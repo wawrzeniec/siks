@@ -1,3 +1,6 @@
+This is the home page for the shikashi project.
+Yeah man.
+
 # Siks
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.1.
