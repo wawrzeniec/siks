@@ -3,16 +3,26 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MaterialComponentsModule } from './material-components.module';
+import { MaterialComponentsModule } from './modules/material-components.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { AddUserComponent } from './components/add-user/add-user.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    AddUserComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MaterialComponentsModule
+    MaterialComponentsModule,
+    FlexLayoutModule,
+    FormsModule, 
+    ReactiveFormsModule
+  ],
+  entryComponents: [
+    AddUserComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

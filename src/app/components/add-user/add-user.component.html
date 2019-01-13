@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>Delete all</h2>
+<mat-dialog-content>
+  <mat-horizontal-stepper linear>
+    <mat-step [stepControl]="fg">
+      <form [formGroup]="fg">
+      </form>
+    </mat-step>
+  </mat-horizontal-stepper>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+</mat-dialog-actions>
