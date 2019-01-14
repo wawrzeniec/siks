@@ -7,11 +7,15 @@ import { MaterialComponentsModule } from './modules/material-components.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MenuComponent } from './components/menu/menu.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddUserComponent
+    AddUserComponent,
+    MenuComponent,
+    ToolbarComponent
   ],
   imports: [
     BrowserModule,

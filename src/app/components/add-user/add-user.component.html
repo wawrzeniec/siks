@@ -1,13 +1,29 @@
-<h2 mat-dialog-title>Delete all</h2>
+<h2 mat-dialog-title style="text-align: center">Add user</h2>
 <mat-dialog-content>
-  <mat-horizontal-stepper linear>
-    <mat-step [stepControl]="fg">
-      <form [formGroup]="fg">
-      </form>
-    </mat-step>
-  </mat-horizontal-stepper>
+  <form>
+      <mat-form-field>
+        <input matInput placeholder="User Name" 
+                [formControl]="userNameCtrl" [errorStateMatcher]="matcher" required>
+        <mat-hint>Enter your user name</mat-hint>
+      </mat-form-field><br>
+
+      <mat-form-field>
+        <input matInput type="password" placeholder="Password" 
+              [formControl]="passwordCtrl" [errorStateMatcher]="matcher" required>
+      </mat-form-field><br>
+
+      <mat-form-field>
+        <input matInput type="password" placeholder="Confirm password" 
+              [formControl]="passwordCheckCtrl" [errorStateMatcher]="matcher" required>
+      </mat-form-field>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancel</button>
-  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
 </mat-dialog-actions>
+
+
+
+
+
+  

@@ -1,34 +1,3 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<mat-toolbar>
-<mat-toolbar-row>
-  
-  <mat-menu #rootMenu="matMenu">
-    <button mat-menu-item [matMenuTriggerFor]="subMenu_user">
-      <mat-icon>person</mat-icon>User
-    </button>
-    <button mat-menu-item [matMenuTriggerFor]="subMenu_securities">
-      <mat-icon>monetization_on</mat-icon>Securities
-    </button>
-  </mat-menu>
-
-  <mat-menu #subMenu_user="matMenu">
-    <button mat-menu-item><mat-icon>settings</mat-icon>Profile</button>
-    <button mat-menu-item><mat-icon>swap_horiz</mat-icon>Switch</button>
-    <button mat-menu-item><mat-icon>person_add</mat-icon>Add</button>
-  </mat-menu>
-
-  <mat-menu #subMenu_securities="matMenu">
-    <button mat-menu-item><mat-icon>add_circle</mat-icon>Add</button>
-    <button mat-menu-item><mat-icon>remove_circle</mat-icon>Remove</button>    
-  </mat-menu>
-
-  <button mat-icon-button [matMenuTriggerFor]="rootMenu">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <span style="width: 100; text-align: right">
-    Welcome to {{ title }}!
-  </span>
-</mat-toolbar-row>  
-</mat-toolbar>
-<app-add-user></app-add-user>
+<app-toolbar></app-toolbar>
 <router-outlet></router-outlet>
