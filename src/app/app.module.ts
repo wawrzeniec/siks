@@ -9,13 +9,15 @@ import { AddUserComponent } from './components/add-user/add-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MenuComponent } from './components/menu/menu.component';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { DisableControlDirective } from './directives/disable-control.directive'
 
 @NgModule({
   declarations: [
     AppComponent,
     AddUserComponent,
     MenuComponent,
-    ToolbarComponent
+    ToolbarComponent,
+    DisableControlDirective
   ],
   imports: [
     BrowserModule,

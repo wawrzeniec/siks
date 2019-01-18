@@ -1,2 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #FF0000; // rgb(52, 27, 165);
+
+/*
+.divider{
+    width:5px;
+    min-height:1px;
+    height:auto;
+    display:inline-block;
+}
+
+title {
+    font: 100% $font-stack;
+    background-color: $primary-color;
+}
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+}
+
+button {
+    background-color: $primary-color;
+}*/
