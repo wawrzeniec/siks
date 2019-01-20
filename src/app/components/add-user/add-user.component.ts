@@ -3,6 +3,8 @@ import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
+import { DataModule, userDataContainer } from '../../modules/data/data.module'
+import { UserService } from '@app/services/user.service'
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -12,24 +14,22 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
-export interface userData {
-  userName: string;
-  password: string;
-}
-
 @Component({
   selector: 'app-add-user',
   templateUrl: './add-user.component.html',
-  styleUrls: ['./add-user.component.scss']
+  styleUrls: ['./add-user.component.scss'],
+  providers: [UserService]
 })
 export class AddUserComponent implements OnInit {
   
-  data: userData;
+  matcher = new MyErrorStateMatcher();
+  userData: userDataContainer = new userDataContainer();
   confirmPasswordDisabled: boolean = false;
   addUserFormGroup: FormGroup;
+
   userNameCtrl = new FormControl('', [
     Validators.required,
-    Validators.minLength(4),
+    Validators.minLength(3),
     Validators.maxLength(32),
     Validators.pattern('^([1-zA-Z0-1@.\s]{1,255})$')
   ]);
@@ -55,13 +55,13 @@ export class AddUserComponent implements OnInit {
     Validators.pattern(/^([1-zA-Z0-1@.\s]{1,255})$/),
   ]);
 
-  matcher = new MyErrorStateMatcher();
-
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, public userService: UserService) {
   }  
 
   ngOnInit() {
     this.addUserFormGroup = new FormGroup({
+      name: this.userNameCtrl,
+      email: this.emailCtrl,
       password: this.passwordCtrl,
       confirmPassword: new FormControl({ value: '', disabled: true }),  //this.confirmPasswordCtrl
     }, { validators: this.checkPasswords })            
@@ -71,24 +71,24 @@ export class AddUserComponent implements OnInit {
     this.confirmPasswordCtrl['disable']();
   }
 
-  logit() {
+  submitForm() {
     console.log('Creating user...');
-    console.log('before:');
-    console.log(this.confirmPasswordDisabled);
-    console.log('after:');
+    this.userData.userName = this.userNameCtrl.value;
+    this.userData.emailAddress = this.emailCtrl.value;
+    this.userData.password = this.addUserFormGroup.get('password').value;
+    console.log('addUserComponent: request to add user');
+    console.log(this.userData);
+    this.userService.addUser(this.userData).subscribe(resp => {
+      console.log(resp)});
   }
 
   checkPasswords: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     const password = control.get('password');
     const confirmPassword = control.get('confirmPassword');
-   
-    console.log('hasserror:');
-    //console.log(control.hasError('passwordMismatch'));
-    console.log(confirmPassword)
+       
     const error = password && confirmPassword && password.value === confirmPassword.value ? null : { 'passwordMismatch': true };
     if (error) {
-      //confirmPassword.status="INVALID";
-      //if (password)
+      //sets the error on the confirm password input control
       confirmPassword.setErrors({'passwordMismatch': true});
     }
 
@@ -104,4 +104,3 @@ export class AddUserComponent implements OnInit {
   }
   
 }
-

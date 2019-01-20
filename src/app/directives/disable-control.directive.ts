@@ -8,13 +8,7 @@ export class DisableControlDirective {
 
   @Input('disableControl') set setDisabled ( condition : boolean ) {
     const action = condition ? 'disable' : 'enable';
-    console.log('condition:');
-    console.log(condition);
-    console.log('action:');
-    console.log(action);
-    console.log(this.ngControl.disabled)
-    this.ngControl.control[action]();
-    console.log(this.ngControl.disabled)
+    this.ngControl.control[action]();    
   }
 
   constructor( private ngControl : NgControl ) {

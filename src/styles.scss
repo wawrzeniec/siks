@@ -2,9 +2,17 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 $font-stack:    Helvetica, sans-serif;
-$primary-color: #FF0000; // rgb(52, 27, 165);
+$app-color-lightblue: rgb(122, 81, 236); 
 
-/*
+$app-major-color: $app-color-lightblue;
+
+.filler {
+    max-width: 100%;
+    min-width: 1px;
+    height: auto;
+    display: inline-block;
+}
+
 .divider{
     width:5px;
     min-height:1px;
@@ -12,16 +20,22 @@ $primary-color: #FF0000; // rgb(52, 27, 165);
     display:inline-block;
 }
 
-title {
-    font: 100% $font-stack;
-    background-color: $primary-color;
+// Background and font colors for elements
+.app-bg-major {
+    background-color: $app-major-color;
+    color: white;
 }
 
-body {
-  font: 100% $font-stack;
-  color: $primary-color;
+// Dialog boxes
+.app-dialog {
+    :host {
+        border: 1px solid $app-major-color;
+    }
 }
 
-button {
-    background-color: $primary-color;
-}*/
+// Titles
+.app-dialog-title {
+    font: $font-stack;
+    text-align: center;
+    color: $app-major-color;
+}

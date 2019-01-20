@@ -3,13 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { MaterialComponentsModule } from './modules/material-components.module';
+import { MaterialComponentsModule } from '@app/modules/material-components.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AddUserComponent } from './components/add-user/add-user.component';
+import { AddUserComponent } from '@app/components/add-user/add-user.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MenuComponent } from './components/menu/menu.component';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-import { DisableControlDirective } from './directives/disable-control.directive'
+import { MenuComponent } from '@app/components/menu/menu.component';
+import { ToolbarComponent } from '@app/components/toolbar/toolbar.component';
+import { DisableControlDirective } from '@app/directives/disable-control.directive'
+import { HttpClientModule }    from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,7 @@ import { DisableControlDirective } from './directives/disable-control.directive'
     AddUserComponent,
     MenuComponent,
     ToolbarComponent,
-    DisableControlDirective
+    DisableControlDirective,
   ],
   imports: [
     BrowserModule,
@@ -25,7 +26,8 @@ import { DisableControlDirective } from './directives/disable-control.directive'
     MaterialComponentsModule,
     FlexLayoutModule,
     FormsModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   entryComponents: [
     AddUserComponent

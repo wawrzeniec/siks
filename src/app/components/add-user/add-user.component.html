@@ -1,16 +1,17 @@
-<h2 mat-dialog-title style="text-align: center">Add user</h2>
-<mat-dialog-content>
-  <form>
+<h2 mat-dialog-title class="app-dialog-title">Add user</h2>
+<mat-dialog-content class="add-user-dialog" class="app-dialog">
+  <form [formGroup]="addUserFormGroup">
       <mat-form-field>
         <input matInput placeholder="User Name" autocomplete="false"
-                [formControl]="userNameCtrl" [errorStateMatcher]="matcher" 
-                (focusin)="initConfirmPassword()" required>
+                formControlName="name"  [errorStateMatcher]="matcher" 
+                (focusin)="initConfirmPassword()" 
+                required>
         <mat-hint>Enter your user name</mat-hint>
         <mat-error *ngIf="userNameCtrl.hasError('pattern') && !userNameCtrl.hasError('maxlength') && !userNameCtrl.hasError('minlength') && !userNameCtrl.hasError('required')">
           User name contains disallowed character(s)
         </mat-error>
         <mat-error *ngIf="userNameCtrl.hasError('minlength') && !userNameCtrl.hasError('required')">
-          User name must be at least 4 characters
+          User name must be at least 3 characters
         </mat-error>
         <mat-error *ngIf="userNameCtrl.hasError('maxlength') && !userNameCtrl.hasError('required')">
           User name must be no longer than 32 characters
@@ -19,7 +20,8 @@
       
       <mat-form-field>
         <input matInput placeholder="Email address" autocomplete="false"
-                [formControl]="emailCtrl" [errorStateMatcher]="matcher" required>
+                formControlName="email"  [errorStateMatcher]="matcher" 
+                required>
         <mat-hint>Enter your email address</mat-hint>
         <mat-error *ngIf="emailCtrl.hasError('pattern') && !emailCtrl.hasError('maxlength') && !emailCtrl.hasError('required')">
           Please enter a valid email address
@@ -28,11 +30,11 @@
           Email address must be no longer than 64 characters
         </mat-error>        
       </mat-form-field><br><br>
-  </form>
-  <form [formGroup]="addUserFormGroup">
+
       <mat-form-field>
         <input matInput type="password" placeholder="Password" formControlName="password"
-              [errorStateMatcher]="matcher" required>
+              [errorStateMatcher]="matcher" 
+              required>
         <mat-error *ngIf="passwordCtrl.hasError('pattern') && !passwordCtrl.hasError('maxlength') && !passwordCtrl.hasError('minlength') && !passwordCtrl.hasError('required')">
           Password contains disallowed character(s)
         </mat-error>
@@ -47,19 +49,17 @@
       <mat-form-field>
         <input matInput type="password" placeholder="Confirm password" formControlName="confirmPassword"
               [errorStateMatcher]="matcher" [disableControl]="confirmPasswordDisabled"
-              disabled required>
+              required>
           <mat-error *ngIf="addUserFormGroup.hasError('passwordMismatch')">
             Passwords do not match
           </mat-error>
-
       </mat-form-field>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>  
-  <button mat-flat-button mat-dialog-close class="cancel-btn">Cancel</button>
-  <div class="divider"></div>
-  <button mat-flat-button mat-dialog-submit class="submit-btn" (click)="logit()">Create user</button>
-  
+<mat-dialog-actions fxLayout="row" fxLayoutGap="32px">  
+  <button mat-flat-button mat-dialog-submit class="app-bg-major" 
+  [disabled]="addUserFormGroup.invalid" (click)="submitForm()">Create user</button>
+  <button mat-flat-button mat-dialog-close class="app-bg-major">Cancel</button>
 </mat-dialog-actions>
 
 
