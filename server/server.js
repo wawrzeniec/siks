@@ -3,7 +3,18 @@ const https = require('https');
 const fs = require('fs')
 const app = express();
 const scm = require('./server-config');
-let ServerConfig = new scm();
+const sqlite3 = require('sqlite3');
+const ServerConfig = new scm();
+
+// On startup connects to the config database
+const configdb = new sqlite3.Database('db/siksconfig.db', (err) => {
+  if (err) {  
+    console.log('[!!!] Error connecting to config database: ' + err.message);
+    process.exit(1);
+  } else {
+    console.log('Connected to config database');
+  }
+});
 
 // Enable CORS
 app.use(function(req, res, next) {
@@ -33,6 +44,7 @@ app.post('/users/', (req, res) => {
 
 app.get('/', (req, res) => {
 	res.send('Server working!');
+        console.log(configdb);
 });
 
 if (ServerConfig.https)
