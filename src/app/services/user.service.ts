@@ -25,15 +25,12 @@ export class UserService {
   addUser(userData: userDataContainer): Observable<Object> {
     // Add user: returns the http response code
     // 200 => OK
-    // 503 => Error
+    // 503 => SQLITE Error
+    // 409 => User already exists
     console.log('UserService: Add User');
     console.log(userData);
 
-    
     const url: string = this.baseUrl; 
-      //userData.userName + '&'
-      //+ userData.emailAddress + '&'
-      //+ userData.password;
     console.log(url);
     return this.http.post(url, userData);
   }

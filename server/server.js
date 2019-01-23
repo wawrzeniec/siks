@@ -6,13 +6,15 @@ const scm = require('./server-config');
 const sqlite3 = require('sqlite3');
 const ServerConfig = new scm();
 
+const userService = require('./userservice');
+
 // On startup connects to the config database
-const configdb = new sqlite3.Database('db/siksconfig.db', (err) => {
+const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
   if (err) {  
-    console.log('[!!!] Error connecting to config database: ' + err.message);
+    console.log('[!!!] Error connecting to siks database: ' + err.message);
     process.exit(1);
   } else {
-    console.log('Connected to config database');
+    console.log('Connected to siks database');
   }
 });
 
@@ -36,10 +38,26 @@ app.post('/users/', (req, res) => {
 	let message = 'Adding user ' + req.body.userName + 
 	' with email ' + req.body.emailAddress + 
 	' and password ' + req.body.password + '\n';
-	res.status(404);
-	console.log(message);
-	let response = {status: 'error', 'reason': 'Function not implemented'}
-	res.json(response);
+	
+	// Queries user name in the database
+	userService.checkUserExists(configdb, req.body.userName, (result) => {
+		if (result.status == 200) {
+			// User not found, add it to the DB
+			userService.createUser(
+				configdb, 
+				req.body.userName,
+				req.body.emailAddress,
+				req.body.password,
+				(result) => {
+					res.status(result.status);
+					res.json(result);
+				});
+		}
+		else {
+			res.status(result.status);
+			res.json(result);
+		}
+	});
 });
 
 app.get('/', (req, res) => {
@@ -47,6 +65,8 @@ app.get('/', (req, res) => {
         console.log(configdb);
 });
 
+
+// Starts the server in HTTPS or HTTP
 if (ServerConfig.https)
 {
 	https.createServer({
