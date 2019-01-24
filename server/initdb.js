@@ -27,6 +27,8 @@ console.log('Exiting (0)');
 
 function createDB(db, callback) 
 {
+  const dbdefaults = require('./dbdefaults');
+
   // Adds the cred table
   console.log('Adding table userprefs...');
   let stmt = `CREATE TABLE userprefs (
@@ -49,9 +51,28 @@ function createDB(db, callback)
         message: err.message
       });
     }
+    // Adds the default users
+    for (user in dbdefaults.defaultusers) {
+      console.log('Adding default user "' + dbdefaults.defaultusers[user].username + '"');
+      stmt = `INSERT INTO userprefs (username, emailaddress, hash) VALUES
+        ($username, $emailaddress, $hash)`;   
+        db.run(stmt, {
+          $username: dbdefaults.defaultusers[user].username,
+          $emailaddress: dbdefaults.defaultusers[user].emailaddress,
+          $hash: dbdefaults.defaultusers[user].hash
+        }, (err) => {
+        if (err) {  
+        return callback( {
+            status: 'error',
+            reason: 'failed to insert user' + dbdefaults.defaultusers[user].username,
+            message: err.message
+          });
+        }
+      });
+    }
   });
-
-  // Adds the prefs table
+  
+  // Adds the config table
   console.log('Adding table config...'); 
   stmt = `CREATE TABLE config (
     id INTEGER UNIQUE PRIMARY KEY,
@@ -66,6 +87,22 @@ function createDB(db, callback)
         message: err.message
       });
     }
+  
+    // Inserts the default config data
+    console.log('Adding default config');
+    stmt = `REPLACE INTO config (id, currentuser) VALUES
+      (1, $currentuser)`;   
+      db.run(stmt, {
+        $currentuser: dbdefaults.defaultconfig.currentuser
+      }, (err) => {
+      if (err) {  
+      return callback( {
+          status: 'error',
+          reason: 'failed to insert default config',
+          message: err.message
+        });
+      }
+    });
   });
 
   // Adds the 'types' table
@@ -84,7 +121,26 @@ function createDB(db, callback)
         message: err.message
       });
     }
+
+    // Adds the default types
+    for (type in dbdefaults.types) {
+      console.log('Adding default type "' + dbdefaults.types[type] + '"');
+      stmt = `INSERT INTO types (typename) VALUES
+        ($type)`;   
+        db.run(stmt, {
+          $type: dbdefaults.types[type]
+        }, (err) => {
+        if (err) {  
+        return callback( {
+            status: 'error',
+            reason: 'failed to insert type' + dbdefaults.types[type],
+            message: err.message
+          });
+        }
+      });
+    }
   });
+
 
   // Adds the 'categories' table
   console.log('Adding table categories...');
@@ -92,7 +148,9 @@ function createDB(db, callback)
     categoryid INTEGER PRIMARY KEY, 
     categoryname TEXT NOT NULL,
     userid INTEGER,
+    typeid INTEGER,
     FOREIGN KEY(userid) REFERENCES userprefs(userid)
+    FOREIGN KEY(typeid) REFERENCES types(typeid)
     )`;
   db.run(stmt, [], (err) => {
     if (err) {  
@@ -100,6 +158,27 @@ function createDB(db, callback)
         status: 'error',
         reason: 'failed to create categories table',
         message: err.message
+      });
+    }
+  
+    // Adds the default categories
+    for (type in dbdefaults.categories) {
+      dbdefaults.categories[type].forEach( (category) => {
+        console.log('Adding default category "' + category + '"');
+        stmt = `INSERT INTO categories (categoryname, typeid) VALUES
+          ($cat, $type)`;   
+          db.run(stmt, {
+            $cat: category,
+            $type: dbdefaults.types.indexOf(type)
+          }, (err) => {
+          if (err) {  
+          return callback( {
+              status: 'error',
+              reason: 'failed to insert category' + category,
+              message: err.message
+            });
+          }
+        });
       });
     }
   });
@@ -110,7 +189,9 @@ function createDB(db, callback)
     marketid INTEGER PRIMARY KEY,
     marketname TEXT NOT NULL,
     userid INTEGER,
+    typeid INTEGER,
     FOREIGN KEY(userid) REFERENCES userprefs(userid)
+    FOREIGN KEY(typeid) REFERENCES types(typeid)
     )`;
   db.run(stmt, [], (err) => {
     if (err) {  
@@ -120,8 +201,29 @@ function createDB(db, callback)
         message: err.message
       });
     }
-  });
 
+    // Adds the default markets
+    for (type in dbdefaults.markets) {
+      dbdefaults.markets[type].forEach( (market) => { 
+        console.log('Adding default market "' + market + '"');
+        stmt = `INSERT INTO markets (marketname, typeid) VALUES
+          ($market, $type)`;   
+          db.run(stmt, {
+            $market: market,
+            $type: dbdefaults.types.indexOf(type)
+          }, (err) => {
+          if (err) {  
+          return callback( {
+              status: 'error',
+              reason: 'failed to insert market' + market,
+              message: err.message
+            });
+          }
+        });
+      });
+    }
+  });
+  
   stmt = `CREATE TABLE securities (
     securityid INTEGER,
     identifier TEXT,
