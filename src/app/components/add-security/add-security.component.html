@@ -1,10 +1,10 @@
-<mat-vertical-stepper linear #stepper>
+<mat-horizontal-stepper labelPosition="bottom" #stepper>
   <mat-step [stepControl]="addSecurityCategoryGroup">
     <form [formGroup]="addSecurityCategoryGroup">
-      <ng-template matStepLabel>Type of security</ng-template>
+      <ng-template matStepLabel>Type</ng-template>
       <mat-form-field>
-        <mat-select [(value)]="category">
-          <mat-option *ngFor="let category of categories">{{category}}</mat-option>7
+        <mat-select [(value)]="category" placeholder="Type of security">
+          <mat-option *ngFor="let category of categories" [value]="category">{{category}}</mat-option>
         </mat-select>
       </mat-form-field>
       <div>
@@ -12,12 +12,31 @@
       </div>
     </form>
   </mat-step>
-  <mat-step [stepControl]="addSecurityAmountGroup" errorMessage="Amount is required.">
-    <form [formGroup]="addSecurityAmountGroup">
-      <ng-template matStepLabel>Number of shares</ng-template>
+  <mat-step [stepControl]="addSecurityDetailsGroup">
+    <form [formGroup]="addSecurityDetailsGroup">
+      <ng-template matStepLabel>Details</ng-template>
       <mat-form-field>
-        <input matInput formControlName="amount">
-      </mat-form-field>
+        <input matInput formControlName="identifier" placeholder="Identifier">
+        <mat-hint>Enter a name to identify the security</mat-hint>
+        <mat-error *ngIf="securityIdentifierCtrl.hasError('required')">
+            Identifier is required
+          </mat-error>
+      </mat-form-field><br><br>
+
+      <mat-form-field>
+          <mat-select formControlName="identifier" placeholder="Markets">
+              <mat-option *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
+            </mat-select>
+            <mat-hint>Choose one or more markets</mat-hint>
+      </mat-form-field><br><br>
+
+      <mat-form-field>
+          <mat-select formControlName="currency" placeholder="Currency">
+              <mat-option *ngFor="let name of currencyNames" [value]="currenciesList[name].symbol">{{name}}</mat-option>
+            </mat-select>
+            <mat-hint>Currency in which the security is traded</mat-hint>
+      </mat-form-field><br><br>
+    
       <div>
         <button mat-button matStepperPrevious>Back</button>
         <button mat-button matStepperNext>Next</button>
@@ -27,10 +46,22 @@
   <mat-step [stepControl]="addSecurityWatchGroup">
       <form [formGroup]="addSecurityWatchGroup">
         <ng-template matStepLabel>Watch methods</ng-template>
-        <mat-checkbox checked="true" formControlName="gf">Google finance</mat-checkbox>
-        <mat-form-field >
-          <input matInput formControlName="gfticker" required>
-        </mat-form-field>
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center">
+          <mat-checkbox formControlName="gf" (click)="dispme()">Google finance</mat-checkbox>          
+          <mat-form-field *ngIf="addSecurityWatchGroup.get('gf').value" fxFlex>
+            <input matInput formControlName="gfticker">
+            <mat-hint>Google finance ticker</mat-hint>
+          </mat-form-field>
+          <button mat-button mat-raised-button color="primary"  *ngIf="addSecurityWatchGroup.get('gf').value">Test</button>        
+        </div><br>
+        <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center">
+            <mat-checkbox formControlName="yf" (click)="dispme()">Yahoo finance</mat-checkbox>          
+            <mat-form-field *ngIf="addSecurityWatchGroup.get('yf').value" fxFlex>
+              <input matInput formControlName="yfticker">
+              <mat-hint>Yahoo finance ticker</mat-hint>
+            </mat-form-field>
+            <button mat-button mat-raised-button color="primary" *ngIf="addSecurityWatchGroup.get('yf').value">Test</button>
+        </div>
         <div>
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext>Next</button>
@@ -38,10 +69,10 @@
       </form>
     </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Add security</ng-template>
+    <ng-template matStepLabel>Confirm</ng-template>
     <div>
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button (click)="stepper.submit()">Submit</button>
     </div>
   </mat-step>
-</mat-vertical-stepper>
+</mat-horizontal-stepper>

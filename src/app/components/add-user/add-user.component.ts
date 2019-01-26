@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
-import { DataModule, userDataContainer } from '../../modules/data/data.module'
+import { DataModule, userDataContainer } from '@app/modules/data/data.module'
 import { UserService } from '@app/services/user.service'
 
 /** Error when invalid control is dirty, touched, or submitted. */

@@ -3,7 +3,8 @@ import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
-import { DataModule, userDataContainer } from '../../modules/data/data.module'
+import { DataModule, userDataContainer } from '@app/modules/data/data.module'
+import { currenciesList } from '@app/modules/assets/assets.module'
 
 @Component({
   selector: 'app-add-security',
@@ -12,33 +13,60 @@ import { DataModule, userDataContainer } from '../../modules/data/data.module'
 })
 export class AddSecurityComponent implements OnInit {
 
-  addSecurityAmountCtrl = new FormControl('', [
-    Validators.required,
-    Validators.pattern('^([0-9]+\.?[0-9]+)$')
+  securityIdentifierCtrl: FormControl = new FormControl('', [
+    Validators.required
   ]);
 
-  addSecurityGFCtrl = new FormControl('', [
+  securityGFCtrl: FormControl = new FormControl('', [
     Validators.required
   ]);
 
   addSecurityCategoryGroup: FormGroup;
-  addSecurityAmountGroup: FormGroup;
+  addSecurityDetailsGroup: FormGroup;
   addSecurityWatchGroup: FormGroup;
+  
   categories: string[] = Array();
+  markets: string[] = Array();
+  currenciesList: Object;
+  currencyNames: string[] = Array();
+  methodChecked: boolean = false;
 
+
+  category: string;
+  identifier: string;
+  market: string;
+  currency: string;
+  
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
     this.categories = ['ETF', 'Fund'];
+    this.markets = ['A', 'B'];
+    this.currenciesList = currenciesList;
+    this.currencyNames = Object.keys(currenciesList);
+    
     this.addSecurityCategoryGroup = new FormGroup({
       category: new FormControl(['', Validators.required])
     });
-    this.addSecurityAmountGroup = new FormGroup({
-      amount: this.addSecurityAmountCtrl
+
+    this.addSecurityDetailsGroup = new FormGroup({
+      identifier: this.securityIdentifierCtrl,
+      market: new FormControl(),
+      currency: new FormControl()
     });
+
     this.addSecurityWatchGroup = new FormGroup({
       gf: new FormControl(),
-      gfticker: this.addSecurityGFCtrl
+      gfticker:new FormControl(),
+      yf: new FormControl(),
+      yfticker:new FormControl()
     });
   }
+
+  dispme()
+  {
+    console.log(this.addSecurityWatchGroup.get('gf').value);
+    this.methodChecked = !this.methodChecked;
+  }
+
 }
