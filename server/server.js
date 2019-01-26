@@ -7,6 +7,7 @@ const sqlite3 = require('sqlite3');
 const ServerConfig = new scm();
 
 const userService = require('./userservice');
+const paramService = require('./paramservice');
 
 // On startup connects to the config database
 const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
@@ -34,11 +35,28 @@ app.use(require('body-parser').json());
 // (1) hash the password
 // (2) add the new user in cred.db
 // (3) create the database for this user
+app.get('/users/', (req, res) => {
+	userService.getUsers(configdb, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+app.get('/users/:username', (req,res) => {
+	userService.getUserDetails(configdb, req.params.username, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+app.get('/userexists/:username', (req,res) => {
+	userService.checkUserExists(configdb, req.params.username, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
 app.post('/users/', (req, res) => {
-	let message = 'Adding user ' + req.body.userName + 
-	' with email ' + req.body.emailAddress + 
-	' and password ' + req.body.password + '\n';
-	
 	// Queries user name in the database
 	userService.checkUserExists(configdb, req.body.userName, (result) => {
 		if (result.status == 200) {
@@ -60,6 +78,33 @@ app.post('/users/', (req, res) => {
 	});
 });
 
+
+///////////////////////////////
+// CONFIG & PARAMETERS 
+// This is the endpoints for querying and modifying app configuration parameters
+app.get('/config/types', (req, res) => {
+	paramService.getTypes(configdb, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+app.get('/config/categories', (req, res) => {
+	paramService.getCategories(configdb, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+app.get('/config/markets', (req, res) => {
+	paramService.getMarkets(configdb, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+////////////////////////////////////
+// Default enpoint - to check server
 app.get('/', (req, res) => {
 	res.send('Server working!');
         console.log(configdb);
