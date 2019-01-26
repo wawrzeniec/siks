@@ -39,6 +39,7 @@ function createDB(db, callback)
     lastname TEXT,
     emailaddress TEXT,
     target INTEGER,
+    weeklyreport INTEGER,
     monthlyreport INTEGER,
     errorreport INTEGER
     )`; 
@@ -227,16 +228,16 @@ function createDB(db, callback)
   stmt = `CREATE TABLE securities (
     securityid INTEGER,
     identifier TEXT,
-    type INTEGER,
-    category INTEGER,
-    market INTEGER,
+    typeid INTEGER,
+    categoryid INTEGER,
+    marketid INTEGER,
     currency TEXT,
     methods TEXT,
     annualfee REAL,
     userid INTEGER,
-    FOREIGN KEY(type) REFERENCES types(typeid),
-    FOREIGN KEY(category) REFERENCES categories(categoryid),
-    FOREIGN KEY(market) REFERENCES markets(marketid),
+    FOREIGN KEY(typeid) REFERENCES types(typeid),
+    FOREIGN KEY(categoryid) REFERENCES categories(categoryid),
+    FOREIGN KEY(marketid) REFERENCES markets(marketid),
     FOREIGN KEY(userid) REFERENCES userprefs(userid)
     )`;
   db.run(stmt, [], (err) => {

@@ -5,11 +5,11 @@ const defaultusers = [
 ];
 
 // The different types of securities
-const types = ['Cash', 'Equity', 'Other'];
+const types = ['Cash', 'Security', 'Other'];
 
 // The various categories of each secuity 
 const categories = {
-    'Equity': ['Stock', 'ETF', 'Fund'],
+    'Security': ['Stock', 'ETF', 'Fund'],
     'Other': ['Real estate']
 };
 

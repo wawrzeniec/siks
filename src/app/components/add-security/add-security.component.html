@@ -1,0 +1,47 @@
+<mat-vertical-stepper linear #stepper>
+  <mat-step [stepControl]="addSecurityCategoryGroup">
+    <form [formGroup]="addSecurityCategoryGroup">
+      <ng-template matStepLabel>Type of security</ng-template>
+      <mat-form-field>
+        <mat-select [(value)]="category">
+          <mat-option *ngFor="let category of categories">{{category}}</mat-option>7
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperNext type="button">Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="addSecurityAmountGroup" errorMessage="Amount is required.">
+    <form [formGroup]="addSecurityAmountGroup">
+      <ng-template matStepLabel>Number of shares</ng-template>
+      <mat-form-field>
+        <input matInput formControlName="amount">
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="addSecurityWatchGroup">
+      <form [formGroup]="addSecurityWatchGroup">
+        <ng-template matStepLabel>Watch methods</ng-template>
+        <mat-checkbox checked="true" formControlName="gf">Google finance</mat-checkbox>
+        <mat-form-field >
+          <input matInput formControlName="gfticker" required>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Add security</ng-template>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.submit()">Submit</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

@@ -9,17 +9,19 @@ import {MatButtonModule,
   MatFormFieldModule, 
   MatInputModule, 
   MatDialogModule,
-  MatStepperModule} from '@angular/material';
+  MatStepperModule,
+  MatSelectModule} from '@angular/material';
 
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
             MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-            ],
+            MatSelectModule],
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
+    MatSelectModule
     ]
 })
 export class MaterialComponentsModule { }
