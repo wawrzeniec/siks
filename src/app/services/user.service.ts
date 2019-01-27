@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { DataModule, userDataContainer } from '@app/modules/data/data.module'
+import { userDataContainer } from '@app/modules/data/data.module'
 import { Observable } from 'rxjs';
 import { HttpClient }    from '@angular/common/http';
-import { ServerConfig} from '@server/server-config-ng';
+import { ServerConfig } from '@server/server-config-ng';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +18,6 @@ export class UserService {
     console.log(this.baseUrl);
   }
 
-  checkuserExists() {
-
-  }
-
   addUser(userData: userDataContainer): Observable<Object> {
     // Add user: returns the http response code
     // 200 => OK
@@ -34,6 +30,21 @@ export class UserService {
     console.log(url);
     return this.http.post(url, userData);
   }
+
+  checkUserExists(userData: userDataContainer): Observable<Object> {
+    // Check if user exists: returns the http response code
+    // 200 => User exists
+    // 503 => SQLITE Error
+    // 404 => Username is available
+    console.log('UserService: check user');
+    console.log(userData);
+
+    const url: string = this.baseUrl; 
+    console.log(url);
+    return this.http.head(url, userData);
+  }
+
+
 
   deleteUser() {
 

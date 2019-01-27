@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10; // Number of rounds to generate salt for passwords
 
 // Get the list of users in the database
-function getUsers(db, callback) {
+function getUsers(db, params, callback) {
     let stmt = 'SELECT userid, username from userprefs';
     db.all(stmt, (err, rows) => {
         if (err) {
@@ -35,18 +35,38 @@ function createUser(db, username, emailaddress, password, callback) {
         else {
             console.log('username: ' + username + '\nhash: ' + hash + '\nemail: ' + emailaddress);
             // If hash suceeded, insert into the database
-            let stmt = 'INSERT INTO userprefs (username, hash, emailaddress) values ($username, $hash, $email)';
+            let stmt = 'INSERT INTO usercred (username, hash) values ($username, $hash)';
             db.run(stmt, {
                 $username: username, 
-                $hash: hash,
-                $email: emailaddress},
+                $hash: hash},
                 (err) => {
                     if (err) {
                         return callback({
                             status: 500,
                             reason: 'failed to write user credentials into database',
                             err: err
-                        });
+                        });                        
+                    }
+                    else {
+                        stmt = 'INSERT INTO userprefs (username, emailaddress) values ($username, $email)';
+                        db.run(stmt, {
+                            $username: username, 
+                            $email: emailaddress},
+                            (err) => {
+                                if (err) {
+                                    return callback({
+                                        status: 500,
+                                        reason: 'failed to write user preferences into database',
+                                        err: err
+                                    });                        
+                                }
+                                else {
+                                    return callback({
+                                        status: 200
+                                    })
+                                }
+                            }
+                        );
                     }
                 });
             }
@@ -54,7 +74,7 @@ function createUser(db, username, emailaddress, password, callback) {
     }
 
 function checkUserExists(db, username, callback) {
-    let stmt = 'SELECT * FROM userprefs WHERE username=$username';	
+    let stmt = 'SELECT 1 FROM usercred WHERE username=$username';	
 	db.get(stmt, {$username: username}, (err, row) => {
         if (err) {
             return callback({

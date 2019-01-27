@@ -1,7 +1,7 @@
 // The default users
 // The password for 'Demo' is "Demo"
 const defaultusers = [
-    {username: 'Demo', emailaddress: '', hash: '$2b$10$SxjccZLjafQaY6jgUD.3eODNF9579yleFZlXutfMWl0XKtmNAeGEi'}
+    {id: 1, username: 'Demo', emailaddress: '', hash: '$2b$10$SxjccZLjafQaY6jgUD.3eODNF9579yleFZlXutfMWl0XKtmNAeGEi'}
 ];
 
 // The different types of securities
@@ -15,9 +15,12 @@ const categories = {
 
 // The various markets for each security is 
 const markets = {
-    'Equity': ['USA', 'Europe', 'Asia', 'Emerging countries', 
-             'Technology', 'Energy', 'Healthcare', 'IT', 
-             'Telecommunications', 'Materials'],
+    'Security': {
+        'Region': ['America', 'Europe', 'Asia'],
+        'Country': ['USA', 'Canada', 'France', 'Germany', 'UK', 'Japan', 'China', 'Russia', 'India'],
+        'Industry': ['Technology', 'Energy', 'Healthcare', 'IT', 
+             'Telecommunications', 'Materials']
+    }
 };
 
 // Default config

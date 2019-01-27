@@ -5,6 +5,7 @@ import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
 import { DataModule, userDataContainer } from '@app/modules/data/data.module'
 import { currenciesList } from '@app/modules/assets/assets.module'
+import { ConfigService } from '@app/services/config.service'
 
 interface FormGroupObject {
   [key: string]: FormGroup
@@ -29,13 +30,8 @@ export class AddSecurityComponent implements OnInit {
     Validators.required
   ]);
 
-  securityGFCtrl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-
   addSecurityCategoryGroup: FormGroup;
   addSecurityDetailsGroup: FormGroup;
-  
   addSecurityWatchGroup: FormGroupObject = {};
   disableMethod: disabledArray = {};
 
@@ -43,7 +39,6 @@ export class AddSecurityComponent implements OnInit {
   markets: string[] = Array();
   currenciesList: Object;
   currencyNames: string[] = Array();
-  methodNames: string[] = Array();
   methods: any = {
     'ETF': [
       ['Google finance', 'Enter google finance ticker', 0],
@@ -59,16 +54,26 @@ export class AddSecurityComponent implements OnInit {
   identifier: string;
   market: string;
   currency: string;
-  
-  constructor(public dialog: MatDialog) { }
+
+  constructor(public dialog: MatDialog, public configservice: ConfigService) { }
 
   ngOnInit() {
-    this.categories = ['ETF', 'Fund'];
-    this.markets = ['A', 'B'];
+    // Queries the categories
+    this.configservice.getCategories('Security').subscribe( (response: Object) => {
+      for (let row of response.data) {
+        this.categories.push(row.categoryname);
+      }
+    });
+    this.configservice.getMarkets('Security').subscribe( (response: Object) => {
+        for (let row of response.data) {
+          this.markets.push(row.marketname);
+        }
+    });
     this.currenciesList = currenciesList;
     this.currencyNames = Object.keys(currenciesList);
-    this.methodNames = Object.keys(this.methods);
     
+
+
     this.addSecurityCategoryGroup = new FormGroup({
       category: this.securityCategoryCtrl
     });
@@ -96,13 +101,12 @@ export class AddSecurityComponent implements OnInit {
 
   toggleButton(m: number)
   {
-    console.log('dismpe with ' + m); 
     let state = this.addSecurityWatchGroup[this.addSecurityCategoryGroup.get('category').value].get('selected'+m).value;
-    console.log('state = ' + state);
     let action = state ? 'enable' : 'disable';
     this.addSecurityWatchGroup[this.addSecurityCategoryGroup.get('category').value].get('ticker'+m)[action]();    
     this.disableMethod[m] = !state; 
   }
+
   testMethod(m: number) {
     console.log('Testing method ' + m + ' with parameter [' + this.addSecurityWatchGroup[this.addSecurityCategoryGroup.get('category').value].get('ticker'+m).value + ']');
   }

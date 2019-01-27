@@ -7,7 +7,6 @@
           <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
         </mat-select>
       </mat-form-field>
-      <button (click)="toggleButton()">i</button>
       <div>
         <button mat-button matStepperNext type="button">Next</button>
       </div>
@@ -25,7 +24,7 @@
       </mat-form-field><br><br>
 
       <mat-form-field>
-          <mat-select formControlName="identifier" placeholder="Markets">
+          <mat-select formControlName="identifier" placeholder="Markets" multiple>
               <mat-option *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
             </mat-select>
             <mat-hint>Choose one or more markets</mat-hint>
@@ -48,19 +47,27 @@
     <ng-template matStepLabel>Watch methods</ng-template> 
   </mat-step>  
   <mat-step *ngIf="!securityCategoryCtrl.hasError('required')" [stepControl]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
-    <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
+    <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">            
       <ng-template matStepLabel>Watch methods</ng-template>              
-      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of methods[addSecurityCategoryGroup.get('category').value]">
-        <mat-checkbox formControlName="selected{{m[2]}}" (change)="dispme(m[2])">{{m[0]}}</mat-checkbox>          
-        <mat-form-field fxFlex>
-          <input matInput formControlName="ticker{{m[2]}}" fxFlex>
-          <mat-hint>{{m[1]}}</mat-hint>
-        </mat-form-field>
-        <button mat-button mat-raised-button color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m[2])">
-          Test
-        </button>
-      </div><br>
+      <div fxLayout="column" fxLayoutGap="30px">
+        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of methods[addSecurityCategoryGroup.get('category').value]">
+          <mat-checkbox formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
+          
+          <mat-form-field class="tickerfield">
+            <input matInput formControlName="ticker{{m[2]}}">
+            <mat-hint>{{m[1]}}</mat-hint>
+          </mat-form-field>
+          
+          <button mat-button mat-raised-button color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m[2])">
+            Test
+          </button>
+        </div>
+      </div>
     </form>
+    <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext>Next</button>
+      </div>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Confirm</ng-template>
