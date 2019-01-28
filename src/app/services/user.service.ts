@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { userDataContainer } from '@app/modules/data/data.module'
+import { userDataContainer, serverPacket } from '@app/modules/data/data.module'
 import { Observable } from 'rxjs';
-import { HttpClient }    from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { ServerConfig } from '@server/server-config-ng';
 
 @Injectable({
@@ -18,7 +18,7 @@ export class UserService {
     console.log(this.baseUrl);
   }
 
-  addUser(userData: userDataContainer): Observable<Object> {
+  addUser(userData: userDataContainer): Observable<serverPacket> {
     // Add user: returns the http response code
     // 200 => OK
     // 503 => SQLITE Error
@@ -28,10 +28,10 @@ export class UserService {
 
     const url: string = this.baseUrl; 
     console.log(url);
-    return this.http.post(url, userData);
+    return this.http.post(url, userData) as Observable<serverPacket>;
   }
 
-  checkUserExists(userData: userDataContainer): Observable<Object> {
+  checkUserExists(userData: userDataContainer): Observable<serverPacket> {
     // Check if user exists: returns the http response code
     // 200 => User exists
     // 503 => SQLITE Error
@@ -39,12 +39,10 @@ export class UserService {
     console.log('UserService: check user');
     console.log(userData);
 
-    const url: string = this.baseUrl; 
+    const url: string = this.baseUrl + userData.userName; 
     console.log(url);
-    return this.http.head(url, userData);
+    return this.http.head(url) as Observable<serverPacket>;
   }
-
-
 
   deleteUser() {
 

@@ -12,19 +12,28 @@ export class userDataContainer {
   weeklyreport: boolean;
   monthlyreport: boolean;
   errorreport: boolean;
-}
+};
+
+export class serverPacket {
+  status: number;
+  reason: string;
+  data: Object;
+  err: Object;
+};
 
 
 
 @NgModule({
   declarations: [
-    userDataContainer
+    userDataContainer,
+    serverPacket
   ],
   imports: [
     CommonModule
   ],
   exports: [
-    userDataContainer
+    userDataContainer,
+    serverPacket
   ]
 })
 export class DataModule { 

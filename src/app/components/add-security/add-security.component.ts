@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {ErrorStateMatcher} from '@angular/material/core';
-import { DataModule, userDataContainer } from '@app/modules/data/data.module'
-import { currenciesList } from '@app/modules/assets/assets.module'
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { serverPacket } from '@app/modules/data/data.module'
+import { currencyList, scrapeMethods } from '@app/modules/assets/assets.module'
 import { ConfigService } from '@app/services/config.service'
 
 interface FormGroupObject {
@@ -37,18 +37,9 @@ export class AddSecurityComponent implements OnInit {
 
   categories: string[] = Array();
   markets: string[] = Array();
-  currenciesList: Object;
+  currencyList: any = currencyList;
   currencyNames: string[] = Array();
-  methods: any = {
-    'ETF': [
-      ['Google finance', 'Enter google finance ticker', 0],
-      ['Yahoo finance', 'Enter yahoo finance ticker', 1]
-    ],
-    'Fund': [
-      ['Other1', 'Enter other1 prop', 2],
-      ['Other2', 'Enter other2 prop', 3]
-    ]
-  };
+  scrapeMethods: any = scrapeMethods;
 
   category: string;
   identifier: string;
@@ -59,21 +50,19 @@ export class AddSecurityComponent implements OnInit {
 
   ngOnInit() {
     // Queries the categories
-    this.configservice.getCategories('Security').subscribe( (response: Object) => {
-      for (let row of response.data) {
+    this.configservice.getCategories('Security').subscribe( (response: serverPacket) => {
+      for (let row of Object.values(response.data)) {
         this.categories.push(row.categoryname);
       }
     });
-    this.configservice.getMarkets('Security').subscribe( (response: Object) => {
-        for (let row of response.data) {
+    this.configservice.getMarkets('Security').subscribe( (response: serverPacket) => {
+        for (let row of Object.values(response.data)) {
           this.markets.push(row.marketname);
         }
     });
-    this.currenciesList = currenciesList;
-    this.currencyNames = Object.keys(currenciesList);
+    //this.currencyList = currencyList;
+    this.currencyNames = Object.keys(currencyList);
     
-
-
     this.addSecurityCategoryGroup = new FormGroup({
       category: this.securityCategoryCtrl
     });
@@ -84,11 +73,12 @@ export class AddSecurityComponent implements OnInit {
       currency: new FormControl()
     });
 
-    for (let m in this.methods) {
+    console.log(this.scrapeMethods);
+    for (let m in this.scrapeMethods) {
       console.log(m);
       this.addSecurityWatchGroup[m] = new FormGroup({});
       console.log(this.addSecurityWatchGroup);
-      let d = this.methods[m];
+      let d = this.scrapeMethods[m];
         for (let i=0; i < d.length; i++) {
           this.addSecurityWatchGroup[m].addControl('selected'+d[i][2], new FormControl([true]));
           this.addSecurityWatchGroup[m].addControl('ticker'+d[i][2], new FormControl());

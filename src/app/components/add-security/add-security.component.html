@@ -32,7 +32,7 @@
 
       <mat-form-field>
           <mat-select formControlName="currency" placeholder="Currency">
-              <mat-option *ngFor="let name of currencyNames" [value]="currenciesList[name].symbol">{{name}}</mat-option>
+              <mat-option *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
             </mat-select>
             <mat-hint>Currency in which the security is traded</mat-hint>
       </mat-form-field><br><br>
@@ -50,7 +50,7 @@
     <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">            
       <ng-template matStepLabel>Watch methods</ng-template>              
       <div fxLayout="column" fxLayoutGap="30px">
-        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of methods[addSecurityCategoryGroup.get('category').value]">
+        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]">
           <mat-checkbox formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
           
           <mat-form-field class="tickerfield">
