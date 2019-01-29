@@ -30,9 +30,14 @@ def getQuote(yahooticker):
 
 def parseYahooURL(content):
     import re
-    toks = re.findall('Trsdu[^>]+>([0-9\.]+)</span>', content)
+    
+    # This doesn't work anymore...
+    # toks = re.findall('Trsdu[^>]+>([0-9\.]+)</span>', content)
+    toks = re.findall('<span.*?"35">(\d{0,3})\D{0,3}(\d{1,3}[\.\,]\d{0,3})</span>', content, re.UNICODE)
     if len(toks) > 0:
-        quote = toks[0]
+        quote = ''.join(toks[0]).replace(',', '.')
     else:
         raise PARSEERROR()
     return float(quote)
+	
+	

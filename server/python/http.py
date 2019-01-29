@@ -3,12 +3,14 @@ from error import HTTP_ERROR
 import time
 import requests
 
+headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:64.0) Gecko/20100101 Firefox/64.0'}
+
 def retrieveURL(url):
     trials = 0
     retrieved = False
     while trials < MAX_HTTP_REQUESTS:
         try:
-            r = requests.get(url, timeout=HTTP_TIMEOUT)
+            r = requests.get(url, timeout=HTTP_TIMEOUT, headers=headers)
             retrieved = True
         except Exception:
             pass
@@ -28,3 +30,9 @@ def retrieveURL(url):
         time.sleep(SLEEP_BETWEEN_REQUESTS)
 
     raise HTTP_ERROR(r)
+
+def getStyleSheets(content):
+    # This finds all the style sheets in the HTML content
+    from bs4 import BeautifulSoup as BS
+    bs = BS(content)
+    return [x.get('href') for x in bs.find_all('link') if 'stylesheet' in x.get('rel')]
