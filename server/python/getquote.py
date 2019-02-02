@@ -13,7 +13,7 @@ try:
         import yfinance as yf
         quote = yf.getQuote(ticker)
     else:
-        print('{"status": 500, "reason": "Unknown method=%s"' %
+        print('{"status": 500, "reason": "Unknown method=%s"}' %
         method, file=sys.stderr)
         sys.exit(1)
 
@@ -21,6 +21,6 @@ try:
     sys.exit(0)
 
 except Exception as e:
-    print ('{"status": 500, "reason": "Error occurred while getting quote for %s, method=%s", "err": "%s"' % (method, ticker, str(e)), file=sys.stderr)
+    print ('{"status": 500, "reason": "Error occurred while getting quote for %s, method=%s", "err": "%s"}' % (ticker, method, str(e)), file=sys.stderr)
     sys.exit(1)
 

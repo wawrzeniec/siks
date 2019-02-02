@@ -1,4 +1,52 @@
-mat-form-field.tickerfield {
-    width: 50px;
-    flex: 20;
+$marginBottom: 20px;
+
+.app-adds-tickerformfield {
+    width: 100px;
+    max-width:200px;
+    flex: 33;    
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-methodcheck {
+    width: 100px;
+    max-width:200px;
+    flex: 33;
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-testbtn {
+    width: 60px;
+    max-width:100px;
+    flex: 33;
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-quotediv {
+    min-width:40px;
+    font-size: 80%;
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-categoryformfield {
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-nextbtn {
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-idformfield {
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-marketformfield {
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-currencyformfield {
+    margin-bottom: $marginBottom;
+}
+
+.app-adds-watchcheck {
+    margin-bottom: $marginBottom;
 }

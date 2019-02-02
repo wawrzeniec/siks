@@ -26,6 +26,10 @@ $app-major-color: $app-color-lightblue;
     color: white;
 }
 
+.app-font-major {
+    color: $app-major-color;
+}
+
 // Dialog boxes
 .app-dialog {
     :host {

@@ -16,6 +16,10 @@ interface disabledArray {
   [key: number]: boolean
 }
 
+interface quoteArray {
+  [key: number]: string
+}
+
 @Component({
   selector: 'app-add-security',
   templateUrl: './add-security.component.html',
@@ -34,8 +38,10 @@ export class AddSecurityComponent implements OnInit {
   addSecurityCategoryGroup: FormGroup;
   addSecurityDetailsGroup: FormGroup;
   addSecurityWatchGroup: FormGroupObject = {};
+  addSecurityConfirmGroup: FormGroup;
   disableMethod: disabledArray = {};
   isTesting: disabledArray = {};
+  quote: quoteArray = {};
 
   categories: string[] = Array();
   markets: string[] = Array();
@@ -53,35 +59,35 @@ export class AddSecurityComponent implements OnInit {
               public quoteservice: QuoteService) { }
 
   ngOnInit() {
-    // Queries the categories
+    // Queries the categories from the server
     this.configservice.getCategories('Security').subscribe( (response: serverPacket) => {
       for (let row of Object.values(response.data)) {
         this.categories.push(row.categoryname);
       }
     });
+    // Queries the markets from the server
     this.configservice.getMarkets('Security').subscribe( (response: serverPacket) => {
         for (let row of Object.values(response.data)) {
           this.markets.push(row.marketname);
         }
     });
-    //this.currencyList = currencyList;
     this.currencyNames = Object.keys(currencyList);
     
+    // Category form
     this.addSecurityCategoryGroup = new FormGroup({
       category: this.securityCategoryCtrl
     });
 
+    // Details form
     this.addSecurityDetailsGroup = new FormGroup({
       identifier: this.securityIdentifierCtrl,
       market: new FormControl(),
       currency: new FormControl()
     });
 
-    console.log(this.scrapeMethods);
+    // Watch methods form(s)
     for (let m in this.scrapeMethods) {
-      console.log(m);
       this.addSecurityWatchGroup[m] = new FormGroup({});
-      console.log(this.addSecurityWatchGroup);
       let d = this.scrapeMethods[m];
         for (let i=0; i < d.length; i++) {
           this.addSecurityWatchGroup[m].addControl('selected'+d[i][2], new FormControl([true]));
@@ -89,11 +95,17 @@ export class AddSecurityComponent implements OnInit {
           this.addSecurityWatchGroup[m].addControl('test'+d[i][2], new FormControl());
           this.disableMethod[d[i][2]] = false;
           this.isTesting[d[i][2]] = false;
+          this.quote[d[i][2]] = "";
         }
     }
-    console.log(this.addSecurityWatchGroup);
+    
+    // Confirm form
+    this.addSecurityConfirmGroup = new FormGroup({
+      watch: new FormControl([true])
+    });
   }
 
+  // Disables the "test" buttons if the watch method is disabled
   toggleButton(m: number)
   {
     let state = this.addSecurityWatchGroup[this.addSecurityCategoryGroup.get('category').value].get('selected'+m).value;
@@ -102,14 +114,22 @@ export class AddSecurityComponent implements OnInit {
     this.disableMethod[m] = !state; 
   }
 
+  // Callback for the "test" button - queries the quote and subscribe to the server response
   testMethod(m: [string, string, number, string]) {
     let category = this.addSecurityCategoryGroup.get('category').value;
     let ticker = this.addSecurityWatchGroup[category].get('ticker'+m[2]).value;
     this.isTesting[m[2]] = true;
+    this.quote[m[2]] = "";
     this.quoteservice.testMethod(m[3], ticker).subscribe(result => {
       console.log(result);
       this.isTesting[m[2]] = false;
+      this.quote[m[2]] = result.data as string;
     });
+  }
+
+  // Callback for form submission
+  addSecurity() {
+
   }
 
 }

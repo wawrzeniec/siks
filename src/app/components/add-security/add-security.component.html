@@ -2,44 +2,44 @@
   <mat-step [stepControl]="addSecurityCategoryGroup">
     <form [formGroup]="addSecurityCategoryGroup">
       <ng-template matStepLabel>Type</ng-template>
-      <mat-form-field>
-        <mat-select placeholder="Type of security" formControlName="category">
+      <mat-form-field class="app-formfield app-adds-categoryformfield">
+        <mat-select class="app-select" placeholder="Type of security" formControlName="category">
           <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
         </mat-select>
       </mat-form-field>
       <div>
-        <button mat-button matStepperNext type="button">Next</button>
+        <button mat-button matStepperNext class="app-nextbtn app-adds-nextbtn" type="button">Next</button>
       </div>
     </form>
   </mat-step>
   <mat-step [stepControl]="addSecurityDetailsGroup">
     <form [formGroup]="addSecurityDetailsGroup">
       <ng-template matStepLabel>Details</ng-template>
-      <mat-form-field>
-        <input matInput formControlName="identifier" placeholder="Identifier">
-        <mat-hint>Enter a name to identify the security</mat-hint>
+      <mat-form-field class="app-formfield app-adds-idformfield">
+        <input matInput class="app-input" formControlName="identifier" placeholder="Identifier">
+        <mat-hint>Name to identify the security</mat-hint>
         <mat-error *ngIf="securityIdentifierCtrl.hasError('required')">
             Identifier is required
           </mat-error>
-      </mat-form-field><br><br>
+      </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field class="app-formfield app-adds-marketformfield">
           <mat-select formControlName="identifier" placeholder="Markets" multiple>
-              <mat-option *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
+              <mat-option class="app-select" *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
             </mat-select>
             <mat-hint>Choose one or more markets</mat-hint>
-      </mat-form-field><br><br>
+      </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field class="app-formfield app-adds-currencyformfield">
           <mat-select formControlName="currency" placeholder="Currency">
-              <mat-option *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
+              <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
             </mat-select>
             <mat-hint>Currency in which the security is traded</mat-hint>
-      </mat-form-field><br><br>
+      </mat-form-field>
     
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button class="app-backbtn app-adds-backbtn" mat-button matStepperPrevious>Back</button>
+        <button class="app-nextbtn app-adds-nextbtn" mat-button matStepperNext>Next</button>
       </div>      
     </form>
   </mat-step>
@@ -47,35 +47,40 @@
     <ng-template matStepLabel>Watch methods</ng-template> 
   </mat-step>  
   <mat-step *ngIf="!securityCategoryCtrl.hasError('required')" [stepControl]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
-    <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">            
+    <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
       <ng-template matStepLabel>Watch methods</ng-template>              
       <div fxLayout="column" fxLayoutGap="30px">
         <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]; index as i">
-          <mat-checkbox formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
+          <mat-checkbox class="app-check app-adds-methodcheck" formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
           
-          <mat-form-field class="tickerfield">
+          <mat-form-field class="app-formfield app-adds-tickerformfield">
             <input matInput formControlName="ticker{{m[2]}}">
             <mat-hint>{{m[1]}}</mat-hint>
           </mat-form-field>
           
-          <button mat-button mat-raised-button color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m)">
+          <button mat-button mat-raised-button class="app-btn app-adds-testbtn" color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m)" flex=20>
             Test
-          </button>
-          <mat-progress-spinner color="primary" mode="indeterminate" [hidden]="isTesting[m[2]]" diameter=20>
+          </button>          
+          <div class="app-div app-adds-quotediv app-font-major" color="primary">{{quote[m[2]]}}
+          <mat-progress-spinner color="primary" mode="indeterminate" *ngIf="isTesting[m[2]]" diameter=20>
           </mat-progress-spinner>
+          </div>
         </div>
       </div>
     </form>
     <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button class="app-backbtn app-adds-backbtn" mat-button matStepperPrevious>Back</button>
+        <button class="app-nextbtn app-adds-nextbtn" mat-button matStepperNext>Next</button>  
       </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Confirm</ng-template>
+    <ng-template matStepLabel>Confirm</ng-template>    
+    <form [formGroup]="addSecurityConfirmGroup">
+      <mat-checkbox class="app-check app-adds-watchcheck" formControlName="watch">Start watching</mat-checkbox>          
+    </form>
     <div>
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.submit()">Submit</button>
+      <button mat-button (click)="addSecurity()">Add security</button>
     </div>
   </mat-step>
   

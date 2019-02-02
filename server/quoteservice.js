@@ -9,11 +9,21 @@ function getQuote(query, callback) {
     const cmd = spawn(command, ['./python/getquote.py', method, ticker]);
 
     cmd.stdout.on('data', (data) => {
-        callback(JSON.parse(data.toString('utf8')))
+        try {
+            callback(JSON.parse(data.toString('utf8')))
+        }
+        catch {
+            callback({status: 500, reason: "Error parsing JSON response from getquote.py", err: data.toString('utf-8')});
+        }
     });
 
     cmd.stderr.on('data', (data) => {
-        callback(JSON.parse(data.toString('utf8')))
+        try { 
+            callback(JSON.parse(data.toString('utf8')))
+        }
+        catch {
+            callback({status: 500, reason: "Error parsing JSON response from getquote.py", err: data.toString('utf-8')});
+        }
     });
 }
 
