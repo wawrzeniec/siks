@@ -5,16 +5,16 @@ export const currencyList: any = {"USD (US Dollar)":{"name":"US Dollar","symbol"
 
 export const scrapeMethods: any = {
   'Stock': [
-    ['Google finance', 'Google finance ticker', 0],
-    ['Yahoo finance', 'Yahoo finance ticker', 1]
+    ['Google finance', 'Google finance ticker', 0, 'gf'],
+    ['Yahoo finance', 'Yahoo finance ticker', 1, 'yf']
   ],
   'ETF': [
-    ['Google finance', 'Google finance ticker', 2],
-    ['Yahoo finance', 'Yahoo finance ticker', 3]
+    ['Google finance', 'Google finance ticker', 2, 'gf'],
+    ['Yahoo finance', 'Yahoo finance ticker', 3, 'yf']
   ],
   'Fund': [
-    ['Other1', 'Enter other1 prop', 4],
-    ['Other2', 'Enter other2 prop', 5]
+    ['Other1', 'Enter other1 prop', 4, ''],
+    ['Other2', 'Enter other2 prop', 5, '']
   ]
 };
 

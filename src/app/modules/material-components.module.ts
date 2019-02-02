@@ -10,18 +10,19 @@ import {MatButtonModule,
   MatInputModule, 
   MatDialogModule,
   MatStepperModule,
-  MatSelectModule} from '@angular/material';
+  MatSelectModule, 
+  MatProgressSpinnerModule} from '@angular/material';
 
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
             MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-            MatSelectModule],
+            MatSelectModule, MatProgressSpinnerModule],
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-    MatSelectModule
+    MatSelectModule, MatProgressSpinnerModule
     ]
 })
 export class MaterialComponentsModule { }

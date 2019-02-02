@@ -6,6 +6,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { serverPacket } from '@app/modules/data/data.module'
 import { currencyList, scrapeMethods } from '@app/modules/assets/assets.module'
 import { ConfigService } from '@app/services/config.service'
+import { QuoteService } from '@app/services/quote.service'
 
 interface FormGroupObject {
   [key: string]: FormGroup
@@ -34,6 +35,7 @@ export class AddSecurityComponent implements OnInit {
   addSecurityDetailsGroup: FormGroup;
   addSecurityWatchGroup: FormGroupObject = {};
   disableMethod: disabledArray = {};
+  isTesting: disabledArray = {};
 
   categories: string[] = Array();
   markets: string[] = Array();
@@ -46,7 +48,9 @@ export class AddSecurityComponent implements OnInit {
   market: string;
   currency: string;
 
-  constructor(public dialog: MatDialog, public configservice: ConfigService) { }
+  constructor(public dialog: MatDialog, 
+              public configservice: ConfigService,
+              public quoteservice: QuoteService) { }
 
   ngOnInit() {
     // Queries the categories
@@ -83,7 +87,8 @@ export class AddSecurityComponent implements OnInit {
           this.addSecurityWatchGroup[m].addControl('selected'+d[i][2], new FormControl([true]));
           this.addSecurityWatchGroup[m].addControl('ticker'+d[i][2], new FormControl());
           this.addSecurityWatchGroup[m].addControl('test'+d[i][2], new FormControl());
-          this.disableMethod[i] = false;
+          this.disableMethod[d[i][2]] = false;
+          this.isTesting[d[i][2]] = false;
         }
     }
     console.log(this.addSecurityWatchGroup);
@@ -97,7 +102,14 @@ export class AddSecurityComponent implements OnInit {
     this.disableMethod[m] = !state; 
   }
 
-  testMethod(m: number) {
-    console.log('Testing method ' + m + ' with parameter [' + this.addSecurityWatchGroup[this.addSecurityCategoryGroup.get('category').value].get('ticker'+m).value + ']');
+  testMethod(m: [string, string, number, string]) {
+    let category = this.addSecurityCategoryGroup.get('category').value;
+    let ticker = this.addSecurityWatchGroup[category].get('ticker'+m[2]).value;
+    this.isTesting[m[2]] = true;
+    this.quoteservice.testMethod(m[3], ticker).subscribe(result => {
+      console.log(result);
+      this.isTesting[m[2]] = false;
+    });
   }
+
 }

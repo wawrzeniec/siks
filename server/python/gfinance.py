@@ -1,6 +1,6 @@
 import requests
 from error import GFINANCE_ERROR, PARSEERROR
-from http import retrieveURL
+from shttp import retrieveURL
 
 
 def makeQueryURL(ticker):
@@ -14,7 +14,7 @@ def parseGoogleURL(content):
     # toks = re.findall('<b>([0-9]+\.[0-9]+)</b>', content)
 
     toks = re.findall('<span class="[^"]+">(\d{0,3})\D{0,3}(\d{1,3}[\.\,]\d{0,3})</span>', content, re.UNICODE)
-	
+
     if len(toks) > 0:
         quote = ''.join(toks[0]).replace(',', '.')
     else:

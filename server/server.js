@@ -8,6 +8,7 @@ const ServerConfig = new scm();
 
 const userService = require('./userservice');
 const paramService = require('./paramservice');
+const quoteService = require('./quoteservice');
 
 // On startup connects to the config database
 const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
@@ -103,6 +104,16 @@ app.get('/config/markets', (req, res) => {
 	});
 });
 
+
+////////////////////////////////////
+// Quotes
+
+app.get('/quote', (req, res) => {
+	quoteService.getQuote(req.query, (result) => {
+		res.status(result.status);
+		res.json(result)
+	});
+});
 
 
 ////////////////////////////////////

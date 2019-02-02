@@ -36,3 +36,5 @@ def getStyleSheets(content):
     from bs4 import BeautifulSoup as BS
     bs = BS(content)
     return [x.get('href') for x in bs.find_all('link') if 'stylesheet' in x.get('rel')]
+
+# Have a look at tinycss2 for parsing the stylesheets

@@ -37,10 +37,11 @@ export class ConfigService {
     // 503 => SQLITE Error
     let params = new HttpParams();
     if (type) {
-      console.log('filtering by type = ' + type);
+      params = params.append('type', type);
     }
 
     const url: string = this.baseUrl + 'markets'; 
     return this.http.get(url, {params: params}) as Observable<serverPacket>;
   }
+
 }

@@ -50,7 +50,7 @@
     <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">            
       <ng-template matStepLabel>Watch methods</ng-template>              
       <div fxLayout="column" fxLayoutGap="30px">
-        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]">
+        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]; index as i">
           <mat-checkbox formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
           
           <mat-form-field class="tickerfield">
@@ -58,9 +58,11 @@
             <mat-hint>{{m[1]}}</mat-hint>
           </mat-form-field>
           
-          <button mat-button mat-raised-button color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m[2])">
+          <button mat-button mat-raised-button color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m)">
             Test
           </button>
+          <mat-progress-spinner color="primary" mode="indeterminate" [hidden]="isTesting[m[2]]" diameter=20>
+          </mat-progress-spinner>
         </div>
       </div>
     </form>
