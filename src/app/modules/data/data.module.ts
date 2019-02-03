@@ -26,7 +26,7 @@ export class securityDescriptor {
   category: string;
   markets: string;
   currency: string;
-  methods: methodDescriptor;
+  methods: methodDescriptor[];
   annualfee: number;
   watch: boolean;
 }
@@ -40,14 +40,18 @@ export class methodDescriptor {
 @NgModule({
   declarations: [
     userDataContainer,
-    serverPacket
+    serverPacket,
+    methodDescriptor, 
+    securityDescriptor
   ],
   imports: [
     CommonModule
   ],
   exports: [
     userDataContainer,
-    serverPacket
+    serverPacket,
+    methodDescriptor,
+    securityDescriptor
   ]
 })
 export class DataModule { 

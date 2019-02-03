@@ -24,7 +24,7 @@
       </mat-form-field>
 
       <mat-form-field class="app-formfield app-adds-marketformfield">
-          <mat-select formControlName="identifier" placeholder="Markets" multiple>
+          <mat-select formControlName="markets" placeholder="Markets" multiple>
               <mat-option class="app-select" *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
             </mat-select>
             <mat-hint>Choose one or more markets</mat-hint>

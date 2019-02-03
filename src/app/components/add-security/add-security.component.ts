@@ -7,6 +7,7 @@ import { serverPacket, securityDescriptor, methodDescriptor } from '@app/modules
 import { currencyList, scrapeMethods } from '@app/modules/assets/assets.module'
 import { ConfigService } from '@app/services/config.service'
 import { QuoteService } from '@app/services/quote.service'
+import { SecurityService } from '@app/services/security.service'
 
 interface FormGroupObject {
   [key: string]: FormGroup
@@ -49,12 +50,14 @@ export class AddSecurityComponent implements OnInit {
   currencyNames: string[] = Array();
   scrapeMethods: any = scrapeMethods;
 
-  methods: methodsDescriptor[];
+  methods: methodDescriptor[];
   security: securityDescriptor;
   
   constructor(public dialog: MatDialog, 
+              private dialogRef:MatDialogRef<AddSecurityComponent>,
               public configservice: ConfigService,
-              public quoteservice: QuoteService) { }
+              public quoteservice: QuoteService, 
+              public securityservice: SecurityService) { }
 
   ngOnInit() {
     // Queries the categories from the server
@@ -79,7 +82,7 @@ export class AddSecurityComponent implements OnInit {
     // Details form
     this.addSecurityDetailsGroup = new FormGroup({
       identifier: this.securityIdentifierCtrl,
-      market: new FormControl(),
+      markets: new FormControl(),
       currency: new FormControl()
     });
 
@@ -91,7 +94,7 @@ export class AddSecurityComponent implements OnInit {
       this.quote[m] = <quoteArray>{};
       let d = this.scrapeMethods[m];
         for (let i=0; i < d.length; i++) {
-          this.addSecurityWatchGroup[m].addControl('selected'+i, new FormControl([true]));
+          this.addSecurityWatchGroup[m].addControl('selected'+i, new FormControl(true));
           this.addSecurityWatchGroup[m].addControl('ticker'+i, new FormControl());
           this.addSecurityWatchGroup[m].addControl('test'+i, new FormControl());
           this.disableMethod[m][i] = false;
@@ -102,7 +105,7 @@ export class AddSecurityComponent implements OnInit {
 
     // Confirm form
     this.addSecurityConfirmGroup = new FormGroup({
-      watch: new FormControl([true])
+      watch: new FormControl(true)
     });
   }
 
@@ -131,12 +134,42 @@ export class AddSecurityComponent implements OnInit {
       console.log(result);
       this.isTesting[category][i] = false;
       this.quote[category][i] = result.data as string;
+    }, error => {
+      this.isTesting[category][i] = false;
+      this.quote[category][i] = "Error";
     });
   }
 
   // Callback for form submission
   addSecurity() {
+    this.security = new securityDescriptor();
+    this.methods = [] as methodsDescriptor[];
+    this.security.category = this.addSecurityCategoryGroup.get('category').value;
+    this.security.identifier = this.addSecurityDetailsGroup.get('identifier').value;
+    this.security.markets = this.addSecurityDetailsGroup.get('markets').value;
+    this.security.currency = this.addSecurityDetailsGroup.get('currency').value;
+    this.security.watch = this.addSecurityConfirmGroup.get('watch').value;
+    
+    // Extracts the methods
+    let m = this.scrapeMethods[this.security.category];
+    for (let i in m) {
+      if (this.addSecurityWatchGroup[this.security.category].get('selected'+i).value) {
+        // Method is selected, get values
+        let thismethod = new methodDescriptor();
+        thismethod.methodid = m[i][0];
+        thismethod.parameters = this.addSecurityWatchGroup[this.security.category].get('ticker'+i).value;
+        this.methods.push(thismethod);
+      }
+    }      
+    this.security.methods = this.methods;
 
+    // Now calls the security service instance to push this data into the DB
+    this.securityservice.addSecurity(this.security).subscribe(result => {
+      // Successfully inserted security => close dialog
+      this.dialog.close();
+    }, error => {
+      // Error occurred => handle error
+    });
   }
 
 }
