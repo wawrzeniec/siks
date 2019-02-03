@@ -21,6 +21,20 @@ export class serverPacket {
   err: Object;
 };
 
+export class securityDescriptor {
+  identifier: string;
+  category: string;
+  markets: string;
+  currency: string;
+  methods: methodDescriptor;
+  annualfee: number;
+  watch: boolean;
+}
+
+export class methodDescriptor {
+  methodid: string;
+  parameters: string;
+}
 
 
 @NgModule({

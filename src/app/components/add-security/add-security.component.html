@@ -49,20 +49,19 @@
   <mat-step *ngIf="!securityCategoryCtrl.hasError('required')" [stepControl]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
     <form [formGroup]="addSecurityWatchGroup[addSecurityCategoryGroup.get('category').value]">
       <ng-template matStepLabel>Watch methods</ng-template>              
-      <div fxLayout="column" fxLayoutGap="30px">
-        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]; index as i">
-          <mat-checkbox class="app-check app-adds-methodcheck" formControlName="selected{{m[2]}}" (change)="toggleButton(m[2])">{{m[0]}}</mat-checkbox>          
-          
+      <div fxLayout="column" fxLayoutGap="20px">
+        <div fxLayout="row wrap" fxLayoutGap="30px" fxLayoutAlign="left center" *ngFor="let m of scrapeMethods[addSecurityCategoryGroup.get('category').value]; index as i">
+          <mat-checkbox class="app-check app-adds-methodcheck" formControlName="selected{{i}}" (change)="toggleButton(i)">{{m[1]}}</mat-checkbox>          
           <mat-form-field class="app-formfield app-adds-tickerformfield">
-            <input matInput formControlName="ticker{{m[2]}}">
-            <mat-hint>{{m[1]}}</mat-hint>
+            <input matInput formControlName="ticker{{i}}">
+            <mat-hint>{{m[2]}}</mat-hint>
           </mat-form-field>
           
-          <button mat-button mat-raised-button class="app-btn app-adds-testbtn" color="primary" [disabled]="disableMethod[m[2]]" (click)="testMethod(m)" flex=20>
+          <button mat-button mat-raised-button class="app-btn app-adds-testbtn" color="primary" [disabled]="disableMethod[addSecurityCategoryGroup.get('category').value][i]" (click)="testMethod(m[0], i)" flex=20>
             Test
           </button>          
-          <div class="app-div app-adds-quotediv app-font-major" color="primary">{{quote[m[2]]}}
-          <mat-progress-spinner color="primary" mode="indeterminate" *ngIf="isTesting[m[2]]" diameter=20>
+          <div class="app-div app-adds-quotediv app-font-major" color="primary">{{quote[addSecurityCategoryGroup.get('category').value][i]}}
+          <mat-progress-spinner color="primary" mode="indeterminate" *ngIf="isTesting[addSecurityCategoryGroup.get('category').value][i]" diameter=20>
           </mat-progress-spinner>
           </div>
         </div>

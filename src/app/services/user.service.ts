@@ -23,11 +23,7 @@ export class UserService {
     // 200 => OK
     // 503 => SQLITE Error
     // 409 => User already exists
-    console.log('UserService: Add User');
-    console.log(userData);
-
     const url: string = this.baseUrl; 
-    console.log(url);
     return this.http.post(url, userData) as Observable<serverPacket>;
   }
 
@@ -36,11 +32,7 @@ export class UserService {
     // 200 => User exists
     // 503 => SQLITE Error
     // 404 => Username is available
-    console.log('UserService: check user');
-    console.log(userData);
-
     const url: string = this.baseUrl + userData.userName; 
-    console.log(url);
     return this.http.head(url) as Observable<serverPacket>;
   }
 

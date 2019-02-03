@@ -11,7 +11,7 @@ import { MenuComponent } from '@app/components/menu/menu.component';
 import { ToolbarComponent } from '@app/components/toolbar/toolbar.component';
 import { DisableControlDirective } from '@app/directives/disable-control.directive'
 import { HttpClientModule }    from '@angular/common/http';
-import { AddSecurityComponent } from './components/add-security/add-security.component';
+import { AddSecurityComponent } from '@app/components/add-security/add-security.component';
 
 @NgModule({
   declarations: [

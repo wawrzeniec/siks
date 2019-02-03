@@ -1,23 +1,27 @@
 $marginBottom: 20px;
 
+.app-adds-flex {
+    display: flex;
+}
+
 .app-adds-tickerformfield {
     width: 100px;
     max-width:200px;
-    flex: 33;    
+    flex: 40;    
     margin-bottom: $marginBottom;
 }
 
 .app-adds-methodcheck {
-    width: 100px;
+    width: 120px;
     max-width:200px;
-    flex: 33;
+    flex: 40;
     margin-bottom: $marginBottom;
 }
 
 .app-adds-testbtn {
     width: 60px;
     max-width:100px;
-    flex: 33;
+    flex: 20;
     margin-bottom: $marginBottom;
 }
 
