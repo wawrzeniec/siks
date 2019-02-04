@@ -40,18 +40,21 @@ function addSecurity(db, security, callback) {
                         }
                         else {
                             // Finally we insert the row in the securities table here
+                            console.log(result);
                             let marketids = [];
                             result.data.forEach( (v, i) => {
                                 marketids.push(v.a);
                             });
-                            let stmt = 'INSERT INTO securities (identifier, typeid, categoryid, marketid, currency, methods) VALUES ($identifier, $typeid, $categoryid, $marketid, $currency, $methods)';
+                            console.log(marketids);
+                            let stmt = 'INSERT INTO securities (identifier, typeid, categoryid, marketid, currency, methods, watch) VALUES ($identifier, $typeid, $categoryid, $marketid, $currency, $methods, $watch)';
                             db.run(stmt, {
                                 $identifier: security.identifier,
                                 $typeid: typeid,
                                 $categoryid: categoryid,
                                 $marketid: JSON.stringify(marketids),
                                 $currency: security.currency,
-                                $methods: JSON.stringify(security.methods)
+                                $methods: JSON.stringify(security.methods),
+                                $watch: security.watch
                                 }, 
                                 (err) => {
                                     if (err) {
@@ -75,7 +78,6 @@ function addSecurity(db, security, callback) {
         }
     });
 }
-
 
 module.exports = {
     addSecurity
