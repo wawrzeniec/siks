@@ -3,7 +3,7 @@ import { ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@ang
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { serverPacket, securityDescriptor, methodDescriptor } from '@app/modules/data/data.module'
+import { serverPacket, securityDescriptor, methodDescriptor, ASSET_TYPES } from '@app/modules/data/data.module'
 import { currencyList, scrapeMethods } from '@app/modules/assets/assets.module'
 import { ConfigService } from '@app/services/config.service'
 import { QuoteService } from '@app/services/quote.service'
@@ -143,7 +143,8 @@ export class AddSecurityComponent implements OnInit {
   // Callback for form submission
   addSecurity() {
     this.security = new securityDescriptor();
-    this.methods = [] as methodsDescriptor[];
+    this.methods = [] as methodDescriptor[];
+    this.security.type = ASSET_TYPES.SECURITY;
     this.security.category = this.addSecurityCategoryGroup.get('category').value;
     this.security.identifier = this.addSecurityDetailsGroup.get('identifier').value;
     this.security.markets = this.addSecurityDetailsGroup.get('markets').value;
@@ -166,9 +167,10 @@ export class AddSecurityComponent implements OnInit {
     // Now calls the security service instance to push this data into the DB
     this.securityservice.addSecurity(this.security).subscribe(result => {
       // Successfully inserted security => close dialog
-      this.dialog.close();
+      this.dialogRef.close();
     }, error => {
       // Error occurred => handle error
+      // We should create an alert dialog class to handle these situations
     });
   }
 

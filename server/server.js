@@ -120,7 +120,7 @@ app.get('/quote', (req, res) => {
 // Securities
 
 app.post('/security', (req, res) => {
-	securityService.addSecurity(req.body, (result) => {
+	securityService.addSecurity(configdb, req.body, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});

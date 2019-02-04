@@ -20,6 +20,28 @@ function getTypes(db, params, callback) {
     });
 }
 
+function getTypeId(db, typename, callback) {
+    let stmt = 'SELECT typeid FROM types WHERE typename=$typename';
+    db.get(stmt, {
+            $typename: typename
+        },
+        (err, rows) => {
+        if (err) {
+            return callback({
+                status: 500,
+                reason: 'failed to query typeid for type ' + typename,
+                err: err
+            });
+        }
+        else {
+            return callback({
+                status: 200, 
+                data: rows
+            });
+        }
+    });
+}
+
 function getCategories(db, params, callback) {
     let stmt = 'SELECT * from categories';
     let par = {};
@@ -35,6 +57,29 @@ function getCategories(db, params, callback) {
             return callback({
                 status: 500,
                 reason: 'failed to query categories from database',
+                err: err
+            });
+        }
+        else {
+            return callback({
+                status: 200, 
+                data: rows
+            });
+        }
+    });
+}
+
+function getCategoryId(db, typeid, categoryname, callback) {
+    let stmt = 'SELECT categoryid FROM categories WHERE categoryname=$categoryname AND typeid=$typeid';
+    db.get(stmt, {
+            $categoryname: categoryname,
+            $typeid: typeid
+        },
+        (err, rows) => {
+        if (err) {
+            return callback({
+                status: 500,
+                reason: 'failed to query categoryid for category [' + categoryname + '] and typeid ' + typeid,
                 err: err
             });
         }
@@ -75,8 +120,45 @@ function getMarkets(db, params, callback) {
     });
 }
 
+function getMarketIds(db, typeid, marketnames, callback) {
+    let stmt = 'SELECT marketid FROM markets WHERE typeid=$typeid AND marketname IN (';
+    let params = {$typeid: typeid};
+    marketnames.forEach( (name, i) => {
+        if (i>0) {
+            stmt += ', ';
+        }        
+        stmt += '$name'+i;
+        params['$name'+i] = name;  
+    });
+    stmt += ')';
+    console.log(stmt);
+    console.log(params)
+    //let stmt = 'SELECT marketid FROM markets WHERE typeid=$typeid AND marketname IN ("America","Europe")';    
+    //let fmarketnames = marketnames.length === 0 ? '' : '"' + marketnames.join('","') + '"';
+    //console.log(fmarketnames);
+    db.all(stmt, params,
+        (err, rows) => {
+        if (err) {
+            return callback({
+                status: 500,
+                reason: 'failed to query marketids for markets [' + marketnames + '] and typeid ' + typeid,
+                err: err
+            });
+        }
+        else {
+            return callback({
+                status: 200, 
+                data: rows
+            });
+        }
+    });
+}
+
 module.exports = {
     getTypes,
+    getTypeId,
     getCategories,
-    getMarkets
+    getCategoryId,
+    getMarkets,
+    getMarketIds
 };

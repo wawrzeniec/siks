@@ -22,6 +22,7 @@ export class serverPacket {
 };
 
 export class securityDescriptor {
+  type: string;
   identifier: string;
   category: string;
   markets: string;
@@ -36,6 +37,11 @@ export class methodDescriptor {
   parameters: string;
 }
 
+export enum ASSET_TYPES {
+  CASH = 'Cash',
+  SECURITY = 'Security',
+  OTHER = 'Other'
+};
 
 @NgModule({
   declarations: [
