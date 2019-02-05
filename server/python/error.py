@@ -22,8 +22,32 @@ class YFINANCE_ERROR(Exception):
         print(self.msg)
 
 class GFINANCE_ERROR(Exception):
-    def __init__(self, ticker, market):
-        self.msg = """Error parsing google finance result for ticker {:s}:{:s}""".format(market, ticker)
+    def __init__(self, ticker):
+        self.msg = """Error parsing google finance result for ticker {:s}""".format(ticker)
+        self.args = (self.msg, )
+
+    def __str__(self):
+        print(self.msg)
+
+class FINANZENCH_ERROR(Exception):
+    def __init__(self, ticker):
+        self.msg = """Error parsing finanzen.ch result for ticker {:s}""".format(ticker)
+        self.args = (self.msg, )
+
+    def __str__(self):
+        print(self.msg)
+
+class FUNDINFO_ERROR(Exception):
+    def __init__(self, ticker):
+        self.msg = """Error parsing fundinfo.com result for ticker {:s}""".format(ticker)
+        self.args = (self.msg, )
+
+    def __str__(self):
+        print(self.msg)
+
+class ONVISTA_ERROR(Exception):
+    def __init__(self, ticker):
+        self.msg = """Error parsing onvista.de result for ticker {:s}""".format(ticker)
         self.args = (self.msg, )
 
     def __str__(self):

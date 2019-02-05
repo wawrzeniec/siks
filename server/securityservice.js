@@ -43,10 +43,20 @@ function addSecurity(db, security, callback) {
                             console.log(result);
                             let marketids = [];
                             result.data.forEach( (v, i) => {
-                                marketids.push(v.a);
+                                marketids.push(v.marketid);
                             });
-                            console.log(marketids);
-                            let stmt = 'INSERT INTO securities (identifier, typeid, categoryid, marketid, currency, methods, watch) VALUES ($identifier, $typeid, $categoryid, $marketid, $currency, $methods, $watch)';
+                            console.log(JSON.stringify(marketids));
+                            console.log(JSON.stringify(security.methods));
+                            console.log({
+                                $identifier: security.identifier,
+                                $typeid: typeid,
+                                $categoryid: categoryid,
+                                $marketid: JSON.stringify(marketids),
+                                $currency: security.currency,
+                                $methods: JSON.stringify(security.methods),
+                                $watch: security.watch ? 1 : 0
+                                });
+                            let stmt = 'INSERT INTO securities (identifier, typeid, categoryid, marketids, currency, methods, watch) VALUES ($identifier, $typeid, $categoryid, $marketid, $currency, $methods, $watch)';
                             db.run(stmt, {
                                 $identifier: security.identifier,
                                 $typeid: typeid,
@@ -54,8 +64,8 @@ function addSecurity(db, security, callback) {
                                 $marketid: JSON.stringify(marketids),
                                 $currency: security.currency,
                                 $methods: JSON.stringify(security.methods),
-                                $watch: security.watch
-                                }, 
+                                $watch: security.watch ? 1 : 0
+                                },
                                 (err) => {
                                     if (err) {
                                         return callback({

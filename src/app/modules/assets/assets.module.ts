@@ -13,8 +13,8 @@ export const scrapeMethods: any = {
     ['yf', 'Yahoo finance', 'Yahoo finance ticker']
   ],
   'Fund': [
-    ['other1', 'Other1', 'Enter other1 prop'],
-    ['other2', 'Other2', 'Enter other2 prop']
+    ['fch', 'Finanzen.ch', 'Valor or ISIN'],
+    ['ov', 'Onvista.de', 'ISIN']
   ]
 };
 

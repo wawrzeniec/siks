@@ -12,9 +12,15 @@ try:
     elif method == 'yf' or method == "1":
         import yfinance as yf
         quote = yf.getQuote(ticker)
+    elif method == 'fch' or method == "2":
+        import finanzench as fc
+        quote = fc.getQuote(ticker)
+    elif method == 'ov' or method == "3":
+        import onvista as ov
+        quote = ov.getQuote(ticker)
     else:
         print('{"status": 500, "reason": "Unknown method=%s"}' %
-        method, file=sys.stderr)
+            method, file=sys.stderr)
         sys.exit(1)
 
     print ('{"status": 200, "data":%g}' % quote, file=sys.stdout)

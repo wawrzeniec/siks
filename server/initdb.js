@@ -267,18 +267,18 @@ function createDB(db, callback)
   });
   
   stmt = `CREATE TABLE securities (
-    securityid INTEGER,
+    securityid INTEGER PRIMARY KEY,
     identifier TEXT,
     typeid INTEGER,
     categoryid INTEGER,
-    marketid INTEGER,
+    marketids TEXT,
     currency TEXT,
     methods TEXT,
     annualfee REAL,
+    watch INTEGER,
     userid INTEGER,
     FOREIGN KEY(typeid) REFERENCES types(typeid),
     FOREIGN KEY(categoryid) REFERENCES categories(categoryid),
-    FOREIGN KEY(marketid) REFERENCES markets(marketid),
     FOREIGN KEY(userid) REFERENCES userprefs(userid)
     )`;
   db.run(stmt, [], (err) => {
@@ -288,6 +288,8 @@ function createDB(db, callback)
         reason: 'failed to create securities table',
         message: err.message
       });
+    } else {
+      console.log('Successfully created table securities');
     }
   });
 
