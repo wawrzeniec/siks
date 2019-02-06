@@ -42,3 +42,8 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Files I don't want on github
+server/db
+server/siks-server.cert
+server/siks-server.key

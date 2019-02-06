@@ -4,17 +4,6 @@ from error import YFINANCE_ERROR, PARSEERROR, HTTP_ERROR
 
 # yahooticker='IUSC.SW'
 
-marketsymbol = {'SWX': '.SW',
-                'NASDAQ': '',
-                'NYSE': '',
-                'LSE': '.L',
-                'ENX': '.NX',
-                'ETR': '.DE',
-                'FRA': '.F',
-                'VTX': '.VX',
-
-                }
-
 def makeQueryURL(yahooticker):
     url = 'https://finance.yahoo.com/quote/' + yahooticker
     return url
@@ -45,10 +34,10 @@ def parseYahooURL(content):
 
     # This should be a bit more reliable as it extracts the number with the largest
     # Fx(**px) class which sets the font size
-    toks = re.findall('<span.*?Fz\((\d+)px\).*?>(\d{0,3})\D{0,3}(.*?)</span>', content, re.UNICODE)
+    toks = re.findall(r'<span.*?Fz\((\d+)px\).*?>(\d{0,3})(\D{0,3})(\d{0,3})(\D{0,3})(\d{0,3}).*?</span>', content, re.UNICODE)
     if len(toks) > 0:
         sizes = [int(x[0]) for x in toks]
-        values = [''.join(x[1:]).replace(',', '.') for x in toks]
+        values = [''.join(x[1:]).replace(',', '') for x in toks]
         squote = values[np.argmax(sizes)]
         quote = parseNumber(squote)
     else:
@@ -59,4 +48,7 @@ def parseYahooURL(content):
 def parseNumber(x):
     import re
     toks = re.findall('(\d{0,3})\D{0,3}(\d{1,3}[.,]\d{0,3})', x)
-    return ''.join(toks[0])
+    if len(toks) > 0:
+        return ''.join(toks[0])
+    else:
+        raise PARSEERROR

@@ -1,5 +1,5 @@
 import requests
-from error import GFINANCE_ERROR, PARSEERROR
+from error import GFINANCE_ERROR, PARSEERROR, HTTP_ERROR
 from shttp import retrieveURL
 
 
