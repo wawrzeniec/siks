@@ -12,6 +12,7 @@ class HTTP_ERROR(Exception):
     def __str__(self):
         return self.message
 
+
 class YFINANCE_ERROR(Exception):
     def __init__(self, yahooticker):
         self.message = """Error parsing yahoo finance result for ticker {:s}""".format(yahooticker)
@@ -19,6 +20,7 @@ class YFINANCE_ERROR(Exception):
 
     def __str__(self):
         return self.message
+
 
 class GFINANCE_ERROR(Exception):
     def __init__(self, ticker):
@@ -28,6 +30,27 @@ class GFINANCE_ERROR(Exception):
     def __str__(self):
         return self.message
 
+
+class CURRENCY_ERROR(Exception):
+    def __init__(self, ticker):
+        self.message = """Error getting exchange rate for currency {:s}""".format(ticker)
+        self.args = (self.message, )
+
+    def __str__(self):
+        return self.message
+
+
+class GETQUOTE_ERROR(Exception):
+    def __init__(self, method, ticker, reason):
+        self.message = """Error getting quote for method {:s} and ticker {:s}""".format(method, ticker)
+        self.reason = reason
+        self.args = (self.message, self.reason)
+
+    def __str__(self):
+        return self.message
+
+
+
 class FINANZENCH_ERROR(Exception):
     def __init__(self, ticker):
         self.message = """Error parsing finanzen.ch result for ticker {:s}""".format(ticker)
@@ -35,6 +58,7 @@ class FINANZENCH_ERROR(Exception):
 
     def __str__(self):
         return self.message
+
 
 class FUNDINFO_ERROR(Exception):
     def __init__(self, ticker):
@@ -44,6 +68,7 @@ class FUNDINFO_ERROR(Exception):
     def __str__(self):
         return self.message
 
+
 class ONVISTA_ERROR(Exception):
     def __init__(self, ticker):
         self.message = """Error parsing onvista.de result for ticker {:s}""".format(ticker)
@@ -51,6 +76,7 @@ class ONVISTA_ERROR(Exception):
 
     def __str__(self):
         return self.message
+
 
 class PARSEERROR(Exception):
     def __init__(self):

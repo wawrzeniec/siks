@@ -316,7 +316,6 @@ function createDB(db, callback)
     securityid INTEGER,
     timestamp TEXT,
     value REAL,
-    chfvalue REAL,
     FOREIGN KEY(securityid) REFERENCES securities(securityid)
     )`;
   db.run(stmt, [], (err) => {
@@ -324,6 +323,20 @@ function createDB(db, callback)
       return callback( {
         status: 'error',
         reason: 'failed to create history table',
+        message: err.message
+      });
+    }
+  });
+
+  stmt = `CREATE TABLE currencies (    
+    timestamp TEXT,
+    value REAL,    
+    )`;
+  db.run(stmt, [], (err) => {
+    if (err) {  
+      return callback( {
+        status: 'error',
+        reason: 'failed to create currencies table',
         message: err.message
       });
     }

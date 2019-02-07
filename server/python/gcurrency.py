@@ -3,8 +3,8 @@ from error import GFINANCE_ERROR, PARSEERROR, HTTP_ERROR
 from shttp import retrieveURL
 
 
-def makeQueryURL(ticker):
-    url = 'https://www.google.com/search?q=' + ticker
+def makeQueryURL(currency):
+    url = 'https://www.google.com/search?q=' + currency + 'CHF'
     return url
 
 def parseURL(content):
@@ -13,7 +13,7 @@ def parseURL(content):
     # this doesn't work anymore...
     # toks = re.findall('<b>([0-9]+\.[0-9]+)</b>', content)
 
-    toks = re.findall('<span class="[^"]+">(\d{0,3})\D{0,3}(\d{1,3}[\.\,]\d{0,3})</span>', content, re.UNICODE)
+    toks = re.findall('<span.*?data-value="([\d\.]+)"', content)
 
     if len(toks) > 0:
         quote = ''.join(toks[0]).replace(',', '.')
@@ -23,13 +23,13 @@ def parseURL(content):
     return quote
 
 
-def getQuote(ticker):
-    url = makeQueryURL(ticker)
+def getQuote(currency):
+    url = makeQueryURL(currency)
     content = retrieveURL(url)
     try:
         quote = parseURL(content)
     except PARSEERROR:
-        raise GFINANCE_ERROR(ticker)
+        raise GFINANCE_ERROR(currency)
 
     return float(quote)
 

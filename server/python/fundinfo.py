@@ -1,10 +1,10 @@
 import requests
-from error import GFINANCE_ERROR, PARSEERROR, HTTP_ERROR
+from error import FUNDINFO_ERROR, PARSEERROR
 from shttp import retrieveURL
 
 
 def makeQueryURL(ticker):
-    url = 'https://www.google.com/search?q=' + ticker
+    url = 'https://www.fundinfo.com/fr/product/' + ticker
     return url
 
 def parseURL(content):
@@ -13,7 +13,8 @@ def parseURL(content):
     # this doesn't work anymore...
     # toks = re.findall('<b>([0-9]+\.[0-9]+)</b>', content)
 
-    toks = re.findall('<span class="[^"]+">(\d{0,3})\D{0,3}(\d{1,3}[\.\,]\d{0,3})</span>', content, re.UNICODE)
+    toks = re.findall('<table class=.*?pricebox[^>]*?>.*?tr.*?th.*?(\d{0,3})\D{0,3}(\d{1,3}[\.\,]\d{0,3})', content,
+                      re.UNICODE | re.DOTALL)
 
     if len(toks) > 0:
         quote = ''.join(toks[0]).replace(',', '.')
@@ -29,7 +30,7 @@ def getQuote(ticker):
     try:
         quote = parseURL(content)
     except PARSEERROR:
-        raise GFINANCE_ERROR(ticker)
+        raise FINANZENCH_ERROR(ticker)
 
     return float(quote)
 

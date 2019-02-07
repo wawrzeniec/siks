@@ -47,7 +47,7 @@ def parseYahooURL(content):
 
 def parseNumber(x):
     import re
-    toks = re.findall('(\d{0,3})\D{0,3}(\d{1,3}[.,]\d{0,3})', x)
+    toks = re.findall('(\d{0,3})\D{0,3}(\d{1,3}[.,]\d{0,5})', x)
     if len(toks) > 0:
         return ''.join(toks[0])
     else:
