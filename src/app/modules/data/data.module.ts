@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+export class loginDataContainer {
+  userName: string;
+  password: string;
+}
+
 export class userDataContainer {
   userid: number;
   userName: string;
@@ -45,6 +50,7 @@ export enum ASSET_TYPES {
 
 @NgModule({
   declarations: [
+    loginDataContainer,
     userDataContainer,
     serverPacket,
     methodDescriptor, 
@@ -54,6 +60,7 @@ export enum ASSET_TYPES {
     CommonModule
   ],
   exports: [
+    loginDataContainer,
     userDataContainer,
     serverPacket,
     methodDescriptor,

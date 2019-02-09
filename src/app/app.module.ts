@@ -12,6 +12,7 @@ import { ToolbarComponent } from '@app/components/toolbar/toolbar.component';
 import { DisableControlDirective } from '@app/directives/disable-control.directive'
 import { HttpClientModule }    from '@angular/common/http';
 import { AddSecurityComponent } from '@app/components/add-security/add-security.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { AddSecurityComponent } from '@app/components/add-security/add-security.
     ToolbarComponent,
     DisableControlDirective,
     AddSecurityComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

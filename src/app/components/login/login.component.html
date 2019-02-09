@@ -1,0 +1,32 @@
+<h2 mat-dialog-title class="app-dialog-title">Log in</h2>
+<mat-dialog-content class="" class="app-dialog">
+  <form [formGroup]="loginFormGroup">
+      <mat-form-field class="app-formfield app-login-usernameformfield">
+        <input matInput placeholder="User Name" autocomplete="false"
+                formControlName="name"  [errorStateMatcher]="matcher" 
+                required>
+        <mat-hint>Enter your user name</mat-hint>
+        <mat-error *ngIf="userNameCtrl.hasError('required')">
+          User name is required
+        </mat-error>        
+      </mat-form-field>
+      <mat-form-field class="app-formfield app-login-passwordformfield" >
+        <input matInput type="password" placeholder="Password" formControlName="password"
+              [errorStateMatcher]="matcher" 
+              required>
+        <mat-error *ngIf="passwordCtrl.hasError('required')">
+          Password is required
+        </mat-error>
+      </mat-form-field><br><br>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutGap="32px">  
+  <button class="app-button app-login-submitbutton app-bg-major" mat-flat-button mat-dialog-submit 
+  [disabled]="loginFormGroup.invalid" (click)="submitForm()">Submit</button>
+</mat-dialog-actions>
+
+
+
+
+
+  

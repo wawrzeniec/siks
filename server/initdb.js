@@ -276,6 +276,7 @@ function createDB(db, callback)
     methods TEXT,
     annualfee REAL,
     watch INTEGER,
+    lastupdate TEXT,
     userid INTEGER,
     FOREIGN KEY(typeid) REFERENCES types(typeid),
     FOREIGN KEY(categoryid) REFERENCES categories(categoryid),
@@ -330,7 +331,7 @@ function createDB(db, callback)
 
   stmt = `CREATE TABLE currencies (    
     timestamp TEXT,
-    value REAL,    
+    value REAL    
     )`;
   db.run(stmt, [], (err) => {
     if (err) {  

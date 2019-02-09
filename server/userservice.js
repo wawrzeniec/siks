@@ -1,6 +1,9 @@
 const sqlite3 = require('sqlite3');
 const bcrypt = require('bcrypt');
-const saltRounds = 10; // Number of rounds to generate salt for passwords
+const scm = require('./server-config');
+
+const ServerConfig = new scm();
+const saltRounds = ServerConfig.saltRounds; // Number of rounds to generate salt for passwords
 
 // Get the list of users in the database
 function getUsers(db, params, callback) {

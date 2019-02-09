@@ -10,6 +10,30 @@ const userService = require('./userservice');
 const paramService = require('./paramservice');
 const quoteService = require('./quoteservice');
 const securityService = require('./securityservice');
+const authService = require('./authservice');
+
+// Session management
+var session = require('express-session');
+var SQLiteStore = require('connect-sqlite3')(session);
+
+
+//app.set('views', __dirname + '/views');
+//app.set('view engine', 'ejs');
+
+app.use(session({
+	store: new SQLiteStore,
+	secret: 'kusoJiJiii',
+	name: 'siks.id',
+	proxy: true,
+	cookie: { 
+		maxAge: 7 * 24 * 60 * 60 * 1000 ,
+		secure: true,
+		httpOnly: false
+	}, // 1 week
+	resave: false,
+	saveUninitialized: false,
+	}));
+//app.use(express.static(__dirname + '/public'));
 
 // On startup connects to the config database
 const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
@@ -22,6 +46,7 @@ const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
 });
 
 // Enable CORS
+// TODO: Enable only for our app not for everyone
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -30,6 +55,27 @@ app.use(function(req, res, next) {
 
 // Body parser for POST requests data
 app.use(require('body-parser').json());
+
+// Authentication API
+// This handles the login/sessions
+app.post('/login/', (req, res) => {
+	console.log(req.session);
+	authService.login(configdb, req.body, (result) => {
+		if (result.status == 200) {
+			console.log('OK')
+			req.session.loggedin = true;
+			req.session.userid = result.data;
+		}
+		else
+		{
+			console.log('NOK')
+			req.session.loggedin = false;
+		}
+		console.log(req.session);
+		res.status(result.status);
+		res.json({result});
+	});
+});
 
 // Configuration API
 // This is the endpoint to add a new user

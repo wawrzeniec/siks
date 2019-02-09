@@ -1,8 +1,8 @@
 <h2 mat-dialog-title class="app-dialog-title">Add user</h2>
-<mat-dialog-content class="add-user-dialog" class="app-dialog">
+<mat-dialog-content class="app-dialog app-adduser-dialogcontent">
   <form [formGroup]="addUserFormGroup">
-      <mat-form-field>
-        <input matInput placeholder="User Name" autocomplete="false"
+      <mat-form-field class="app-formfield app-adduser-usernameformfield">
+        <input class="app-input" matInput placeholder="User Name" autocomplete="false"
                 formControlName="name"  [errorStateMatcher]="matcher" 
                 (focusin)="initConfirmPassword()" 
                 required>
@@ -18,8 +18,8 @@
         </mat-error>        
       </mat-form-field><br><br>
       
-      <mat-form-field>
-        <input matInput placeholder="Email address" autocomplete="false"
+      <mat-form-field class="app-formfield app-adduser-emailformfield">
+        <input class="app-input" matInput placeholder="Email address" autocomplete="false"
                 formControlName="email"  [errorStateMatcher]="matcher" 
                 required>
         <mat-hint>Enter your email address</mat-hint>
@@ -31,8 +31,8 @@
         </mat-error>        
       </mat-form-field><br><br>
 
-      <mat-form-field>
-        <input matInput type="password" placeholder="Password" formControlName="password"
+      <mat-form-field class="app-formfield app-adduser-passwordformfield">
+        <input matInput class="app-input" type="password" placeholder="Password" formControlName="password"
               [errorStateMatcher]="matcher" 
               required>
         <mat-error *ngIf="passwordCtrl.hasError('pattern') && !passwordCtrl.hasError('maxlength') && !passwordCtrl.hasError('minlength') && !passwordCtrl.hasError('required')">
@@ -46,8 +46,8 @@
         </mat-error> 
       </mat-form-field><br><br>
 
-      <mat-form-field>
-        <input matInput type="password" placeholder="Confirm password" formControlName="confirmPassword"
+      <mat-form-field class="app-formfield app-adduser-confirmpasswordformfield">
+        <input class="app-input" matInput type="password" placeholder="Confirm password" formControlName="confirmPassword"
               [errorStateMatcher]="matcher" [disableControl]="confirmPasswordDisabled"
               required>
           <mat-error *ngIf="addUserFormGroup.hasError('passwordMismatch')">
@@ -57,9 +57,9 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions fxLayout="row" fxLayoutGap="32px">  
-  <button mat-flat-button mat-dialog-submit class="app-bg-major" 
+  <button mat-flat-button mat-dialog-submit class="app-button app-bg-major" 
   [disabled]="addUserFormGroup.invalid" (click)="submitForm()">Create user</button>
-  <button mat-flat-button mat-dialog-close class="app-bg-major">Cancel</button>
+  <button mat-flat-button mat-dialog-close class="app-button app-bg-major">Cancel</button>
 </mat-dialog-actions>
 
 
