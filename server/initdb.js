@@ -330,6 +330,7 @@ function createDB(db, callback)
   });
 
   stmt = `CREATE TABLE currencies (    
+    symbol TEXT,
     timestamp TEXT,
     value REAL    
     )`;

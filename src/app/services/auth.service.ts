@@ -14,8 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) { 
     this.serverIP = window.location.hostname;
     let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login/';
-    console.log(this.baseUrl);
+    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login/';    
   }
 
   postLogin(loginData: loginDataContainer): Observable<serverPacket> {
@@ -24,7 +23,14 @@ export class AuthService {
     // 503 => SQLITE Error
     // 401 => Authentication failed
     const url: string = this.baseUrl; 
-    return this.http.post(url, loginData) as Observable<serverPacket>;
+    return this.http.post(url, loginData, { withCredentials: true }) as Observable<serverPacket>;
   }
 
+  checkSession(): Observable<serverPacket> {
+    // Add user: returns the http response code
+    // 200 => OK
+    // 403 => Need to reauthenticate
+    const url: string = this.baseUrl; 
+    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+  }
 }

@@ -63,6 +63,23 @@ function login(db, params, callback) {
     });
 }
 
+function checkSession(session, callback)
+{
+    console.log(session);
+    if (session.loggedin) {        
+        return callback({
+        status: 200,
+        });
+    }
+    else {
+        return callback({
+            status: 401,
+            reason: 'Session invalid',
+        });
+    }
+}
+
 module.exports = {
-    login
+    login,
+    checkSession
 };

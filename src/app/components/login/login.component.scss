@@ -1,11 +1,29 @@
-.app-login-usernameformfield{
+$marginBottom: 20px;
 
+.app-login-flex {
+    display: flex;
+}
+
+.app-login-usernameformfield{
+    display:block;
+    max-width: 200px;
+    margin-bottom: $marginBottom;
 }
 
 .app-login-passwordformfield{
-
+    display:block;
+    max-width: 200px;
+    margin-bottom: $marginBottom;
 }
 
 .app-login-submitbutton{
-    
+    display:block;
+    max-width: 200px;
+    margin-bottom: $marginBottom;
+}
+
+.app-login-wrongcred{
+    display:block;
+    max-width: 200px;
+    margin-bottom: $marginBottom;
 }

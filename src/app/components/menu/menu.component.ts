@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { AddUserComponent } from '../add-user/add-user.component'
-import { AddSecurityComponent } from '../add-security/add-security.component'
+import { AddUserComponent } from '@app/components/add-user/add-user.component'
+import { AddSecurityComponent } from '@app/components/add-security/add-security.component'
 
 @Component({
   selector: 'app-menu',

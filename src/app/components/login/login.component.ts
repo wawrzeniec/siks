@@ -32,8 +32,11 @@ export class LoginComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   loginData: loginDataContainer = new loginDataContainer();
   loginFormGroup: FormGroup;
+  wrongCred: boolean = false;
 
-  constructor(public dialog: MatDialog, public authService: AuthService) { }
+  constructor(public dialog: MatDialog, 
+              private dialogRef:MatDialogRef<AddSecurityComponent>,
+              public authService: AuthService) { }
 
   ngOnInit() {
     this.loginFormGroup = new FormGroup({
@@ -46,7 +49,14 @@ export class LoginComponent implements OnInit {
     console.log('Logging in...');
     this.loginData.userName = this.userNameCtrl.value;
     this.loginData.password = this.loginFormGroup.get('password').value;
-    this.authService.postLogin(this.loginData).subscribe(resp => {
-      console.log(resp)});
+    this.authService.postLogin(this.loginData).subscribe(result => {
+      // Successfully inserted security => close dialog
+      this.isOpen = false;
+      this.dialogRef.close();
+    }, error => {
+      // Error occurred => handle error
+      // We should create an alert dialog class to handle these situations
+      this.wrongCred = true;
+    });
   }
 }

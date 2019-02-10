@@ -35,7 +35,8 @@ import { LoginComponent } from './components/login/login.component';
   ],
   entryComponents: [
     AddUserComponent,
-    AddSecurityComponent
+    AddSecurityComponent,
+    LoginComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

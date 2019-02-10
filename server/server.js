@@ -4,6 +4,7 @@ const fs = require('fs')
 const app = express();
 const scm = require('./server-config');
 const sqlite3 = require('sqlite3');
+const cors = require('cors');
 const ServerConfig = new scm();
 
 const userService = require('./userservice');
@@ -11,6 +12,10 @@ const paramService = require('./paramservice');
 const quoteService = require('./quoteservice');
 const securityService = require('./securityservice');
 const authService = require('./authservice');
+
+const ip = require('ip');
+const authorizedOrigin = 'https://' + ip.address() + ':4200';
+console.log(authorizedOrigin);
 
 // Session management
 var session = require('express-session');
@@ -26,7 +31,7 @@ app.use(session({
 	name: 'siks.id',
 	proxy: true,
 	cookie: { 
-		maxAge: 7 * 24 * 60 * 60 * 1000 ,
+		maxAge: 1000*30, //7 * 24 * 60 * 60 * 1000 ,
 		secure: true,
 		httpOnly: false
 	}, // 1 week
@@ -47,8 +52,16 @@ const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
 
 // Enable CORS
 // TODO: Enable only for our app not for everyone
+/*app.use(cors({
+    allowedOrigins: [
+		'localhost:4200',
+		'192.168.1.23'
+	]})
+);*/
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
+	console.log(req.headers);
+	res.header("Access-Control-Allow-Origin", authorizedOrigin);
+	res.header("Access-Control-Allow-Credentials", true);
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
   });
@@ -56,24 +69,31 @@ app.use(function(req, res, next) {
 // Body parser for POST requests data
 app.use(require('body-parser').json());
 
+///////////////////////////////////////////////
 // Authentication API
 // This handles the login/sessions
+///////////////////////////////////////////////
 app.post('/login/', (req, res) => {
 	console.log(req.session);
 	authService.login(configdb, req.body, (result) => {
 		if (result.status == 200) {
-			console.log('OK')
 			req.session.loggedin = true;
 			req.session.userid = result.data;
 		}
 		else
 		{
-			console.log('NOK')
 			req.session.loggedin = false;
 		}
 		console.log(req.session);
 		res.status(result.status);
 		res.json({result});
+	});
+});
+
+app.get('/login', (req, res) => {
+	authService.checkSession(req.session, (result) => {		
+		res.status(result.status);
+		res.json(result);
 	});
 });
 

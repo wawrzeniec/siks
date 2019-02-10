@@ -37,6 +37,7 @@ def getAll():
     import json
     from numpy.random import permutation
     import time
+    import datetime
 
     nErrors = 0
     errorLoc = []
@@ -60,8 +61,72 @@ def getAll():
     nrows = len(rows)
     print('Found %d securities' % nrows)
 
-    currencies = np.unique(np.array([r[5] for r in rows]))
+    currencies = np.array([r[5] for r in rows])
+    methods = np.array([r[6] for r in rows])
+    secids = np.array([r[0] for r in rows])
+    secnames = np.array([r[1] for r in rows])
+    lastupdate = np.array([todate(r[9]) for r in rows])
 
+    currenciesToWatch = []
+    nowdate = datetime.datetime.now()
+
+    for thismethods, thisid, thisname, thislast, thiscur in zip(methods, secids, secnames, lastupdate, currencies):
+        try:
+            dt = nowdate - thislast
+            print(dt)
+            if dt > datetime.timedelta(0.9):
+                print('Last update for %s [%s] ago. Re-queriying.' % (thisname, dt.__str__()))
+
+                method = json.loads(thismethods)
+                nmethods = len(method)
+                order = permutation(range(nmethods))
+
+                for i in range(nmethods):
+                    try:
+                        algo = method[order[i]]['methodid']
+                        ticker = method[order[i]]['parameters']
+                        print('Getting quote for %s [%s], method=%s' % (thisname, ticker, algo))
+                        quote = getQuote(algo, ticker)
+                        break
+                    except Exception as e:
+                        nErrors += 1
+                        errorLoc.append('While getting quote for %s [%s], method [%s]' % (thisname, ticker, algo))
+                        errorDesc.append(str(e))
+                        continue
+
+                ts = getts()
+                try:
+                    print('Inserting data into DB...')
+                    db.execute('INSERT INTO history (securityid, timestamp, value) VALUES (:id, :ts, :quote)', {"id": thisid, "ts": ts, "quote": quote})
+                except Exception as e:
+                    nErrors += 1
+                    errorLoc.append('While inserting quote for %s [%s] into DB' % (thisname, ticker))
+                    errorDesc.append(str(e))
+                    continue
+
+                try:
+                    print('Setting last update time...')
+                    db.execute('UPDATE securities SET lastupdate=:ts WHERE securityid=:id',
+                               {"ts": ts, "id": thisid})
+                except Exception as e:
+                    nErrors += 1
+                    errorLoc.append('While setting last update time for %s [%s] into DB' % (thisname, ticker))
+                    errorDesc.append(str(e))
+                    continue
+
+                # If updated successfully, add currency to list of to-watch
+                currenciesToWatch.append(thiscur)
+                time.sleep(PAUSE_BETWEEN_REQUESTS)
+            else:
+                print('Last update for %s [%s] ago. Skipping.' % (thisname, dt.__str__()))
+
+        except Exception as e:
+            nErrors += 1
+            errorLoc.append('While getting quote for %s [%s], method [%s]' % (thisname, ticker, algo))
+            errorDesc.append(str(e))
+            continue
+
+    currencies = np.unique(np.array(currenciesToWatch))
     for cur in currencies:
         try:
             print('Getting quote for currency [%s]' % cur)
@@ -76,49 +141,15 @@ def getAll():
         ts = getts()
         try:
             print('Inserting data into DB...')
-            db.execute('INSERT INTO currencies (timestamp, value) VALUES (:ts, :quote)', {"ts": ts, "quote": quote})
+            print(cur)
+            db.execute('INSERT INTO currencies (symbol, timestamp, value) VALUES (:symbol, :ts, :quote)',
+                       {"symbol": cur, "ts": ts, "quote": quote})
         except Exception as e:
             nErrors += 1
             errorLoc.append('While inserting quote for currency [%s] into DB' % cur)
             errorDesc.append(str(e))
             continue
 
-    methods = np.unique(np.array([r[6] for r in rows]))
-    secids = np.unique(np.array([r[0] for r in rows]))
-    secnames = np.unique(np.array([r[1] for r in rows]))
-
-    for thismethods, thisid, thisname in zip(methods, secids, secnames):
-        try:
-            method = json.loads(thismethods)
-            nmethods = len(method)
-            order = permutation(range(nmethods))
-
-            for i in range(nmethods):
-                try:
-                    algo = method[order[i]]['methodid']
-                    ticker = method[order[i]]['parameters']
-                    print('Getting quote for %d [%s], method=%s' % (thisname, ticker, algo))
-                    quote = getQuote(algo, ticker)
-                    break
-                except Exception as e:
-                    nErrors += 1
-                    errorLoc.append('While getting quote for %s [%s], method [%s]' % (thisname, ticker, algo))
-                    errorDesc.append(str(e))
-        except Exception as e:
-            nErrors += 1
-            errorLoc.append('While getting quote for [%s]' % ticker)
-            errorDesc.append(str(e))
-            continue
-
-        ts = getts()
-        try:
-            print('Inserting data into DB...')
-            db.execute('INSERT INTO history (securityid, timestamp, value) VALUES (:id, :ts, :quote)', {"id": thisid, "ts": ts, "quote": quote})
-        except Exception as e:
-            nErrors += 1
-            errorLoc.append('While inserting quote for %s [%s] into DB' % (thisname, ticker))
-            errorDesc.append(str(e))
-            continue
 
     print('getAll() terminated. Committing and closing DB.')
     conn.commit()
@@ -157,3 +188,11 @@ def ftime(tstamp):
 def getts():
     import datetime
     return ftime(datetime.datetime.now())
+
+def todate(str):
+    import datetime
+    try:
+        return datetime.datetime.strptime(str, '%Y-%m-%d %H:%M:%S')
+    except Exception as e:
+        return datetime.datetime(1970, 1, 1)
+
