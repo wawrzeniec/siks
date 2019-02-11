@@ -31,7 +31,7 @@ app.use(session({
 	name: 'siks.id',
 	proxy: true,
 	cookie: { 
-		maxAge: 1000*30, //7 * 24 * 60 * 60 * 1000 ,
+		maxAge: 1 * 60 * 60 * 1000,
 		secure: true,
 		httpOnly: false
 	}, // 1 week

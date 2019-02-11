@@ -3,8 +3,8 @@ import { AuthService } from '@app/services/auth.service'
 import { loginDataContainer } from '@app/modules/data/data.module'
 import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import {ErrorStateMatcher} from '@angular/material/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
   wrongCred: boolean = false;
 
   constructor(public dialog: MatDialog, 
-              private dialogRef:MatDialogRef<AddSecurityComponent>,
+              private dialogRef:MatDialogRef<LoginComponent>,
               public authService: AuthService) { }
 
   ngOnInit() {
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
     this.loginData.password = this.loginFormGroup.get('password').value;
     this.authService.postLogin(this.loginData).subscribe(result => {
       // Successfully inserted security => close dialog
-      this.isOpen = false;
+      this.wrongCred = true;
       this.dialogRef.close();
     }, error => {
       // Error occurred => handle error

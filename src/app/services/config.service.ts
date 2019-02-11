@@ -18,6 +18,14 @@ export class ConfigService {
 
   }
 
+  getTypes(): Observable<serverPacket> {
+    // Retrieves the list of types
+    // 200 => OK
+    // 503 => SQLITE Error
+    const url: string = this.baseUrl + 'types'; 
+    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+  }
+
   getCategories(type?: string): Observable<serverPacket> {
     // Retrieves the list of categories
     // 200 => OK
@@ -28,7 +36,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'categories'; 
-    return this.http.get(url, {params: params}) as Observable<serverPacket>;
+    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
   getMarkets(type?: string): Observable<serverPacket> {
@@ -41,7 +49,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'markets'; 
-    return this.http.get(url, {params: params}) as Observable<serverPacket>;
+    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
 }

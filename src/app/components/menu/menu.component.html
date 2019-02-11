@@ -5,6 +5,9 @@
     <button mat-menu-item [matMenuTriggerFor]="subMenu_securities">
       <mat-icon>monetization_on</mat-icon>Securities
     </button>
+    <button mat-menu-item [matMenuTriggerFor]="subMenu_portfolio">
+      <mat-icon>pie_chart</mat-icon>Portfolio
+    </button>
   </mat-menu>
 
   <mat-menu #subMenu_user="matMenu">
@@ -14,8 +17,13 @@
   </mat-menu>
 
   <mat-menu #subMenu_securities="matMenu">
-    <button mat-menu-item (click)="openAddSecurity()"><mat-icon>add_circle</mat-icon>Add</button>
-    <button mat-menu-item><mat-icon>remove_circle</mat-icon>Remove</button>    
+    <button mat-menu-item (click)="openAddSecurity()"><mat-icon>add_circle</mat-icon>Add new</button>
+    <button mat-menu-item><mat-icon>settings</mat-icon>Manage</button>    
+  </mat-menu>
+
+  <mat-menu #subMenu_portfolio="matMenu">
+    <button mat-menu-item (click)="openAddAsset()"><mat-icon>add_circle</mat-icon>Add asset</button>
+    <button mat-menu-item><mat-icon>settings</mat-icon>Manage</button>    
   </mat-menu>
 
   <button mat-icon-button [matMenuTriggerFor]="rootMenu">

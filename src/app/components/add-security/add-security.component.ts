@@ -36,6 +36,10 @@ export class AddSecurityComponent implements OnInit {
     Validators.required
   ]);
 
+  currencyCtrl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
+
   addSecurityCategoryGroup: FormGroup;
   addSecurityDetailsGroup: FormGroup;
   addSecurityWatchGroup: FormGroupObject = {};
@@ -53,8 +57,7 @@ export class AddSecurityComponent implements OnInit {
   methods: methodDescriptor[];
   security: securityDescriptor;
   
-  constructor(public dialog: MatDialog, 
-              private dialogRef:MatDialogRef<AddSecurityComponent>,
+  constructor(private dialogRef:MatDialogRef<AddSecurityComponent>,
               public configservice: ConfigService,
               public quoteservice: QuoteService, 
               public securityservice: SecurityService) { }
@@ -83,7 +86,7 @@ export class AddSecurityComponent implements OnInit {
     this.addSecurityDetailsGroup = new FormGroup({
       identifier: this.securityIdentifierCtrl,
       markets: new FormControl(),
-      currency: new FormControl()
+      currency: this.currencyCtrl
     });
 
     // Watch methods form(s)

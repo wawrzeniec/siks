@@ -25,6 +25,6 @@ export class QuoteService {
     params = params.append('ticker', ticker);    
     const url: string = this.baseUrl; 
     console.log('Requesting quote for ' + ticker + ' using method ' + method);
-    return this.http.get(url, {params: params}) as Observable<serverPacket>;
+    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 }

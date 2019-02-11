@@ -1,11 +1,15 @@
-<mat-horizontal-stepper labelPosition="bottom" #stepper>
+<mat-dialog-content>
+<mat-horizontal-stepper labelPosition="bottom" linear #stepper>
   <mat-step [stepControl]="addSecurityCategoryGroup">
     <form [formGroup]="addSecurityCategoryGroup">
       <ng-template matStepLabel>Type</ng-template>
       <mat-form-field class="app-formfield app-adds-categoryformfield">
-        <mat-select class="app-select" placeholder="Type of security" formControlName="category">
+        <mat-select class="app-select" placeholder="Type of security" formControlName="category" required>
           <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
         </mat-select>
+        <mat-error *ngIf="securityCategoryCtrl.hasError('required')">
+          Category is required
+        </mat-error>
       </mat-form-field>
       <div>
         <button mat-button matStepperNext class="app-nextbtn app-adds-nextbtn" type="button">Next</button>
@@ -16,11 +20,11 @@
     <form [formGroup]="addSecurityDetailsGroup">
       <ng-template matStepLabel>Details</ng-template>
       <mat-form-field class="app-formfield app-adds-idformfield">
-        <input matInput class="app-input" formControlName="identifier" placeholder="Identifier">
+        <input matInput class="app-input" formControlName="identifier" placeholder="Identifier" required>
         <mat-hint>Name to identify the security</mat-hint>
         <mat-error *ngIf="securityIdentifierCtrl.hasError('required')">
-            Identifier is required
-          </mat-error>
+          Identifier is required
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field class="app-formfield app-adds-marketformfield">
@@ -31,10 +35,13 @@
       </mat-form-field>
 
       <mat-form-field class="app-formfield app-adds-currencyformfield">
-          <mat-select formControlName="currency" placeholder="Currency">
+          <mat-select formControlName="currency" placeholder="Currency" required>
               <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
             </mat-select>
             <mat-hint>Currency in which the security is traded</mat-hint>
+            <mat-error *ngIf="currencyCtrl.hasError('required')">
+              Currency is required
+            </mat-error>
       </mat-form-field>
     
       <div>
@@ -74,13 +81,18 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Confirm</ng-template>    
+    <div class="app-check app-adds-watchcheck">
     <form [formGroup]="addSecurityConfirmGroup">
-      <mat-checkbox class="app-check app-adds-watchcheck" formControlName="watch">Start watching</mat-checkbox>          
+      <mat-checkbox class="app-check app-adds-watchcheck" formControlName="watch">
+        Start watching
+      </mat-checkbox>          
     </form>
+  </div>
     <div>
       <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="addSecurity()">Add security</button>
+      <button mat-button mat-flat-button color="primary" (click)="addSecurity()">Add security</button>
     </div>
   </mat-step>
   
 </mat-horizontal-stepper>
+</mat-dialog-content>

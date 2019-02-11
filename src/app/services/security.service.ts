@@ -20,7 +20,7 @@ export class SecurityService {
   addSecurity(security: securityDescriptor): Observable<serverPacket> {
     // Tests a scrape method and returns the quote or an error
     const url: string = this.baseUrl; 
-    return this.http.post(url, security) as Observable<serverPacket>;
+    return this.http.post(url, security, { withCredentials: true }) as Observable<serverPacket>;
   }
 
 }

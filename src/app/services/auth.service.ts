@@ -9,7 +9,7 @@ import { ServerConfig } from '@server/server-config-ng';
 })
 export class AuthService {
   private baseUrl: string;
-  private serverIP:string; 
+  private serverIP:string;   
 
   constructor(private http: HttpClient) { 
     this.serverIP = window.location.hostname;
@@ -26,11 +26,4 @@ export class AuthService {
     return this.http.post(url, loginData, { withCredentials: true }) as Observable<serverPacket>;
   }
 
-  checkSession(): Observable<serverPacket> {
-    // Add user: returns the http response code
-    // 200 => OK
-    // 403 => Need to reauthenticate
-    const url: string = this.baseUrl; 
-    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
-  }
 }

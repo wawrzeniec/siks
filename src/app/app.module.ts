@@ -13,6 +13,7 @@ import { DisableControlDirective } from '@app/directives/disable-control.directi
 import { HttpClientModule }    from '@angular/common/http';
 import { AddSecurityComponent } from '@app/components/add-security/add-security.component';
 import { LoginComponent } from './components/login/login.component';
+import { AddAssetComponent } from './components/add-asset/add-asset.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { LoginComponent } from './components/login/login.component';
     DisableControlDirective,
     AddSecurityComponent,
     LoginComponent,
+    AddAssetComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,7 +38,8 @@ import { LoginComponent } from './components/login/login.component';
   entryComponents: [
     AddUserComponent,
     AddSecurityComponent,
-    LoginComponent
+    LoginComponent,
+    AddAssetComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
