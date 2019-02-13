@@ -18,11 +18,14 @@ export const scrapeMethods: any = {
   ]
 };
 
+// Text constant for the "number" field
+export const assetNumberString: string[] = ['Amount', 'Number of shares', 'Quantity'];
 
 @NgModule({
   declarations: [
     currencyList,
     scrapeMethods,
+    assetNumberString
   ],
   imports: [
     CommonModule
@@ -30,6 +33,7 @@ export const scrapeMethods: any = {
   exports: [
     currencyList,
     scrapeMethods,
+    assetNumberString
   ]
 })
 

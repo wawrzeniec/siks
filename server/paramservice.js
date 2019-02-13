@@ -154,11 +154,40 @@ function getMarketIds(db, typeid, marketnames, callback) {
     });
 }
 
+function getSecurities(db, params, callback) {
+    
+    let stmt = 'SELECT * from securities';
+    let par = {};
+
+    // Filter on types
+    if (params.hasOwnProperty('type')) {
+        stmt += ' JOIN types USING(typeid) WHERE typename=$type';
+        par['$type'] = params.type;
+    }
+
+    db.all(stmt, par, (err, rows) => {
+        if (err) {
+            return callback({
+                status: 500,
+                reason: 'failed to query list of securities from database',
+                err: err
+            });
+        }
+        else {
+            return callback({
+                status: 200, 
+                data: rows
+            });
+        }
+    });
+}
+
 module.exports = {
     getTypes,
     getTypeId,
     getCategories,
     getCategoryId,
     getMarkets,
-    getMarketIds
+    getMarketIds,
+    getSecurities
 };

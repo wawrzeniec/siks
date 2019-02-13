@@ -59,12 +59,24 @@ const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
 	]})
 );*/
 app.use(function(req, res, next) {
-	console.log(req.headers);
 	res.header("Access-Control-Allow-Origin", authorizedOrigin);
 	res.header("Access-Control-Allow-Credentials", true);
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
-  });
+});
+
+app.use(/^(?!\/login\/?$)/, function(req, res, next) {	
+	if (req.session.loggedin) {        
+        next()
+    }
+    else {
+		res.status(401);
+		res.json({
+            status: 401,
+            reason: 'Session invalid',
+        });
+    }
+});
 
 // Body parser for POST requests data
 app.use(require('body-parser').json());
@@ -73,8 +85,7 @@ app.use(require('body-parser').json());
 // Authentication API
 // This handles the login/sessions
 ///////////////////////////////////////////////
-app.post('/login/', (req, res) => {
-	console.log(req.session);
+app.post('/login', (req, res) => {
 	authService.login(configdb, req.body, (result) => {
 		if (result.status == 200) {
 			req.session.loggedin = true;
@@ -84,9 +95,8 @@ app.post('/login/', (req, res) => {
 		{
 			req.session.loggedin = false;
 		}
-		console.log(req.session);
 		res.status(result.status);
-		res.json({result});
+		res.json(result);		
 	});
 });
 
@@ -104,7 +114,7 @@ app.get('/login', (req, res) => {
 // (2) add the new user in cred.db
 // (3) create the database for this user
 app.get('/users/', (req, res) => {
-	userService.getUsers(configdb, req.query, (result) => {
+	userService.getUsers(configdb, req.session, req.query, (result) => {
 		res.status(result.status);
 		res.json(result);
 	});
@@ -148,8 +158,8 @@ app.post('/users/', (req, res) => {
 
 
 ///////////////////////////////
-// CONFIG & PARAMETERS 
-// This is the endpoints for querying and modifying app configuration parameters
+// SECURITIES  
+// This is the endpoints for querying and modifying app securities and their details
 app.get('/config/types', (req, res) => {
 	paramService.getTypes(configdb, req.query, (result) => {
 		res.status(result.status);
@@ -170,6 +180,14 @@ app.get('/config/markets', (req, res) => {
 		res.json(result);
 	});
 });
+
+app.get('/config/securities', (req, res) => {
+	paramService.getSecurities(configdb, req.query, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
 
 
 ////////////////////////////////////

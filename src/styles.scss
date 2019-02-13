@@ -43,3 +43,9 @@ $app-major-color: $app-color-lightblue;
     text-align: center;
     color: $app-major-color;
 }
+
+// Dialog classes
+.app-dialog-panel-login {
+    display: flex;
+    max-width: 300px;
+}

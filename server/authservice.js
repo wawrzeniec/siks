@@ -10,7 +10,6 @@ function login(db, params, callback) {
     const username = params.userName;
     const password = params.password;
     let stmt = 'SELECT ROWID, hash FROM usercred WHERE username=$username';
-    console.log(stmt);
     db.get(stmt, {
         $username: username, 
     },

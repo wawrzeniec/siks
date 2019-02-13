@@ -1,0 +1,27 @@
+$marginBottom: 20px;
+
+.app-adda-typeformfield {
+    display: flex;
+}
+
+.app-adda-nextbtn {
+    display: inline-block;
+}
+
+.app-adda-backbtn {
+    display: inline-block;
+}
+
+.app-adda-numberformfield {
+    display: flex;
+}
+
+.app-adda-idformfield {
+    display: flex;
+    margin-bottom: $marginBottom;
+}
+
+.app-adda-currencyformfield {
+    display: flex;
+    margin-bottom: $marginBottom;
+}

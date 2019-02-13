@@ -16,7 +16,7 @@ export class SessionService {
               private http: HttpClient) {
     this.serverIP = window.location.hostname;
     let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login/';
+    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login';
   }
 
   checkSession() {
@@ -35,6 +35,7 @@ export class SessionService {
         }, (err) => {
         console.log('Not logged in => opening dialog')          
           const dialogRef = this.dialog.open(LoginComponent, {
+            panelClass: 'app-dialog-panel-login',
             height: '400px',
             width: '800px',
             disableClose: true 

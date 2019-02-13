@@ -299,8 +299,9 @@ function createDB(db, callback)
     securityid INTEGER,
     date TEXT,
     number REAL,
-    value REAL,
-    pricepaid REAL,
+    price REAL,
+    currency TEXT,
+    comment TEXT,
     FOREIGN KEY(securityid) REFERENCES securities(securityid)
     )`;
   db.run(stmt, [], (err) => {

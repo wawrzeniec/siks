@@ -14,6 +14,7 @@ import { HttpClientModule }    from '@angular/common/http';
 import { AddSecurityComponent } from '@app/components/add-security/add-security.component';
 import { LoginComponent } from './components/login/login.component';
 import { AddAssetComponent } from './components/add-asset/add-asset.component';
+import { SelectAssetIdComponent } from './components/select-asset-id/select-asset-id.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { AddAssetComponent } from './components/add-asset/add-asset.component';
     AddSecurityComponent,
     LoginComponent,
     AddAssetComponent,
+    SelectAssetIdComponent,
   ],
   imports: [
     BrowserModule,

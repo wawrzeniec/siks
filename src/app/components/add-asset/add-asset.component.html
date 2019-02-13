@@ -1,3 +1,57 @@
-<p>
-  add-asset works!
-</p>
+<mat-dialog-content>
+  <mat-horizontal-stepper labelPosition="bottom" linear #stepper>
+    <mat-step [stepControl]="addAssetTypeGroup">
+      <form [formGroup]="addAssetTypeGroup">
+        <ng-template matStepLabel>Asset type</ng-template>
+        <mat-form-field class="app-formfield app-adda-typeformfield">
+          <mat-select class="app-select" placeholder="Type of asset" formControlName="type" required
+          (selectionChange)="getAssetTypeData()">
+            <mat-option *ngFor="let type of types" [value]="type">{{type}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="assetTypeCtrl.hasError('required')">
+            Type is required
+          </mat-error>
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext class="app-nextbtn app-adda-nextbtn" type="button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="addAssetIdGroup">
+      <form [formGroup]="addAssetIdGroup">
+        <ng-template matStepLabel>Details</ng-template>
+                
+        <app-select-asset-id *ngIf="addAssetTypeGroup.get('type').value!='Cash'" [formGroup]="addAssetIdGroup" [type]="addAssetTypeGroup.get('type').value">
+        </app-select-asset-id>    
+
+        <mat-form-field class="app-formfield app-adda-currencyformfield" *ngIf="addAssetTypeGroup.get('type').value==='Cash'">
+          <mat-select formcontrolName="id" placeholder="Currency" required>
+            <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <div>
+          <button class="app-backbtn app-adda-backbtn" mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext class="app-nextbtn app-adda-nextbtn" type="button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="addAssetDetailsGroup">
+      <form [formGroup]="addAssetDetailsGroup">
+        <ng-template matStepLabel>Asset details</ng-template>
+        <mat-form-field class="app-formfield app-adda-numberformfield">
+          <input matInput class="app-input" placeholder="Quantity" formControlName="number" required>
+          <mat-hint>Quantity</mat-hint>
+          <mat-error *ngIf="assetDetailsNumberCtrl.hasError('required')">
+            Quantity is required
+          </mat-error>
+        </mat-form-field>
+        <div>
+            <button class="app-backbtn app-adda-backbtn" mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext class="app-nextbtn app-adda-nextbtn" type="button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+  </mat-horizontal-stepper>
+</mat-dialog-content>

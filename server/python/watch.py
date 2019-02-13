@@ -73,6 +73,7 @@ def getAll():
     for thismethods, thisid, thisname, thislast, thiscur in zip(methods, secids, secnames, lastupdate, currencies):
         try:
             dt = nowdate - thislast
+            print('Last update for %s: %s' % (thisname, str(thislast)))
             print(dt)
             if dt > datetime.timedelta(0.9):
                 print('Last update for %s [%s] ago. Re-queriying.' % (thisname, dt.__str__()))

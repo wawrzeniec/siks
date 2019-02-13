@@ -52,4 +52,17 @@ export class ConfigService {
     return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
+  getSecurities(type?: string): Observable<serverPacket> {
+    // Retrieves the list of securities, filtering by type if provided
+    // 200 => OK
+    // 503 => SQLITE Error
+    let params = new HttpParams();
+    if (type) {
+      params = params.append('type', type);
+    }
+
+    const url: string = this.baseUrl + 'securities'; 
+    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+  }
+
 }

@@ -14,7 +14,7 @@ export class AuthService {
   constructor(private http: HttpClient) { 
     this.serverIP = window.location.hostname;
     let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login/';    
+    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login';    
   }
 
   postLogin(loginData: loginDataContainer): Observable<serverPacket> {

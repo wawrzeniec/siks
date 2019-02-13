@@ -37,11 +37,11 @@
       <mat-form-field class="app-formfield app-adds-currencyformfield">
           <mat-select formControlName="currency" placeholder="Currency" required>
               <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
-            </mat-select>
-            <mat-hint>Currency in which the security is traded</mat-hint>
-            <mat-error *ngIf="currencyCtrl.hasError('required')">
-              Currency is required
-            </mat-error>
+          </mat-select>
+          <mat-hint>Currency in which the security is traded</mat-hint>
+          <mat-error *ngIf="currencyCtrl.hasError('required')">
+            Currency is required
+          </mat-error>
       </mat-form-field>
     
       <div>
@@ -92,7 +92,6 @@
       <button mat-button matStepperPrevious>Back</button>
       <button mat-button mat-flat-button color="primary" (click)="addSecurity()">Add security</button>
     </div>
-  </mat-step>
-  
+  </mat-step>  
 </mat-horizontal-stepper>
 </mat-dialog-content>
