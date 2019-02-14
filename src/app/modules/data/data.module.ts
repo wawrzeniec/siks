@@ -35,6 +35,7 @@ export class securityDescriptor {
   methods: methodDescriptor[];
   annualfee: number;
   watch: boolean;
+  lastupdate: string;
 }
 
 export class methodDescriptor {

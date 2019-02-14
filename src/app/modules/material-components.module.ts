@@ -12,17 +12,17 @@ import {MatButtonModule,
   MatStepperModule,
   MatSelectModule, 
   MatProgressSpinnerModule} from '@angular/material';
-
+import { MatTableModule } from '@angular/material/table'
+  
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
             MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-            MatSelectModule, MatProgressSpinnerModule],
+            MatSelectModule, MatProgressSpinnerModule, MatTableModule],
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-    MatSelectModule, MatProgressSpinnerModule
-    ]
+    MatSelectModule, MatProgressSpinnerModule, MatTableModule]
 })
 export class MaterialComponentsModule { }

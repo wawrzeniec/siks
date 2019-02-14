@@ -18,6 +18,11 @@ export const scrapeMethods: any = {
   ]
 };
 
+// Text constants for the security properties
+export const securityFieldsDescriptor: string[] = 
+  ['Security type', 'Identifier', 'Category', 'Markets', 
+  'Currency', 'Annual fee', 'Watch methods', 'Last updated'];
+
 // Text constant for the "number" field
 export const assetNumberString: string[] = ['Amount', 'Number of shares', 'Quantity'];
 

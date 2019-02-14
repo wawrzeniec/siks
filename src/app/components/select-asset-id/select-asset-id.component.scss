@@ -1,0 +1,18 @@
+$highlightedRowColor: #99bbff;
+
+mat-row.highlightedRow {
+    background-color: $highlightedRowColor;
+}
+
+.app-table-selsid-headerrow {
+    background-color: #888888;
+}
+
+.app-table-selsid-table {
+    display: block;
+    flex: 100;
+}
+
+.app-table-selsid-tablerow {
+    
+}
