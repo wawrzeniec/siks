@@ -152,4 +152,8 @@ export class AddAssetComponent implements OnInit {
       }
     });
   }
+
+  setSelected(row) {
+    console.log(row);
+  }
 }

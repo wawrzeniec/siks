@@ -1,11 +1,13 @@
+$headerRowColor: #dddddd;
 $highlightedRowColor: #99bbff;
+$table-margin-bottom: 20px;
 
 mat-row.highlightedRow {
     background-color: $highlightedRowColor;
 }
 
 .app-table-selsid-headerrow {
-    background-color: #888888;
+    background-color: $headerRowColor;    
 }
 
 .app-table-selsid-table {
@@ -15,4 +17,30 @@ mat-row.highlightedRow {
 
 .app-table-selsid-tablerow {
     
+}
+
+.mat-row {
+    min-height: 36px;
+    flex: 0 0 100px;
+}
+
+.mat-header-row {
+    min-height: 36px;
+    color: white;
+    font-weight: bold;
+    min-height: 28px;
+}
+
+.mat-table {
+    min-width: 250px;
+    margin-bottom: $table-margin-bottom;
+}
+
+.mat-cell:nth-child(1),
+.mat-header-cell:nth-child(1) {
+    flex: 0 0 60%;
+}
+
+.mat-dialog-content {
+    padding: 5px;
 }

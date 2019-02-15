@@ -21,7 +21,8 @@
       <form [formGroup]="addAssetIdGroup">
         <ng-template matStepLabel>Details</ng-template>
                 
-        <app-select-asset-id *ngIf="addAssetTypeGroup.get('type').value!='Cash'" [formGroup]="addAssetIdGroup" [type]="addAssetTypeGroup.get('type').value">
+        <app-select-asset-id *ngIf="addAssetTypeGroup.get('type').value!='Cash'" [formGroup]="addAssetIdGroup" 
+        [type]="addAssetTypeGroup.get('type').value" (onSelect)="setSelected($event)">
         </app-select-asset-id>    
 
         <mat-form-field class="app-formfield app-adda-currencyformfield" *ngIf="addAssetTypeGroup.get('type').value==='Cash'">

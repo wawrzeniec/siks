@@ -1,7 +1,7 @@
 <mat-dialog-content>
 <mat-table #table [dataSource]="dataSource" class="app-table app-table-selsid-table" matSort>
   <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef>{{fields[1]}}</mat-header-cell>
+    <mat-header-cell *matHeaderCellDef="let row">{{fields[1]}}</mat-header-cell>
     <mat-cell *matCellDef="let security">{{security.identifier}}</mat-cell>
   </ng-container>
 
@@ -15,6 +15,6 @@
   <mat-row mat-row *matRowDef="let row; columns: ['name', 'currency']"
   class="app-table app-table-selsid-tablerow"
   [ngClass]="{highlightedRow: row.securityid==selectedRow}"
-  (click)="selectedRow=row.securityid"></mat-row>
+  (click)="updateSelected(row)"></mat-row>
 </mat-table>
 </mat-dialog-content>
