@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="app-dialog-title">Add user</h2>
 <mat-dialog-content class="app-dialog app-adduser-dialogcontent">
   <form [formGroup]="addUserFormGroup">
-      <mat-form-field class="app-formfield app-adduser-usernameformfield">
+      <mat-form-field class="app-formfield app-marginbottoms">
         <input class="app-input" matInput placeholder="User Name" autocomplete="false"
                 formControlName="name"  [errorStateMatcher]="matcher" 
                 (focusin)="initConfirmPassword()" 
@@ -18,7 +18,7 @@
         </mat-error>        
       </mat-form-field><br><br>
       
-      <mat-form-field class="app-formfield app-adduser-emailformfield">
+      <mat-form-field class="app-formfield app-marginbottoms">
         <input class="app-input" matInput placeholder="Email address" autocomplete="false"
                 formControlName="email"  [errorStateMatcher]="matcher" 
                 required>
@@ -31,7 +31,7 @@
         </mat-error>        
       </mat-form-field><br><br>
 
-      <mat-form-field class="app-formfield app-adduser-passwordformfield">
+      <mat-form-field class="app-formfield app-marginbottoms">
         <input matInput class="app-input" type="password" placeholder="Password" formControlName="password"
               [errorStateMatcher]="matcher" 
               required>
@@ -46,7 +46,7 @@
         </mat-error> 
       </mat-form-field><br><br>
 
-      <mat-form-field class="app-formfield app-adduser-confirmpasswordformfield">
+      <mat-form-field class="app-formfield app-marginbottoms">
         <input class="app-input" matInput type="password" placeholder="Confirm password" formControlName="confirmPassword"
               [errorStateMatcher]="matcher" [disableControl]="confirmPasswordDisabled"
               required>
@@ -57,9 +57,9 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions fxLayout="row" fxLayoutGap="32px">  
-  <button mat-flat-button mat-dialog-submit class="app-button app-bg-major" 
+  <button mat-flat-button mat-dialog-close class="app-button" color="primary">Cancel</button>
+  <button mat-flat-button mat-dialog-submit class="app-button" color="primary" 
   [disabled]="addUserFormGroup.invalid" (click)="submitForm()">Create user</button>
-  <button mat-flat-button mat-dialog-close class="app-button app-bg-major">Cancel</button>
 </mat-dialog-actions>
 
 

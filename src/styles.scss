@@ -2,9 +2,14 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 $font-stack:    Helvetica, sans-serif;
-$app-color-lightblue: rgb(122, 81, 236); 
+$app-color-lightblue: rgb(80, 60, 180); 
+$app-color-lightgray: rgb(180, 180, 180); 
+$app-color-orange: rgb(230, 133, 23);
 
 $app-major-color: $app-color-lightblue;
+$app-accent-color: $app-color-orange;
+
+$marginSmall: 20px;
 
 .filler {
     max-width: 100%;
@@ -48,4 +53,28 @@ $app-major-color: $app-color-lightblue;
 .app-dialog-panel-login {
     display: flex;
     max-width: 300px;
+}
+
+.app-stepper-nextbtn {
+    display: inline-block;
+}
+
+.app-stepper-backbtn {
+    display: inline-block;
+}
+
+.app-stepper-submitbtn {
+    display: inline-block;
+}
+
+.app-flex {
+    display: flex;
+}
+
+.app-bottommargins {
+    margin-bottom: $marginSmall;
+}
+
+.app-topmargins {
+    margin-top: $marginSmall;
 }

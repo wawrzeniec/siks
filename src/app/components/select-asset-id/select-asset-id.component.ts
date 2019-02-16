@@ -15,6 +15,7 @@ import { securityFieldsDescriptor } from '@app/modules/assets/assets.module'
 export class SelectAssetIdComponent implements OnInit {
 
   @Input() formGroup: FormGroup;
+  @Input() formControlField: string;
   @Input() type: string; 
   @Output() onSelect = new EventEmitter();
   selectedRow: number = undefined;
@@ -24,19 +25,32 @@ export class SelectAssetIdComponent implements OnInit {
 
   constructor(public configService: ConfigService) { }
 
-  ngOnInit() {
+  ngOnInit() { 
+    let value = this.formGroup.get(this.formControlField).value;
+    if (value) {
+      this.selectedRow = value;
+    }
   }
 
   ngOnChanges() {
-
+    // Gets the securities for the new type
     this.configService.getSecurities(this.type).subscribe(result => {
-      this.dataSource = result.data as MatTableDataSource<securityDescriptor>;
-      console.log(result)
-    });
+      this.dataSource = result.data as MatTableDataSource<securityDescriptor>;      
+    });    
+
+    // Cancels the selection
+    this.updateValue(null)
   }
 
   updateSelected(row) {
-    this.selectedRow = row.securityid;
-    this.onSelect.emit(row);
+    this.updateValue(row.securityid);
+    this.onSelect.emit(row.securityid);
+  }
+
+  updateValue(v) {
+    this.selectedRow = v;   
+    let value: any = {}; 
+    value[this.formControlField] = this.selectedRow;
+    this.formGroup.patchValue(value);
   }
 }

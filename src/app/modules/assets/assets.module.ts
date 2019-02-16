@@ -24,7 +24,11 @@ export const securityFieldsDescriptor: string[] =
   'Currency', 'Annual fee', 'Watch methods', 'Last updated'];
 
 // Text constant for the "number" field
-export const assetNumberString: string[] = ['Amount', 'Number of shares', 'Quantity'];
+export const assetNumberString: any = {
+  'Cash': 'Amount acquired', 
+  'Security': 'Number of shares', 
+  'Other': 'Quantity acquired'
+};
 
 @NgModule({
   declarations: [

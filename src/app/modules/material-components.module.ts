@@ -11,18 +11,23 @@ import {MatButtonModule,
   MatDialogModule,
   MatStepperModule,
   MatSelectModule, 
-  MatProgressSpinnerModule} from '@angular/material';
+  MatProgressSpinnerModule, 
+  MatNativeDateModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table'
+import { MatDatepickerModule } from '@angular/material/datepicker'
   
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
             MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-            MatSelectModule, MatProgressSpinnerModule, MatTableModule],
+            MatSelectModule, MatProgressSpinnerModule, MatTableModule,
+            MatDatepickerModule, MatNativeDateModule],
+
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
-    MatSelectModule, MatProgressSpinnerModule, MatTableModule]
+    MatSelectModule, MatProgressSpinnerModule, MatTableModule,
+    MatDatepickerModule, MatNativeDateModule]
 })
 export class MaterialComponentsModule { }

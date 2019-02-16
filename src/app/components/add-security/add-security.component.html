@@ -3,7 +3,7 @@
   <mat-step [stepControl]="addSecurityCategoryGroup">
     <form [formGroup]="addSecurityCategoryGroup">
       <ng-template matStepLabel>Type</ng-template>
-      <mat-form-field class="app-formfield app-adds-categoryformfield">
+      <mat-form-field class="app-formfield app-bottommargins">
         <mat-select class="app-select" placeholder="Type of security" formControlName="category" required>
           <mat-option *ngFor="let cat of categories" [value]="cat">{{cat}}</mat-option>
         </mat-select>
@@ -19,7 +19,7 @@
   <mat-step [stepControl]="addSecurityDetailsGroup">
     <form [formGroup]="addSecurityDetailsGroup">
       <ng-template matStepLabel>Details</ng-template>
-      <mat-form-field class="app-formfield app-adds-idformfield">
+      <mat-form-field class="app-formfield app-bottommargins">
         <input matInput class="app-input" formControlName="identifier" placeholder="Identifier" required>
         <mat-hint>Name to identify the security</mat-hint>
         <mat-error *ngIf="securityIdentifierCtrl.hasError('required')">
@@ -27,14 +27,14 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field class="app-formfield app-adds-marketformfield">
+      <mat-form-field class="app-formfield app-bottommargins">
           <mat-select formControlName="markets" placeholder="Markets" multiple>
               <mat-option class="app-select" *ngFor="let market of markets" [value]="market">{{market}}</mat-option>
             </mat-select>
             <mat-hint>Choose one or more markets</mat-hint>
       </mat-form-field>
 
-      <mat-form-field class="app-formfield app-adds-currencyformfield">
+      <mat-form-field class="app-formfield app-bottommargins">
           <mat-select formControlName="currency" placeholder="Currency" required>
               <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
           </mat-select>
@@ -45,8 +45,8 @@
       </mat-form-field>
     
       <div>
-        <button class="app-backbtn app-adds-backbtn" mat-button matStepperPrevious>Back</button>
-        <button class="app-nextbtn app-adds-nextbtn" mat-button matStepperNext>Next</button>
+        <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
+        <button class="app-stepper-nextbtn" mat-button matStepperNext>Next</button>
       </div>      
     </form>
   </mat-step>
@@ -75,22 +75,23 @@
       </div>
     </form>
     <div>
-        <button class="app-backbtn app-adds-backbtn" mat-button matStepperPrevious>Back</button>
-        <button class="app-nextbtn app-adds-nextbtn" mat-button matStepperNext>Next</button>  
+        <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
+        <button class="app-stepper-nextbtn" mat-button matStepperNext>Next</button>  
       </div>
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>Confirm</ng-template>    
-    <div class="app-check app-adds-watchcheck">
+    <div class="app-check app-bottommargins">
     <form [formGroup]="addSecurityConfirmGroup">
-      <mat-checkbox class="app-check app-adds-watchcheck" formControlName="watch">
+      <mat-checkbox class="app-check" formControlName="watch">
         Start watching
       </mat-checkbox>          
     </form>
   </div>
     <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button mat-flat-button color="primary" (click)="addSecurity()">Add security</button>
+      <button mat-button matStepperPrevious class="app-stepper-backbtn">Back</button>
+      <button mat-button mat-flat-button color="primary" class="app-stepper-submitbtn"
+      (click)="addSecurity()">Add security</button>
     </div>
   </mat-step>  
 </mat-horizontal-stepper>

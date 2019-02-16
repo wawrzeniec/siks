@@ -29,7 +29,8 @@ export class AddAssetComponent implements OnInit {
   ]);
 
   assetDetailsNumberCtrl: FormControl = new FormControl('', [
-    Validators.required
+    Validators.required,
+    Validators.pattern(/^\d+?\.?\d*?$/)
   ]);
 
   assetDetailsDateCtrl: FormControl = new FormControl('', [
@@ -37,17 +38,14 @@ export class AddAssetComponent implements OnInit {
   ]);
 
   assetDetailsPriceCtrl: FormControl = new FormControl('', [
-    Validators.required
+    Validators.required,
+    Validators.pattern(/^\d+?\.?\d*?$/)
   ]);
 
   assetDetailsCurrencyCtrl: FormControl = new FormControl('', [
     Validators.required
   ]);
   
-  assetDetailsCommentCtrl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-
   addAssetTypeGroup: FormGroup;
   addAssetCategoryGroup: FormGroup;
   addAssetIdGroup: FormGroup;
@@ -59,12 +57,9 @@ export class AddAssetComponent implements OnInit {
   markets: string[] = Array();
 
   // Some hard-coded assets
-  numberString: string[] = assetNumberString;
+  numberString: any = assetNumberString;
   currencyList: any = currencyList;
   currencyNames: string[] = Array();
-  
-  // Variables to hold the data
-  selectedType: string;
   
   constructor(private dialogRef:MatDialogRef<AddAssetComponent>,
               public configservice: ConfigService,
@@ -101,8 +96,16 @@ export class AddAssetComponent implements OnInit {
       number: this.assetDetailsNumberCtrl,
       date: this.assetDetailsDateCtrl,
       price: this.assetDetailsPriceCtrl,
-      currency: this.assetDetailsCurrencyCtrl,
-      comment: this.assetDetailsCommentCtrl
+      currency: this.assetDetailsCurrencyCtrl,      
+    });
+    this.addAssetDetailsGroup.patchValue({
+      date: new Date()
+    });
+
+    // Confirm form
+    this.addAssetConfirmGroup = new FormGroup({
+      comment: new FormControl(),
+      deduct: new FormControl(true)
     });
 
   }
@@ -150,10 +153,26 @@ export class AddAssetComponent implements OnInit {
       for (let row of Object.values(response.data)) {
         this.markets.push(row.marketname);
       }
+
     });
+
+    // Resets the selection
+    this.addAssetIdGroup.patchValue({id: null});
+    
   }
 
-  setSelected(row) {
-    console.log(row);
+  addAsset() {
+    //Gathers the data from all formGroups
+    let data = {};
+    data['type'] = this.addAssetTypeGroup.get('type').value;
+    data['id'] = this.addAssetIdGroup.get('id').value;
+    data['number'] = this.addAssetDetailsGroup.get('number').value;
+    data['date'] = this.addAssetDetailsGroup.get('date').value.toISOString().slice(0, 10);;
+    data['price'] = this.addAssetDetailsGroup.get('price').value;
+    data['currency'] = this.addAssetDetailsGroup.get('currency').value;
+    data['comment'] = this.addAssetConfirmGroup.get('comment').value;
+    data['deduct'] = this.addAssetConfirmGroup.get('deduct').value;
+    console.log(data);
   }
+  
 }
