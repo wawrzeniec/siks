@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { userDataContainer, serverPacket } from '@app/modules/data/data.module'
+import { userDataContainer, serverPacket } from '@server/assets/assets'
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ServerConfig } from '@server/server-config-ng';

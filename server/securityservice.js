@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3');
 const paramService = require('./paramservice');
-const assetsModule = require('./assetsmodule')
+
+const assetsModule = require('./assets/assets')
 
 function addSecurity(db, security, callback) {
     console.log('Adding security');

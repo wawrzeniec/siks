@@ -13,6 +13,8 @@ const quoteService = require('./quoteservice');
 const securityService = require('./securityservice');
 const authService = require('./authservice');
 
+require('typescript-require');
+
 const ip = require('ip');
 const authorizedOrigin = 'https://' + ip.address() + ':4200';
 console.log(authorizedOrigin);
@@ -41,7 +43,7 @@ app.use(session({
 //app.use(express.static(__dirname + '/public'));
 
 // On startup connects to the config database
-const configdb = new sqlite3.Database('db/siksdb.db', (err) => {
+const configdb = new sqlite3.Database('db/siksdb.experimental.db', (err) => {
   if (err) {  
     console.log('[!!!] Error connecting to siks database: ' + err.message);
     process.exit(1);

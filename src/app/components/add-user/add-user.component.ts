@@ -3,11 +3,11 @@ import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
-import { userDataContainer } from '@app/modules/data/data.module'
+import { userDataContainer } from '@server/assets/assets'
 import { UserService } from '@app/services/user.service'
 
 /** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
+class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
     const isSubmitted = form && form.submitted;
     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));

@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Input, OnChanges, Output, EventEmitter } from '@angular/core'
 import { FormGroup } from '@angular/forms'
 import { ConfigService } from '@app/services/config.service'
-import { securityDescriptor } from '@app/modules/data/data.module'
+import { securityDescriptor } from '@server/assets/assets'
 import { MatTableModule } from '@angular/material/table'
 import { MatTableDataSource, MatSort } from '@angular/material'
-import { securityFieldsDescriptor } from '@app/modules/assets/assets.module'
+import { securityFieldsDescriptor } from '@server/assets/assets'
 
 @Component({
   selector: 'app-select-asset-id',

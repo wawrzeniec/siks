@@ -1,0 +1,8 @@
+{
+  "name": "assets",
+  "version": "0.0.1",
+  "description": "Bunch of constant and types for siks",
+  "main": "assets.js",
+  "types": "index.d.ts",
+  "dependencies": { }
+}

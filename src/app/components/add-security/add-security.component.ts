@@ -3,8 +3,8 @@ import { ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@ang
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { serverPacket, securityDescriptor, methodDescriptor, ASSET_TYPES } from '@app/modules/data/data.module'
-import { currencyList, scrapeMethods } from '@app/modules/assets/assets.module'
+import { serverPacket, securityDescriptor, methodDescriptor, ASSET_TYPES } from '@server/assets/assets'
+import { currencyList, scrapeMethods } from '@server/assets/assets'
 import { ConfigService } from '@app/services/config.service'
 import { QuoteService } from '@app/services/quote.service'
 import { SecurityService } from '@app/services/security.service'
@@ -66,13 +66,17 @@ export class AddSecurityComponent implements OnInit {
     // Queries the categories from the server
     this.configservice.getCategories('Security').subscribe( (response: serverPacket) => {
       for (let row of Object.values(response.data)) {
-        this.categories.push(row.categoryname);
+        if (row.hasOwnProperty('categoryname')) {
+          this.categories.push(row['categoryname']);
+        }
       }
     });
     // Queries the markets from the server
     this.configservice.getMarkets('Security').subscribe( (response: serverPacket) => {
         for (let row of Object.values(response.data)) {
-          this.markets.push(row.marketname);
+          if (row.hasOwnProperty('marketname')) {
+            this.markets.push(row['marketname']);
+          }
         }
     });
     this.currencyNames = Object.keys(currencyList);
