@@ -11,7 +11,8 @@ import { assetNumberString, currencyList } from '@server/assets/assets'
 @Component({
   selector: 'app-add-asset',
   templateUrl: './add-asset.component.html',
-  styleUrls: ['./add-asset.component.scss']
+  styleUrls: ['./add-asset.component.scss'],
+  providers: [AssetService]
 })
 export class AddAssetComponent implements OnInit {
     

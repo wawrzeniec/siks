@@ -112,7 +112,7 @@ function addAsset(db, asset, callback) {
                         });
                     }
                     else {
-                        if (asset.deduct) {
+                        if (asset.price > 0 && asset.deduct) {
                             return deductCurrency(db, asset, callback)
                         }
                         else {

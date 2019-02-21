@@ -43,12 +43,13 @@ app.use(session({
 //app.use(express.static(__dirname + '/public'));
 
 // On startup connects to the config database
-const configdb = new sqlite3.Database('db/siksdb.experimental.db', (err) => {
+const dbname = 'siksdb.experimental.db'
+const configdb = new sqlite3.Database('db/' + dbname, (err) => {
   if (err) {  
     console.log('[!!!] Error connecting to siks database: ' + err.message);
     process.exit(1);
   } else {
-    console.log('Connected to siks database');
+    console.log('Connected to [' + dbname + ']');
   }
 });
 
@@ -64,6 +65,9 @@ app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", authorizedOrigin);
 	res.header("Access-Control-Allow-Credentials", true);
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	if ('OPTIONS' == req.method) {
+		res.sendStatus(200);
+	}
 	next();
 });
 
@@ -205,6 +209,7 @@ app.get('/quote', (req, res) => {
 /////////////////////////////////////
 // Securities
 
+// Endpoint to add a security to the database
 app.post('/security', (req, res) => {
 	securityService.addSecurity(configdb, req.body, (result) => {
 		res.status(result.status);
@@ -212,6 +217,12 @@ app.post('/security', (req, res) => {
 	});
 });
 
+app.post('/asset', (req, res) => {
+	securityService.addAsset(configdb, req.body, (result) => {
+		res.status(result.status);
+		res.json(result)
+	});
+});
 
 ////////////////////////////////////
 // Default enpoint - to check server

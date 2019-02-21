@@ -63,9 +63,9 @@ function login(db, params, callback) {
 }
 
 function checkSession(session, callback)
-{
-    console.log(session);
-    if (session.loggedin) {        
+{    
+    if (session.loggedin) { 
+        console.log('Authorizing query')       
         return callback({
         status: 200,
         });
