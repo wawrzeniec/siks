@@ -75,7 +75,7 @@ function addSecurity(db, security, callback) {
     });
 }
 
-function addAsset(db, asset, callback) {
+function addAsset(db, session, asset, callback) {
     // This adds an asset to the 'investments' table
     // It also checks whether the asset's currency is already in the securities table
     // If not, it adds it automatically.
@@ -94,7 +94,7 @@ function addAsset(db, asset, callback) {
             });
         }
         else {
-            let stmt = 'INSERT INTO investments (securityid, date, number, price, currency, comment) VALUES ($id, $date, $number, $price, $currency, $comment)';
+            let stmt = 'INSERT INTO investments (securityid, date, number, price, currency, comment, userid) VALUES ($id, $date, $number, $price, $currency, $comment, $userid)';
             db.run(stmt, {
                 $id: securityId,
                 $date: asset.date,
@@ -113,7 +113,7 @@ function addAsset(db, asset, callback) {
                     }
                     else {
                         if (asset.price > 0 && asset.deduct) {
-                            return deductCurrency(db, asset, callback)
+                            return deductCurrency(db, session, asset, callback)
                         }
                         else {
                             return callback({
@@ -187,7 +187,7 @@ function insertNewCurrency(db, currency, callback) {
     });
 }
 
-function deductCurrency(db, asset, callback) {
+function deductCurrency(db, session, asset, callback) {
     // Deducing is like adding a new negative investment =>
     // We create an investment and call addAsset() on it
     console.log('Deducting ' + asset.price + ' ' + asset.currency + ' from assets');
@@ -210,7 +210,7 @@ function deductCurrency(db, asset, callback) {
                 number: -asset.price,
                 type: 'Cash'
             };
-            return addAsset(db, negAsset, callback)
+            return addAsset(db, session, negAsset, callback)
         }
     });
 }

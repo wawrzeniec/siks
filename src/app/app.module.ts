@@ -15,6 +15,7 @@ import { AddSecurityComponent } from '@app/components/add-security/add-security.
 import { LoginComponent } from './components/login/login.component';
 import { AddAssetComponent } from './components/add-asset/add-asset.component';
 import { SelectAssetIdComponent } from './components/select-asset-id/select-asset-id.component';
+import { SummaryComponent } from './components/summary/summary.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SelectAssetIdComponent } from './components/select-asset-id/select-asse
     LoginComponent,
     AddAssetComponent,
     SelectAssetIdComponent,
+    SummaryComponent,
   ],
   imports: [
     BrowserModule,

@@ -68,12 +68,15 @@ app.use(function(req, res, next) {
 	if ('OPTIONS' == req.method) {
 		res.sendStatus(200);
 	}
-	next();
+	else {
+		next();
+	}
 });
 
 app.use(/^(?!\/login\/?$)/, function(req, res, next) {	
 	if (req.session.loggedin) {        
-        next()
+			console.log(req.session)	
+			next()
     }
     else {
 		res.status(401);
@@ -162,7 +165,6 @@ app.post('/users/', (req, res) => {
 	});
 });
 
-
 ///////////////////////////////
 // SECURITIES  
 // This is the endpoints for querying and modifying app securities and their details
@@ -194,15 +196,13 @@ app.get('/config/securities', (req, res) => {
 	});
 });
 
-
-
 ////////////////////////////////////
 // Quotes
 
 app.get('/quote', (req, res) => {
 	quoteService.getQuote(req.query, (result) => {
 		res.status(result.status);
-		res.json(result)
+		res.json(result);
 	});
 });
 
@@ -213,16 +213,27 @@ app.get('/quote', (req, res) => {
 app.post('/security', (req, res) => {
 	securityService.addSecurity(configdb, req.body, (result) => {
 		res.status(result.status);
-		res.json(result)
+		res.json(result);
 	});
 });
 
 app.post('/asset', (req, res) => {
-	securityService.addAsset(configdb, req.body, (result) => {
+	securityService.addAsset(configdb, req.session, req.body, (result) => {
+		res.status(result.status);
+		res.json(result);
+	});
+});
+
+////////////////////////////////////
+// Data enpoint - to get the data
+// from the DB 
+app.get('/data/summary', (req, res) => {
+	dataService.getSummary(configdb, req.body, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});
 });
+
 
 ////////////////////////////////////
 // Default enpoint - to check server

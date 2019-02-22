@@ -1,3 +1,19 @@
 mat-toolbar {
     color: 'primary';
 }
+
+#wrapper{
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
+}
+
+.app-toolbar-title {
+    display: inline;
+    font-family: zonji;
+    font-size: 11pt;
+}
+
+.app-toolbar-summary {
+    display: inline;
+}

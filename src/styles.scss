@@ -11,6 +11,16 @@ $app-accent-color: $app-color-orange;
 
 $marginSmall: 20px;
 
+@font-face {
+    font-family: zonji;
+    src: url('assets/fonts/Zomzi.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: shirokuma;
+    src: url('assets/fonts/shirokuma.otf') format('opentype');
+}
+
 .filler {
     max-width: 100%;
     min-width: 1px;
