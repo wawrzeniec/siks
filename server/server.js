@@ -12,6 +12,7 @@ const paramService = require('./paramservice');
 const quoteService = require('./quoteservice');
 const securityService = require('./securityservice');
 const authService = require('./authservice');
+const dataService = require('./dataservice');
 
 require('typescript-require');
 
@@ -219,8 +220,25 @@ app.post('/security', (req, res) => {
 
 app.post('/asset', (req, res) => {
 	securityService.addAsset(configdb, req.session, req.body, (result) => {
-		res.status(result.status);
-		res.json(result);
+		if (result.status != 200) {
+			res.status(result.status);
+			res.json(result);
+		}
+		else {
+			const output = quoteService.updateNew(dbname);
+			if (output.status != 0) {
+				res.status(500);
+				res.json({
+					status: 500,
+					reason: 'Failed to check for new assets',
+					err: output
+				})
+			}
+			else {
+				res.status(result.status);
+				res.json(result);
+			}
+		}				
 	});
 });
 
@@ -228,7 +246,7 @@ app.post('/asset', (req, res) => {
 // Data enpoint - to get the data
 // from the DB 
 app.get('/data/summary', (req, res) => {
-	dataService.getSummary(configdb, req.body, (result) => {
+	dataService.getSummary(configdb, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});

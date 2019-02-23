@@ -1,4 +1,5 @@
 const { spawn } = require('child_process');
+const { spawnSync } = require('child_process');
 
 function getQuote(query, callback) {
     const method = query.method;
@@ -27,7 +28,16 @@ function getQuote(query, callback) {
     });
 }
 
+function updateNew(dbname) {
+    // This checks if there are new assets that have not been tracked yet, and tracks them if so
+    const command = 'python'; 
+    console.log('Checking for new securities...');
+    const cmd = spawnSync(command, ['checknew.py', dbname], { cwd: './python' });
+    return cmd;
+}
+
 module.exports = {
-    getQuote
+    getQuote,
+    updateNew
 };
 

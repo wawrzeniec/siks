@@ -1,8 +1,11 @@
 from __future__ import print_function
 from error import GETQUOTE_ERROR
-
+import os
 
 PAUSE_BETWEEN_REQUESTS = 2
+
+dbpath = '../db'
+dbname = 'siksdb.db'
 
 def getQuote(method, ticker):
     try:
@@ -32,7 +35,7 @@ def getQuote(method, ticker):
     except Exception as e:
         raise GETQUOTE_ERROR(method, ticker, str(e))
 
-def getAll():
+def getAll(securityid=None):
     import sqlite3
     import numpy as np
     import json
@@ -50,7 +53,7 @@ def getAll():
 
     #0. Connects to the database
     try:
-        conn = sqlite3.connect('../db/siksdb.db')
+        conn = sqlite3.connect(os.path.join(dbpath, dbname))
         db = conn.cursor()
     except Exception as e:
         raise Exception('Error opening database: [%s]' % str(e))
@@ -116,68 +119,85 @@ def getAll():
         lastupdate = np.array([todate(r[9]) for r in rows])
 
     # Updates all the security entries
+    if securityid is None:
+        securityid = np.unique(secids)
+
     for thismethods, thisid, thisname, thislast, thiscur, thistype in zip(methods, secids, secnames, lastupdate, currencies, types):
-        print('Going for 1')
-        try:
-            dt = nowdate - thislast
-            print(dt)
-            if dt > datetime.timedelta(0.9):
-                print('Last update for %s [%s] ago. Re-queriying.' % (thisname, dt.__str__()))
+        if thisid in securityid:
+            try:
+                if thisname == 'Swiss Franc':
+                    checkCHF(db, thisid, getts())
+                else:
+                    dt = nowdate - thislast
+                    print(dt)
+                    if dt > datetime.timedelta(0.9):
+                        print('Last update for %s [%s] ago. Re-queriying.' % (thisname, dt.__str__()))
 
-                method = json.loads(thismethods)
-                print(method)
-                nmethods = len(method)
-                print(nmethods)
-                order = permutation(range(nmethods))
-                print(order)
-                for i in range(nmethods):
-                    try:
-                        algo = method[order[i]]['methodid']
-                        ticker = method[order[i]]['parameters']
-                        print('Getting quote for %s [%s], method=%s' % (thisname, ticker, algo))
-                        quote = getQuote(algo, ticker)
-                        break
-                    except Exception as e:
-                        nErrors += 1
-                        errorLoc.append('While getting quote for %s [%s], method [%s]' % (thisname, ticker, algo))
-                        errorDesc.append(str(e))
-                        continue
+                        method = json.loads(thismethods)
+                        print(method)
+                        nmethods = len(method)
+                        print(nmethods)
+                        order = permutation(range(nmethods))
+                        print(order)
+                        for i in range(nmethods):
+                            try:
+                                algo = method[order[i]]['methodid']
+                                ticker = method[order[i]]['parameters']
+                                print('Getting quote for %s [%s], method=%s' % (thisname, ticker, algo))
+                                quote = getQuote(algo, ticker)
+                                break
+                            except Exception as e:
+                                nErrors += 1
+                                errorLoc.append('While getting quote for %s [%s], method [%s]' % (thisname, ticker, algo))
+                                errorDesc.append(str(e))
+                                continue
 
-                ts = getts()
-                try:
-                    print('Inserting data into DB...')
-                    db.execute('INSERT INTO history (securityid, timestamp, value) VALUES (:id, :ts, :quote)', {"id": thisid, "ts": ts, "quote": quote})
-                except Exception as e:
-                    nErrors += 1
-                    errorLoc.append('While inserting quote for %s [%s] into DB' % (thisname, ticker))
-                    errorDesc.append(str(e))
-                    continue
+                        ts = getts()
+                        try:
+                            print('Inserting data into DB...')
+                            db.execute('INSERT INTO history (securityid, timestamp, value) VALUES (:id, :ts, :quote)', {"id": thisid, "ts": ts, "quote": quote})
+                        except Exception as e:
+                            nErrors += 1
+                            errorLoc.append('While inserting quote for %s [%s] into DB' % (thisname, ticker))
+                            errorDesc.append(str(e))
+                            continue
 
-                try:
-                    print('Setting last update time...')
-                    db.execute('UPDATE securities SET lastupdate=:ts WHERE securityid=:id',
-                               {"ts": ts, "id": thisid})
-                except Exception as e:
-                    nErrors += 1
-                    errorLoc.append('While setting last update time for %s [%s] into DB' % (thisname, ticker))
-                    errorDesc.append(str(e))
-                    continue
+                        try:
+                            print('Setting last update time...')
+                            db.execute('UPDATE securities SET lastupdate=:ts WHERE securityid=:id',
+                                       {"ts": ts, "id": thisid})
+                        except Exception as e:
+                            nErrors += 1
+                            errorLoc.append('While setting last update time for %s [%s] into DB' % (thisname, ticker))
+                            errorDesc.append(str(e))
+                            continue
 
-                time.sleep(PAUSE_BETWEEN_REQUESTS)
-            else:
-                print('Last update for %s [%s] ago. Skipping.' % (thisname, dt.__str__()))
+                        time.sleep(PAUSE_BETWEEN_REQUESTS)
+                    else:
+                        print('Last update for %s [%s] ago. Skipping.' % (thisname, dt.__str__()))
 
-        except Exception as e:
-            nErrors += 1
-            errorLoc.append('While getting quote for %s' % thisname)
-            errorDesc.append(str(e))
-            continue
+            except Exception as e:
+                nErrors += 1
+                errorLoc.append('While getting quote for %s' % thisname)
+                errorDesc.append(str(e))
+                continue
 
     print('getAll() terminated. Committing and closing DB.')
     conn.commit()
     db.close()
 
     return nErrors, errorLoc, errorDesc
+
+def checkCHF(db, id, timestamp):
+    print('Checking if CHF [%s] is in history...' % id)
+    row = db.execute('SELECT 1 FROM history WHERE securityid=:id', {"id": id}).fetchone()
+    if row:
+        print('Already in.')
+        return
+    else:
+        print('Nope. Adding...')
+        db.execute('INSERT INTO history (securityid, timestamp, value) VALUES (:id, :ts, 1)',
+               {"id": id, "ts": timestamp})
 
 def updateCurrency(cur):
     from numpy.random import permutation
@@ -237,7 +257,7 @@ def currenciesToSecurities():
 
     # 0. Connects to the database
     try:
-        conn = sqlite3.connect('../db/siksdb.db')
+        conn = sqlite3.connect(os.path.join(dbpath, dbname))
     except Exception as e:
         raise Exception('Error opening database: [%s]' % str(e))
 
@@ -327,3 +347,46 @@ def currenciesToSecurities():
     db.close()
 
     return nErrors, errorLoc, errorDesc
+
+def checkNew():
+    import sqlite3
+    import numpy as np
+    import datetime
+    from assets import currencySymbol, currencyName
+
+    nErrors = 0
+    errorLoc = []
+    errorDesc = []
+
+    timestamp = getts()
+    print('[%s] Starting checkNew()' % timestamp)
+
+    # 0. Connects to the database
+    try:
+        print(os.getcwd())
+        dbfile = os.path.join(dbpath, dbname)
+        print(dbfile)
+        conn = sqlite3.connect(dbfile)
+        db = conn.cursor()
+    except Exception as e:
+        raise Exception('Error opening database %s: [%s]' % (dbfile, str(e)))
+
+    # 1. Gets the list of securities
+    try:
+        # NICE query but this is not necessary
+        # stmt = 'SELECT securityid, mt FROM (SELECT securityid, max(timestamp) AS mt FROM securities LEFT JOIN history USING(securityid) GROUP BY securityid) WHERE mt IS NULL'
+        stmt = 'SELECT securityid FROM securities WHERE lastupdate IS NULL'
+        rows = db.execute(stmt).fetchall()
+    except Exception as e:
+        raise Exception('Error retrieving unwatched securities: [%s]' % str(e))
+    nrows = len(rows)
+    print('Found %d securities' % nrows)
+
+    conn.close()
+
+    if nrows > 0:
+        securityid = [r[0] for r in rows]
+        nErrors, errorLoc, errorDesc = getAll(securityid=securityid)
+        return nErrors, errorLoc, errorDesc
+    else:
+        return 0, [], []

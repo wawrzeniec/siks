@@ -11,6 +11,7 @@ $app-accent-color: $app-color-orange;
 
 $marginSmall: 20px;
 
+/*
 @font-face {
     font-family: zonji;
     src: url('assets/fonts/Zomzi.TTF') format('truetype');
@@ -20,6 +21,77 @@ $marginSmall: 20px;
     font-family: shirokuma;
     src: url('assets/fonts/shirokuma.otf') format('opentype');
 }
+
+@font-face {
+    font-family: killgoNA;
+    src: url('assets/fonts/GN-KillGothic-U-KanaNA.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: killgoNB;
+    src: url('assets/fonts/GN-KillGothic-U-KanaNB.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: killgoO;
+    src: url('assets/fonts/GN-KillGothic-U-KanaO.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: hanko;
+    src: url('assets/fonts/HANKO___.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: Mio6;
+    src: url('assets/fonts/MioBoldW6.otf') format('opentype');
+}
+
+@font-face {
+    font-family: Mio4;
+    src: url('assets/fonts/MioW4.otf') format('opentype');
+}
+
+@font-face {
+    font-family: OreHaru;
+    src: url('assets/fonts/OreHaru.otf') format('opentype');
+}
+
+@font-face {
+    font-family: OreNatsu;
+    src: url('assets/fonts/OreNatsu.otf') format('opentype');
+}
+
+@font-face {
+    font-family: Ryu;
+    src: url('assets/fonts/RyunosukeW4.otf') format('opentype');
+}
+
+@font-face {
+    font-family: Sakura;
+    src: url('assets/fonts/SAKURA.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: Sakurah;
+    src: url('assets/fonts/SAKURAh.TTF') format('truetype');
+}
+
+@font-face {
+    font-family: Yakitori;
+    src: url('assets/fonts/YAKITORI.TTF') format('truetype');
+}*/
+
+@font-face {
+    font-family: shirayuki;
+    src: url('assets/fonts/shirayuki.otf') format('opentype');
+}
+
+/*
+@font-face {
+    font-family: kizuna;
+    src: url('assets/fonts/kizunadrops.TTF') format('truetype');
+}*/
 
 .filler {
     max-width: 100%;

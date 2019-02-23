@@ -7,12 +7,14 @@ import { DataService } from '@app/services/data.service'
 })
 export class SummaryComponent implements OnInit {
   data: any;
+  total: number|string = 'N/A';
 
   constructor(private dataService: DataService) { }
 
   ngOnInit() {
     this.dataService.getSummary().subscribe( response => {
-      this.data.total = response.data.total
+      this.data = response.data;
+      this.total = response.data.total;  
     });
   }
 

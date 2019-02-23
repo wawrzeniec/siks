@@ -85,7 +85,7 @@ function addAsset(db, session, asset, callback) {
 
     // If it is a currency, the id will be the currency name
 
-    getSecurityId(db, asset, (securityId, err) => {
+    getSecurityId(db, session, asset, (securityId, err) => {
         if (err) {
             return callback({
                 status: 500,
@@ -101,7 +101,8 @@ function addAsset(db, session, asset, callback) {
                 $number: asset.number,
                 $price: asset.price,
                 $currency: asset.currency,
-                $comment: asset.comment
+                $comment: asset.comment,
+                $userid: session.userid
                 },
                 (err) => {
                     if (err) {
@@ -127,7 +128,7 @@ function addAsset(db, session, asset, callback) {
     });
 }
 
-function getSecurityId(db, asset, callback) {
+function getSecurityId(db, session, asset, callback) {
     console.log('Getting securityid')
     if (asset.type == 'Cash') {
         console.log('Type is Cash: ' + asset.id)
@@ -150,7 +151,7 @@ function getSecurityId(db, asset, callback) {
                 }
                 else {
                     // We need to insert the currency as an asset
-                    return insertNewCurrency(db, asset.id, callback)
+                    return insertNewCurrency(db, session, asset.id, callback)
                 }
             }
         });
@@ -162,7 +163,7 @@ function getSecurityId(db, asset, callback) {
     }
 }
 
-function insertNewCurrency(db, currency, callback) {
+function insertNewCurrency(db, session, currency, callback) {
     console.log('Inserting new currency ' + currency)
     const curmethods = assetsModule.makeDefaultCurrencyWatch(currency);
     var curlist = {};
@@ -171,11 +172,14 @@ function insertNewCurrency(db, currency, callback) {
     }
     let identifier = curlist[currency]
     console.log('Found identifier = ' + identifier);
-    let stmt = 'INSERT INTO securities (identifier, typeid, currency, methods, watch) VALUES ($id, 1, $cur, $methods, 1)';
+    console.log('Inserting w/ methods:');
+    console.log(curmethods);
+    let stmt = 'INSERT INTO securities (identifier, typeid, currency, methods, watch, userid) VALUES ($id, 1, $cur, $methods, 1, $userid)';
     db.run(stmt, {
         $id: identifier,
         $cur: currency,
-        $methods: curmethods
+        $methods: JSON.stringify(curmethods),
+        $userid: session.userid
     }, function (err) {
         if (err) {
             return callback(null, err)
@@ -240,41 +244,8 @@ function makeDeductionComment(db, asset, callback) {
     }
 }
 
-/*
-[{"methodid":"gcur","parameters":cur},{"methodid":"ycur","parameters":cur}]
-*/
-
-var asset1 = {
-'comment': null,
-'currency': "USD",
-'date': "2019-02-16",
-'deduct': true,
-'id': "USD",
-'number': "12",
-'price': "1",
-'type': "Cash"
-}
-
-var asset2 = {
-'comment': "romeo",
-'currency': "USD",
-'date': "2019-02-16",
-'deduct': true,
-'id': 1,
-'number': "12",
-'price': "1",
-'type': "Security"
-}
-
-// TODO:
-// TEST addAsset to see if there is no loophole,
-// then remove unnecessary stuff and logs (and exports!)
-// and that's it :)
-
 
 module.exports = {
     addSecurity,
     addAsset,
-    asset1,
-    asset2
 };
