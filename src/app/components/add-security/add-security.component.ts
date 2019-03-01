@@ -4,10 +4,10 @@ import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { serverPacket, securityDescriptor, methodDescriptor, ASSET_TYPES } from '@server/assets/assets'
-import { currencyList, scrapeMethods } from '@server/assets/assets'
-import { ConfigService } from '@app/services/config.service'
-import { QuoteService } from '@app/services/quote.service'
-import { SecurityService } from '@app/services/security.service'
+import { currencyList, scrapeMethods } from '@server/assets/assets';
+import { ConfigService } from '@app/services/config.service';
+import { QuoteService } from '@app/services/quote.service';
+import { SecurityService } from '@app/services/security.service';
 
 interface FormGroupObject {
   [key: string]: FormGroup
@@ -174,7 +174,7 @@ export class AddSecurityComponent implements OnInit {
     // Now calls the security service instance to push this data into the DB
     this.securityservice.addSecurity(this.security).subscribe(result => {
       // Successfully inserted security => close dialog
-      this.dialogRef.close();
+      this.dialogRef.close();      
     }, error => {
       // Error occurred => handle error
       // We should create an alert dialog class to handle these situations

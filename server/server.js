@@ -45,6 +45,7 @@ app.use(session({
 
 // On startup connects to the config database
 const dbname = 'siksdb.experimental.db'
+//const dbname = 'siksdb.db'
 const configdb = new sqlite3.Database('db/' + dbname, (err) => {
   if (err) {  
     console.log('[!!!] Error connecting to siks database: ' + err.message);
@@ -247,6 +248,13 @@ app.post('/asset', (req, res) => {
 // from the DB 
 app.get('/data/summary', (req, res) => {
 	dataService.getSummary(configdb, (result) => {
+		res.status(result.status);
+		res.json(result)
+	});
+});
+
+app.get('/data/history', (req, res) => {
+	dataService.getHistory(configdb, req.session, req.params.mindate, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});

@@ -4,6 +4,18 @@ $marginBottom: 20px;
     display: flex;
 }
 
+.app-login-title {
+    font-family: shirayuki;
+    font-weight: normal;
+    font-size: 13pt;
+    margin-bottom: 0px;
+}
+
+.app-login-subtitle {
+    font-weight: normal;
+    font-size: 13pt;
+}
+
 .app-login-usernameformfield{
     display:block;
     max-width: 200px;

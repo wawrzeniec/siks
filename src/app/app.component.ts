@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SessionService } from '@app/services/session.service'
+import { EventService } from '@app/services/event.service'
 
 @Component({
   selector: 'app-root',
@@ -8,19 +9,26 @@ import { SessionService } from '@app/services/session.service'
 })
 export class AppComponent implements OnInit{
   title: string = 'siks';
-  loginOpen: boolean = false;
   
-  constructor(public sessionService: SessionService) {
+  constructor(public sessionService: SessionService, 
+    public eventService: EventService) {
     
   };
 
   ngOnInit() {
-    this.sessionService.checkSession();
+  }
+
+  ngAfterViewInit() {
+    this.sessionService.checkSession.subscribe((msg) => {
+      console.log(msg)
+      console.log(this.eventService);
+      this.eventService.triggerReloadSummary();
+    });
   }
 
   @HostListener('window:focus')
   onFocus(): void {
-    this.sessionService.checkSession();
+    this.sessionService.checkSession.subscribe((data) => console.log(data));
   }
 }
 

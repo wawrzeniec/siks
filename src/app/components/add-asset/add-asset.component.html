@@ -109,10 +109,11 @@
             Deduct from owned cash
           </mat-checkbox>  
         </div>        
-        <div>
+        <div class="app-aa-buttongroup">
           <button mat-button matStepperPrevious class="app-stepper-backbtn">Back</button>
           <button mat-button mat-flat-button color="primary" class="app-stepper-submitbtn"
           (click)="addAsset()">Add asset</button>
+          <mat-progress-spinner class="app-aa-spinner" *ngIf="iswaiting" diameter=20 color="primary" mode="indeterminate"></mat-progress-spinner>
         </div>
       </form>
     </mat-step>        

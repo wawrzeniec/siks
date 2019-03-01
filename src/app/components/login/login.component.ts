@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '@app/services/auth.service'
+import { EventService } from '@app/services/event.service'
 import { loginDataContainer } from '@server/assets/assets'
 import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
@@ -36,7 +37,8 @@ export class LoginComponent implements OnInit {
 
   constructor(public dialog: MatDialog, 
               private dialogRef:MatDialogRef<LoginComponent>,
-              public authService: AuthService) { }
+              public authService: AuthService,
+              public eventService: EventService) { }
 
   ngOnInit() {
     this.loginFormGroup = new FormGroup({
@@ -51,9 +53,10 @@ export class LoginComponent implements OnInit {
     this.loginData.userName = this.userNameCtrl.value;
     this.loginData.password = this.loginFormGroup.get('password').value;
     this.authService.postLogin(this.loginData).subscribe(result => {
-      // Successfully inserted security => close dialog
-      this.wrongCred = true;
+      // Successful login => close the dialog
+      this.wrongCred = false;
       this.dialogRef.close();
+      this.eventService.triggerReloadSummary();
     }, error => {
       // Error occurred => handle error
       // We should create an alert dialog class to handle these situations

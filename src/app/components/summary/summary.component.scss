@@ -1,4 +1,26 @@
 .app-total {
-    font-family: monospace;
-    font-weight: bold;
+    font-weight: normal;
+    font-size: 16px;
 }
+
+.summary ::ng-deep .mat-progress-spinner circle, .mat-spinner circle {
+    stroke: #ffffff;
+}
+
+.summary {
+    display:inline-block;
+    min-width:40px;
+}
+
+.mat-tooltip {
+    white-space: pre-line;
+  }
+
+.app-summary-tooltip {
+    font-size: 10px;
+}
+
+.app-summary-tooltip-tdleft {
+    align: right;
+}
+

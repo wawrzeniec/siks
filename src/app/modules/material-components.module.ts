@@ -15,19 +15,19 @@ import {MatButtonModule,
   MatNativeDateModule } from '@angular/material';
 import { MatTableModule } from '@angular/material/table'
 import { MatDatepickerModule } from '@angular/material/datepicker'
-  
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
             MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
             MatSelectModule, MatProgressSpinnerModule, MatTableModule,
-            MatDatepickerModule, MatNativeDateModule],
+            MatDatepickerModule, MatNativeDateModule, MatTooltipModule],
 
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
     MatSelectModule, MatProgressSpinnerModule, MatTableModule,
-    MatDatepickerModule, MatNativeDateModule]
+    MatDatepickerModule, MatNativeDateModule, MatTooltipModule]
 })
 export class MaterialComponentsModule { }

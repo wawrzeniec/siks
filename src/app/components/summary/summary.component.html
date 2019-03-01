@@ -1,1 +1,13 @@
-<h3 class="mat-h3 app-total">{{total | number:'0.2-2':'en-us'}} CHF</h3>
+
+<div class="summary">
+  <mat-progress-spinner *ngIf="loading"
+          class="app-progress-spinner"
+          mode="indeterminate"
+          diameter=15>
+  </mat-progress-spinner>  
+  
+  <ng-template #tooltipcontent><div class="app-summary-tooltip" [innerHtml]="tooltiptext"></div></ng-template>
+  <h3 class="mat-h3 app-total" *ngIf="!loading" placement="bottom" [tooltip]="tooltipcontent">
+    {{total | number:'0.2-2':'en-us'}} {{currency}}
+  </h3>
+</div>

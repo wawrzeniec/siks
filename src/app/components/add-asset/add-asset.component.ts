@@ -7,6 +7,7 @@ import { serverPacket, assetDescriptor } from '@server/assets/assets'
 import { ConfigService } from '@app/services/config.service'
 import { AssetService } from '@app/services/asset.service'
 import { assetNumberString, currencyList } from '@server/assets/assets'
+import { EventService } from '@app/services/event.service'
 
 @Component({
   selector: 'app-add-asset',
@@ -65,9 +66,13 @@ export class AddAssetComponent implements OnInit {
   // Output data
   data: assetDescriptor;
   
+  // For progress spinner
+  iswaiting: boolean = false;
+
   constructor(private dialogRef:MatDialogRef<AddAssetComponent>,
               public configservice: ConfigService,
-              public assetservice: AssetService) { }
+              public assetservice: AssetService, 
+              private eventService: EventService) { }
 
   ngOnInit() {
     this.getTypes().subscribe( (response: serverPacket) => {
@@ -188,8 +193,11 @@ export class AddAssetComponent implements OnInit {
     this.data['deduct'] = this.addAssetConfirmGroup.get('deduct').value as boolean;
     
     // Pushes data to the server
+    this.iswaiting = true;
     this.assetservice.addAsset(this.data).subscribe(result => {
       // Successfully inserted security => close dialog
+      this.eventService.triggerReloadSummary();
+      this.iswaiting = false;
       this.dialogRef.close();
     }, error => {
       // Error occurred => handle error

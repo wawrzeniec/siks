@@ -160,3 +160,13 @@ $marginSmall: 20px;
 .app-topmargins {
     margin-top: $marginSmall;
 }
+
+.app-dialog-panel-login {
+    height: '500px';
+    width: '600px';
+}
+
+.app-dialog-backdrop-login {
+    background-color: darkslategray;
+    opacity: 0.98;
+}
