@@ -28,6 +28,7 @@
     "connect-sqlite3": "^0.9.11",
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
+    "d3": "^5.9.1",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "hammerjs": "^2.0.8",

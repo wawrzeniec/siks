@@ -17,6 +17,10 @@ import { AddAssetComponent } from './components/add-asset/add-asset.component';
 import { SelectAssetIdComponent } from './components/select-asset-id/select-asset-id.component';
 import { SummaryComponent } from './components/summary/summary.component';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { HistoryGraphComponent } from './components/graphs/history-graph/history-graph.component';
+import { GraphContainerComponent } from './components/graphs/graph-container/graph-container.component';
+
+import { NgxChartsModule } from '@swimlane/ngx-charts'
 
 @NgModule({
   declarations: [
@@ -29,7 +33,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     LoginComponent,
     AddAssetComponent,
     SelectAssetIdComponent,
-    SummaryComponent
+    SummaryComponent,
+    HistoryGraphComponent,
+    GraphContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -39,13 +45,15 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
     FormsModule, 
     ReactiveFormsModule,
     HttpClientModule,
-    TooltipModule.forRoot()
+    TooltipModule.forRoot(),
+    NgxChartsModule
   ],
   entryComponents: [
     AddUserComponent,
     AddSecurityComponent,
     LoginComponent,
-    AddAssetComponent
+    AddAssetComponent,
+    HistoryGraphComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

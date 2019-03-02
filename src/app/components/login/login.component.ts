@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
       this.wrongCred = false;
       this.dialogRef.close();
       this.eventService.triggerReloadSummary();
+      this.eventService.triggerReloadGraphs();
     }, error => {
       // Error occurred => handle error
       // We should create an alert dialog class to handle these situations

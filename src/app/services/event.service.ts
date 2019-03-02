@@ -17,12 +17,18 @@ class Event {
 })
 export class EventService {
   reloadSummaryEvent: Event;
+  reloadGraphsEvent: Event;
 
   constructor() {    
     this.reloadSummaryEvent = new Event();
+    this.reloadGraphsEvent = new Event();
    }
 
   triggerReloadSummary() {
     this.reloadSummaryEvent.callback();
+  }
+
+  triggerReloadGraphs() {
+    this.reloadGraphsEvent.callback();
   }
 }

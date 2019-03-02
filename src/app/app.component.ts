@@ -23,6 +23,7 @@ export class AppComponent implements OnInit{
       console.log(msg)
       console.log(this.eventService);
       this.eventService.triggerReloadSummary();
+      this.eventService.triggerReloadGraphs();
     });
   }
 
