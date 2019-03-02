@@ -23,13 +23,13 @@ export class HistoryGraphComponent implements OnInit {
       "name": "Germany",
       "series": [
         {
-          "name": "2010",
+          "name": new Date("2010"),
           "value": 7300000,
           "min": 7000000,
           "max": 7600000
         },
         {
-          "name": "2011",
+          "name": new Date("2011"),
           "value": 8940000,
           "min": 8840000,
           "max": 9300000
@@ -41,13 +41,13 @@ export class HistoryGraphComponent implements OnInit {
       "name": "USA",
       "series": [
         {
-          "name": "2010",
+          "name": new Date("2010"),
           "value": 7870000,
           "min": 7800000,
           "max": 7950000
         },
         {
-          "name": "2011",
+          "name": new Date("2011"),
           "value": 8270000,
           "min": 8170000,
           "max": 8300000
@@ -65,7 +65,38 @@ export class HistoryGraphComponent implements OnInit {
 
   reload() {
     console.log('HistoryGraphComponent: reloading myself!!')
-    this.dataLoaded = true;
-    console.log(this.lineData);
+    this.dataService.getHistory().subscribe((result) => {
+      if (result.status == 200) {
+        this.formatData(result.data);
+        this.dataLoaded = true;
+      }
+      else {
+        // Handle the error here
+        console.log('Error while retrieving historical data:');
+        console.log(result);
+      }
+    });
   }
+
+  formatData(data) {
+    this.lineData = [];
+    let added = {};
+    for (let y of data) {
+      if (!added.hasOwnProperty(y.securityid)) {
+        added[y.securityid] = this.lineData.length;
+        this.lineData.push({
+          "name": y.securityid,
+          "series": []
+        });
+      }
+      if (y.totalvalue != null) {
+        this.lineData[added[y.securityid]]["series"].push({
+          "name": new Date(y.timestamp),
+          "value": y.totalvalue
+        });            
+      }
+    }
+  console.log(this.lineData);
+  }
+
 }

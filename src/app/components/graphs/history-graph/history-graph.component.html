@@ -1,5 +1,16 @@
-<div *ngIf="dataLoaded" style="height:200px">
-  <ngx-charts-line-chart
-    [results]="lineData">
-  </ngx-charts-line-chart>
+<div *ngIf="dataLoaded" style="height:300px" class="">
+  <ngx-charts-area-chart-stacked
+    [results]="lineData"    
+    scheme="picnic"    
+    xAxis="true"
+    yAxis="true"
+    showXAxisLabel="true"
+    showYAxisLabel="true"
+    xAxisLabel="Date"
+    yAxisLabel="Value (CHF)"
+    timeline="true"
+    xScale="date"
+    gradient="true"
+    >
+  </ngx-charts-area-chart-stacked>
 </div>

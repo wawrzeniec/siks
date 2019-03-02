@@ -15,7 +15,7 @@ import {BrowserModule} from '@angular/platform-browser';
 })
 export class GraphContainerComponent implements OnInit {
   @ViewChild('historyGraph', {read: ViewContainerRef}) 
-    private _HistoryGraphComponentRef: ElementRef;
+    private _HistoryGraphComponentRef;
   private historyGraphComponent: HistoryGraphComponent;
 
   constructor(private eventService: EventService,

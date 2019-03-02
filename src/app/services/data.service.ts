@@ -22,4 +22,10 @@ export class DataService {
     const url: string = this.baseUrl + '/summary'; 
     return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
   }
+
+  getHistory(mindate?: string): Observable<serverPacket> {
+    // Get the "history" total in CHF
+    const url: string = this.baseUrl + '/history'; 
+    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+  }
 }

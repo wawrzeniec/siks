@@ -44,8 +44,8 @@ app.use(session({
 //app.use(express.static(__dirname + '/public'));
 
 // On startup connects to the config database
-const dbname = 'siksdb.experimental.db'
-//const dbname = 'siksdb.db'
+//const dbname = 'siksdb.experimental.db'
+const dbname = 'siksdb.db'
 const configdb = new sqlite3.Database('db/' + dbname, (err) => {
   if (err) {  
     console.log('[!!!] Error connecting to siks database: ' + err.message);

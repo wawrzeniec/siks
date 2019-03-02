@@ -25,6 +25,7 @@ function getSummary(db, callback) {
             });
         }
         else {
+            // Formats the data for the front-end
             data = {
                 total: 0,
                 identifier: [],
@@ -51,7 +52,6 @@ function getSummary(db, callback) {
                 data.typename.push(rows[d].typename);
                 data.currency.push(rows[d].currency)
             }
-            console.log(data);
             return callback({
                 status: 200,
                 data: data
@@ -85,24 +85,45 @@ function getHistory(db, session, mindate, callback) {
     let userid = session.userid;
     console.log(userid);
 
-    let userclause = '';
+    let userclause = ' ';
     if (userid == 0) {
-        userclause = ''; 
+        userclause = ' '; 
     }
     else {
-        userclause = ' WHERE userid=$userid';
+        userclause = ' WHERE userid=$userid ';
     }
     console.log(userclause);
     
     let stmt = `
-    with history2 AS (
+    WITH usec AS ( 
+        SELECT 
+            DISTINCT(securityid) FROM investments` + userclause + 
+       `UNION
+        SELECT 
+            DISTINCT(securityid) FROM (
+                SELECT 
+                    DISTINCT(n.securityid) as iid, o.currency 
+                FROM 
+                    (SELECT * FROM	investments` + userclause + `) n 
+                JOIN 
+                    securities o         
+            )
+            JOIN (
+                SELECT 
+                    securityid, currency 
+                FROM 
+                    securities 
+                WHERE typeid = 1
+            )
+            USING(currency)
+        ),
+    
+    history2 AS (
         SELECT * FROM (
             SELECT * FROM
                 (SELECT DISTINCT(date(timestamp)) AS timestamp FROM history WHERE date(timestamp)>=$mindate)
             JOIN
-                (SELECT DISTINCT(securityid) FROM investments` + 
-    userclause + 
-    `)
+                usec
             ORDER BY timestamp, securityid
             ) n
         LEFT JOIN (
@@ -123,13 +144,11 @@ function getHistory(db, session, mindate, callback) {
     
         totalnumber AS (
         SELECT n.securityid securityid, n.dnumber number, n.date date, n.currency currency, sum(o.dnumber) AS total FROM (
-            SELECT *, sum(number) dnumber FROM investments` + 
-        userclause + 
-        ` GROUP BY securityid, date) n
+            SELECT *, sum(number) dnumber FROM investments` + userclause + 
+        `GROUP BY securityid, date) n
         LEFT JOIN
-            (SELECT *, sum(number) dnumber FROM investments` +
-        userclause + 
-        ` GROUP BY securityid, date) o
+            (SELECT *, sum(number) dnumber FROM investments` + userclause + 
+        `GROUP BY securityid, date) o
         ON (o.securityid = n.securityid AND n.date >= o.date)
         GROUP BY n.securityid, n.date
         ),
@@ -210,15 +229,17 @@ function getHistory(db, session, mindate, callback) {
             else {
                 // Format the rows here for ngx-charts
                 // The format is:
-                // - Each line in the graph hAS a "name" AND a "series" property.
+                // - Each line in the graph has a "name" AND a "series" property.
                 // - Each "series" is made up of {"name":name, "value":value} objects
                 //
                 // However we might want to do some processing on the front end - for example,
                 // if we want to change the display breakdown from "typeid" to "categoryid" or something
-                // similar. In this cASe it might be more useful to return all the columns AND let the
+                // similar. In this case it might be more useful to return all the columns and let the
                 // front-end do the calculation.
 
-                console.log(rows);
+                
+                /*
+                // For now we return all the rows - probably it makes more sense to deal with it directly on the front end
 
                 let securityid = [];
                 let typeid = [];
@@ -253,10 +274,11 @@ function getHistory(db, session, mindate, callback) {
                     currencyvalue: currencyvalue,
                     totalvalue: totalvalue
                 }
+                */
 
                 return callback({
                     status: 200,
-                    data: data
+                    data: rows
                 });
             }
         }
