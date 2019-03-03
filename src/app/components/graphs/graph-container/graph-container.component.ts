@@ -31,7 +31,7 @@ export class GraphContainerComponent implements OnInit {
     this.historyGraphComponent = _comp.instance;
   }
 
-  public createComponent (vCref: ViewContainerRef<any>, type: any): ComponentRef {
+  public createComponent (vCref: ViewContainerRef, type: any): ComponentRef<any> {
 
     let factory = this._cmpFctryRslvr.resolveComponentFactory(type);
 

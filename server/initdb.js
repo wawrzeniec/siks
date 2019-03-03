@@ -33,6 +33,7 @@ function createDB(db, callback)
   // Adds the cred table
   console.log('Adding table usercred...');
   let stmt = `CREATE TABLE usercred (
+    userid INTEGER UNIQUE NOT NULL AUTOINCREMENT PRIMARY KEY, 
     username TEXT UNIQUE NOT NULL, 
     hash TEXT NOT NULL
     )`;
@@ -48,9 +49,10 @@ function createDB(db, callback)
     // Adds the default users
     for (user in dbdefaults.defaultusers) {
       console.log('Adding default user "' + dbdefaults.defaultusers[user].username + '"');
-      stmt = `INSERT INTO usercred (username, hash) VALUES
-        ($username, $hash)`;   
+      stmt = `INSERT INTO usercred (userid, username, hash) VALUES
+        ($id, $username, $hash)`;   
         db.run(stmt, {
+          $id: dbdefaults.defaultusers[user].id,
           $username: dbdefaults.defaultusers[user].username,
           $hash: dbdefaults.defaultusers[user].hash
         }, (err) => {
@@ -344,4 +346,21 @@ function createDB(db, callback)
       });
     }
   });
+
+  stmt = `CREATE TABLE portfolios (
+    portfolioid INTEGER UNIQUE PRIMARY KEY,
+    name TEXT,
+    userid INTEGER,
+    FOREIGN KEY(userid) REFERENCES usercred(userid)
+    )`;
+  db.run(stmt, [], (err) => {
+    if (err) {  
+      return callback( {
+        status: 'error',
+        reason: 'failed to create portfolio table',
+        message: err.message
+      });
+    }
+  });
+
 }

@@ -9,13 +9,13 @@ console.log(saltRounds);
 function login(db, params, callback) {    
     const username = params.userName;
     const password = params.password;
-    let stmt = 'SELECT ROWID, hash FROM usercred WHERE username=$username';
+    let stmt = 'SELECT userid, hash FROM usercred WHERE username=$username';
     db.get(stmt, {
         $username: username, 
     },
     (err, row) => {
         if (err) {
-            console.log('error')
+            console.log(err);
             return callback({
                 status: 500,
                 reason: 'Failed to retrieve user info from database',
@@ -38,7 +38,7 @@ function login(db, params, callback) {
                         if (res) {
                             return callback({
                                 status: 200,
-                                data: row['rowid']
+                                data: row['userid']
                             }); 
                         }
                         else{                            

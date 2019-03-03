@@ -42,7 +42,7 @@ function createUser(db, username, emailaddress, password, callback) {
             db.run(stmt, {
                 $username: username, 
                 $hash: hash},
-                (err) => {
+                function(err) {
                     if (err) {
                         return callback({
                             status: 500,
@@ -51,8 +51,9 @@ function createUser(db, username, emailaddress, password, callback) {
                         });                        
                     }
                     else {
-                        stmt = 'INSERT INTO userprefs (username, emailaddress) values ($username, $email)';
+                        stmt = 'INSERT INTO userprefs (userid, username, emailaddress) values ($id, $username, $email)';
                         db.run(stmt, {
+                            $id: this.lastID,
                             $username: username, 
                             $email: emailaddress},
                             (err) => {
