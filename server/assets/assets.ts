@@ -84,7 +84,9 @@ date: string;
 price: number;
 currency: string;
 comment: string;
-deduct: boolean;
+portfolioid: number;
+payaccount: number;
+creditaccount: number;
 }
 
 export class methodDescriptor {

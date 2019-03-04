@@ -296,6 +296,24 @@ function createDB(db, callback)
     }
   });
 
+  CREATE TABLE "investments" (
+    "investmentid"	INTEGER UNIQUE,
+    "securityid"	INTEGER,
+    "date"	TEXT,
+    "number"	REAL,
+    "price"	REAL,
+    "currency"	TEXT,
+    "comment"	TEXT,
+    "userid"	INTEGER,
+    "creditaccount"	INTEGER,
+    "payaccount"	INTEGER,
+    FOREIGN KEY("payaccount") REFERENCES "accounts"("accountid"),
+    FOREIGN KEY("securityid") REFERENCES "securities"("securityid"),
+    FOREIGN KEY("userid") REFERENCES "userprefs"("userid"),
+    PRIMARY KEY("investmentid"),
+    FOREIGN KEY("creditaccount") REFERENCES "accounts"("accountid")
+  )
+
   stmt = `CREATE TABLE investments (
     investmentid INTEGER UNIQUE PRIMARY KEY,
     securityid INTEGER,
@@ -304,7 +322,13 @@ function createDB(db, callback)
     price REAL,
     currency TEXT,
     comment TEXT,
+    userid INTEGER,
+    creditaccount	INTEGER,
+    payaccount	INTEGER,
     FOREIGN KEY(securityid) REFERENCES securities(securityid)
+    FOREIGN KEY(userid) REFERENCES userprefs(userid),
+    FOREIGN KEY(creditaccount) REFERENCES accounts(accountid),
+    FOREIGN KEY(payaccount) REFERENCES accounts(accountid),
     )`;
   db.run(stmt, [], (err) => {
     if (err) {  
@@ -363,4 +387,23 @@ function createDB(db, callback)
     }
   });
 
+  stmt = `CREATE TABLE accounts (
+    accountid INTEGER UNIQUE PRIMARY KEY,
+    name TEXT,
+    bank TEXT,
+    iban TEXT,
+    currency TEXT,
+    userid INTEGER,
+    portfolioid TEXT,
+    FOREIGN KEY(userid) REFERENCES usercred(userid)
+    )`;
+  db.run(stmt, [], (err) => {
+    if (err) {  
+      return callback( {
+        status: 'error',
+        reason: 'failed to create accounts table',
+        message: err.message
+      });
+    }
+  });
 }

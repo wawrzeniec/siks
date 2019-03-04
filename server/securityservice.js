@@ -94,7 +94,27 @@ function addAsset(db, session, asset, callback) {
             });
         }
         else {
-            let stmt = 'INSERT INTO investments (securityid, date, number, price, currency, comment, userid) VALUES ($id, $date, $number, $price, $currency, $comment, $userid)';
+            let stmt = `INSERT INTO investments (
+                            securityid, 
+                            date, 
+                            number, 
+                            price, 
+                            currency, 
+                            comment, 
+                            userid,
+                            creditaccount,
+                            payaccount) 
+                        VALUES (
+                            $id, 
+                            $date, 
+                            $number, 
+                            $price, 
+                            $currency, 
+                            $comment, 
+                            $userid,
+                            $creditaccount,
+                            $payaccount
+                        )`;
             db.run(stmt, {
                 $id: securityId,
                 $date: asset.date,
@@ -102,10 +122,13 @@ function addAsset(db, session, asset, callback) {
                 $price: asset.price,
                 $currency: asset.currency,
                 $comment: asset.comment,
-                $userid: session.userid
+                $userid: session.userid,
+                $creditaccount: asset.creditaccount,
+                $payaccount: asset.payaccount
                 },
                 (err) => {
                     if (err) {
+                        console.log(err);
                         return callback({
                             status: 500,
                             reason: 'failed to add asset into database: ' + asset,
@@ -113,7 +136,7 @@ function addAsset(db, session, asset, callback) {
                         });
                     }
                     else {
-                        if (asset.price > 0 && asset.deduct) {
+                        if (asset.price > 0) {
                             return deductCurrency(db, session, asset, callback)
                         }
                         else {
@@ -209,10 +232,11 @@ function deductCurrency(db, session, asset, callback) {
                 comment: comment,
                 currency: asset.currency,
                 date: asset.date,
-                deduct: false,
                 id: asset.currency,
                 number: -asset.price,
-                type: 'Cash'
+                type: 'Cash',
+                creditaccount: asset.payaccount,
+                payaccount: null
             };
             return addAsset(db, session, negAsset, callback)
         }
@@ -244,8 +268,30 @@ function makeDeductionComment(db, asset, callback) {
     }
 }
 
+function getAccounts(db, session, callback) {
+    let stmt = 'SELECT accountid, name FROM accounts WHERE userid=$id';
+    db.all(stmt, {
+        $id: session.userid
+        }, (err, rows) => {
+            if (err) {
+                return callback({
+                    status: 500,
+                    reason: "Failed to query accounts from DB"
+                });
+            }
+            else {
+                return callback({
+                    status: 200,
+                    data: rows
+                })
+            }
+        }
+    );
+}
+
 
 module.exports = {
     addSecurity,
     addAsset,
+    getAccounts
 };

@@ -45,8 +45,8 @@
       </form>
     </mat-step>
     
-    <!-- 3rd step: asset details. This queries quantity, date of purchase, 
-    price and currency  -->
+    <!-- 3rd step: asset details. This queries quantity, date of purchase, and account to be credited
+    -->
     <mat-step [stepControl]="addAssetDetailsGroup">
       <form [formGroup]="addAssetDetailsGroup">
         <ng-template matStepLabel>Asset details</ng-template>
@@ -70,25 +70,17 @@
           <mat-error *ngIf="assetDetailsDateCtrl.hasError('required')">
             Date is required
           </mat-error>
-        </mat-form-field>
+        </mat-form-field>        
+        <!-- Account selection -->
         <mat-form-field class="app-formfield app-bottommargins">
-          <input matInput type="tel" class="app-input" placeholder="Price" formControlName="price" required>
-          <mat-hint>Price paid</mat-hint>
-          <mat-error *ngIf="!assetDetailsPriceCtrl.hasError('required') && assetDetailsPriceCtrl.hasError('pattern')">
-            Please enter a valid number
-          </mat-error>
-          <mat-error *ngIf="assetDetailsPriceCtrl.hasError('required')">
-            Price is required
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field class="app-formfield app-bottommargins">
-          <mat-select formControlName="currency" placeholder="Currency" required>
-            <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
+          <mat-select formControlName="account" placeholder="Pay account" required>
+            <mat-option class="app-select" *ngFor="let i in accounts" [value]="i">{{accounts[i]}}</mat-option>
           </mat-select>
-          <mat-error *ngIf="assetDetailsCurrencyCtrl.hasError('required')">
-            Currency is required
+          <mat-error *ngIf="assetDetailsAccountCtrl.hasError('required')">
+            Account is required
           </mat-error>
         </mat-form-field>
+        <!-- Action buttons -->
         <div>
             <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext class="app-stepper-nextbtn" type="button">Next</button>
@@ -96,6 +88,48 @@
       </form>
     </mat-step>
     
+    <!-- 4th step: payment details. This queries price, currency, and account to be debited
+    -->
+    <mat-step [stepControl]="addAssetPaymentsGroup">
+      <form [formGroup]="addAssetPaymentGroup">
+        <ng-template matStepLabel>Asset details</ng-template>
+        <mat-form-field class="app-formfield app-bottommargins">
+          <input matInput type="tel" class="app-input" placeholder="Price" formControlName="price" required>
+          <mat-hint>Price paid</mat-hint>
+          <mat-error *ngIf="!assetPaymentPriceCtrl.hasError('required') && assetPaymentPriceCtrl.hasError('pattern')">
+            Please enter a valid number
+          </mat-error>
+          <mat-error *ngIf="assetPaymentPriceCtrl.hasError('required')">
+            Price is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="app-formfield app-bottommargins">
+          <mat-select formControlName="currency" placeholder="Currency" required>
+            <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="assetPaymentCurrencyCtrl.hasError('required')">
+            Currency is required
+          </mat-error>
+        </mat-form-field>
+        <!-- Account selection -->
+        <mat-form-field class="app-formfield app-bottommargins">
+          <mat-select formControlName="account" placeholder="Pay account" required>
+            <mat-option class="app-select" *ngFor="let i in accounts" [value]="i">{{accounts[i]}}</mat-option>
+          </mat-select>
+          <mat-error *ngIf="assetPaymentAccountCtrl.hasError('required')">
+            Account is required
+          </mat-error>
+        </mat-form-field>        
+        <div>
+            <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext class="app-stepper-nextbtn" type="button">Next</button>
+        </div>
+      </form>
+    </mat-step>
+    
+
+
+
     <!-- 4th step: comment and confirm  -->
     <mat-step [stepControl]="addAssetConfirmGroup">
       <form [formGroup]="addAssetConfirmGroup">
@@ -103,12 +137,7 @@
         <mat-form-field class="app-formfield app-bottommargins">
           <input matInput class="app-input" placeholder="Comment" formControlName="comment">
           <mat-hint>Enter any comments here</mat-hint>
-        </mat-form-field>
-        <div class="app-bottommargins">
-          <mat-checkbox class="app-check" formControlName="deduct">
-            Deduct from owned cash
-          </mat-checkbox>  
-        </div>        
+        </mat-form-field>                
         <div class="app-aa-buttongroup">
           <button mat-button matStepperPrevious class="app-stepper-backbtn">Back</button>
           <button mat-button mat-flat-button color="primary" class="app-stepper-submitbtn"

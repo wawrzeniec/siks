@@ -243,6 +243,16 @@ app.post('/asset', (req, res) => {
 	});
 });
 
+/////////////////////////////////////
+// Accounts endpoint - to get 
+// data related to accounts
+app.get('/accounts', (req, res) => {
+	securityService.getAccounts(configdb, req.session, (result) => {
+		res.status(result.status);
+		res.json(result);
+	}); 
+});
+
 ////////////////////////////////////
 // Data enpoint - to get the data
 // from the DB 
