@@ -13,6 +13,8 @@ const quoteService = require('./quoteservice');
 const securityService = require('./securityservice');
 const authService = require('./authservice');
 const dataService = require('./dataservice');
+const accountService = require('./accountservice');
+const portfolioService = require('./portfolioservice');
 
 require('typescript-require');
 
@@ -247,17 +249,27 @@ app.post('/asset', (req, res) => {
 // Accounts endpoint - to get 
 // data related to accounts
 app.get('/accounts', (req, res) => {
-	securityService.getAccounts(configdb, req.session, (result) => {
+	accountService.getAccounts(configdb, req.session, (result) => {
+		res.status(result.status);
+		res.json(result);
+	}); 
+});
+
+/////////////////////////////////////
+// Portfolios endpoint - to get 
+// data related to accounts
+app.get('/portfolios', (req, res) => {
+	portfolioService.getPortfolios(configdb, req.session, (result) => {
 		res.status(result.status);
 		res.json(result);
 	}); 
 });
 
 ////////////////////////////////////
-// Data enpoint - to get the data
+// Data endpoint - to get the data
 // from the DB 
 app.get('/data/summary', (req, res) => {
-	dataService.getSummary(configdb, (result) => {
+	dataService.getSummary(configdb, req.session, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});

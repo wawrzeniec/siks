@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Directive } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, NgForm, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import {ErrorStateMatcher} from '@angular/material/core';
 import { userDataContainer } from '@server/assets/assets'
 import { UserService } from '@app/services/user.service'

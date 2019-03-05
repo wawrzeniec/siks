@@ -1,20 +1,55 @@
 const sqlite3 = require('sqlite3');
 
-function getSummary(db, callback) {
+function getSummary(db, session, callback) {
     console.log('Getting summary');
 
     const stmt = `
     SELECT identifier, number, intrinsicvalue, currency, intrinsicvalue*currencyvalue AS chfvalue, securityid, typeid, typename FROM (
-    SELECT * FROM (
-    SELECT * FROM (
-    SELECT * FROM (
-    SELECT securityid, number, number*value AS intrinsicvalue FROM 
-    (SELECT securityid, SUM(number) AS number FROM investments GROUP BY securityid) 
-    JOIN (SELECT securityid, value, MAX(timestamp) FROM history GROUP BY securityid) USING(securityid))
-    JOIN (SELECT securityid, identifier, currency, typeid FROM securities) USING (securityid))
-    JOIN (SELECT securityid AS currencyid, currency FROM securities WHERE typeid=1) USING(currency))
-    JOIN (SELECT securityid AS currencyid, value AS currencyvalue, MAX(timestamp) AS timestamp FROM history GROUP BY securityid) USING(currencyid))
-    JOIN types USING (typeid)`
+        SELECT * FROM (
+            SELECT * FROM (
+                SELECT * FROM (
+                    SELECT securityid, number, number*value AS intrinsicvalue FROM (
+                        SELECT securityid, SUM(number) AS number FROM 
+                            investments 
+                        WHERE userid=:userid
+                        GROUP BY securityid
+                    ) 
+                    JOIN (
+                    SELECT securityid, value, MAX(timestamp) FROM 
+                        history 
+                    GROUP BY securityid
+                    ) USING(securityid)
+                )
+                JOIN (
+                SELECT 
+                    securityid, identifier, currency, typeid 
+                FROM 
+                    securities
+                ) 
+                USING (securityid)
+            )
+            JOIN (
+            SELECT 
+                securityid AS currencyid, currency 
+            FROM 
+                securities 
+            WHERE typeid=1
+            ) 
+            USING(currency)
+        )
+        JOIN (
+        SELECT 
+            securityid AS currencyid, value AS currencyvalue, MAX(timestamp) AS timestamp 
+        FROM 
+            history 
+        GROUP BY 
+            securityid
+        ) 
+        USING(currencyid)
+    )
+    JOIN 
+        types 
+    USING (typeid)`
 
     db.all(stmt, (err, rows) => {
         if (err) {

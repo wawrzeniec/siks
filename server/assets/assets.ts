@@ -87,6 +87,7 @@ comment: string;
 portfolioid: number;
 payaccount: number;
 creditaccount: number;
+deduct: boolean;
 }
 
 export class methodDescriptor {

@@ -136,7 +136,7 @@ function addAsset(db, session, asset, callback) {
                         });
                     }
                     else {
-                        if (asset.price > 0) {
+                        if (asset.price > 0 && asset.deduct) {
                             return deductCurrency(db, session, asset, callback)
                         }
                         else {
@@ -268,30 +268,7 @@ function makeDeductionComment(db, asset, callback) {
     }
 }
 
-function getAccounts(db, session, callback) {
-    let stmt = 'SELECT accountid, name FROM accounts WHERE userid=$id';
-    db.all(stmt, {
-        $id: session.userid
-        }, (err, rows) => {
-            if (err) {
-                return callback({
-                    status: 500,
-                    reason: "Failed to query accounts from DB"
-                });
-            }
-            else {
-                return callback({
-                    status: 200,
-                    data: rows
-                })
-            }
-        }
-    );
-}
-
-
 module.exports = {
     addSecurity,
-    addAsset,
-    getAccounts
+    addAsset    
 };

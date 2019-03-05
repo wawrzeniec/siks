@@ -74,12 +74,13 @@
         <!-- Account selection -->
         <mat-form-field class="app-formfield app-bottommargins">
           <mat-select formControlName="account" placeholder="Pay account" required>
-            <mat-option class="app-select" *ngFor="let i in accounts" [value]="i">{{accounts[i]}}</mat-option>
+            <mat-option class="app-select" *ngFor="let acc of accounts" [value]="acc.accountid">{{acc.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="assetDetailsAccountCtrl.hasError('required')">
             Account is required
           </mat-error>
         </mat-form-field>
+        <button mat-raised-button (click)="createNewAccount()">Create account</button>
         <!-- Action buttons -->
         <div>
             <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
@@ -93,8 +94,15 @@
     <mat-step [stepControl]="addAssetPaymentsGroup">
       <form [formGroup]="addAssetPaymentGroup">
         <ng-template matStepLabel>Asset details</ng-template>
+        <div class="app-bottommargins">
+          <mat-checkbox class="app-check" formControlName="deduct"  (change)="togglePaymentFields()">
+            Deduct from owned cash
+          </mat-checkbox>  
+        </div> 
         <mat-form-field class="app-formfield app-bottommargins">
-          <input matInput type="tel" class="app-input" placeholder="Price" formControlName="price" required>
+          <input matInput type="tel" class="app-input" placeholder="Price" 
+            formControlName="price" [required]="addAssetPaymentGroup.get('deduct').value"
+            [disableControl]="!addAssetPaymentGroup.get('deduct').value">
           <mat-hint>Price paid</mat-hint>
           <mat-error *ngIf="!assetPaymentPriceCtrl.hasError('required') && assetPaymentPriceCtrl.hasError('pattern')">
             Please enter a valid number
@@ -104,7 +112,9 @@
           </mat-error>
         </mat-form-field>
         <mat-form-field class="app-formfield app-bottommargins">
-          <mat-select formControlName="currency" placeholder="Currency" required>
+          <mat-select formControlName="currency" placeholder="Currency" 
+            [required]="addAssetPaymentGroup.get('deduct').value"
+            [disableControl]="!addAssetPaymentGroup.get('deduct').value">
             <mat-option class="app-select" *ngFor="let name of currencyNames" [value]="currencyList[name].symbol">{{name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="assetPaymentCurrencyCtrl.hasError('required')">
@@ -113,22 +123,22 @@
         </mat-form-field>
         <!-- Account selection -->
         <mat-form-field class="app-formfield app-bottommargins">
-          <mat-select formControlName="account" placeholder="Pay account" required>
-            <mat-option class="app-select" *ngFor="let i in accounts" [value]="i">{{accounts[i]}}</mat-option>
+          <mat-select formControlName="account" placeholder="Pay account" 
+            [required]="addAssetPaymentGroup.get('deduct').value"
+            [disableControl]="!addAssetPaymentGroup.get('deduct').value">
+            <mat-option class="app-select" *ngFor="let acc of accounts" [value]="acc.accountid">{{acc.name}}</mat-option>
           </mat-select>
           <mat-error *ngIf="assetPaymentAccountCtrl.hasError('required')">
             Account is required
           </mat-error>
         </mat-form-field>        
+        <button mat-raised-button (click)="createNewAccount()">Create account</button>
         <div>
             <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
           <button mat-button matStepperNext class="app-stepper-nextbtn" type="button">Next</button>
         </div>
       </form>
     </mat-step>
-    
-
-
 
     <!-- 4th step: comment and confirm  -->
     <mat-step [stepControl]="addAssetConfirmGroup">

@@ -6,6 +6,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { serverPacket, assetDescriptor } from '@server/assets/assets'
 import { ConfigService } from '@app/services/config.service'
 import { AssetService } from '@app/services/asset.service'
+import { AccountService } from '@app/services/account.service'
 import { assetNumberString, currencyList } from '@server/assets/assets'
 import { EventService } from '@app/services/event.service'
 
@@ -16,7 +17,7 @@ import { EventService } from '@app/services/event.service'
   providers: [AssetService]
 })
 export class AddAssetComponent implements OnInit {
-    
+
   // Form validators
   assetTypeCtrl: FormControl = new FormControl('', [
     Validators.required
@@ -48,15 +49,33 @@ export class AddAssetComponent implements OnInit {
     Validators.required
   ]);
   
+  assetDetailsAccountCtrl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  assetPaymentAccountCtrl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  assetPaymentPriceCtrl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
+
+  assetPaymentCurrencyCtrl: FormControl = new FormControl('', [
+    Validators.required
+  ]);
+  
   addAssetTypeGroup: FormGroup;
   addAssetCategoryGroup: FormGroup;
   addAssetIdGroup: FormGroup;
   addAssetDetailsGroup: FormGroup;
+  addAssetPaymentGroup: FormGroup;
   addAssetConfirmGroup: FormGroup;
   
   types: string[] = Array();
   categories: string[] = Array();
   markets: string[] = Array();
+  accounts: Object[] = Array();
 
   // Some hard-coded assets
   numberString: any = assetNumberString;
@@ -70,25 +89,25 @@ export class AddAssetComponent implements OnInit {
   iswaiting: boolean = false;
 
   constructor(private dialogRef:MatDialogRef<AddAssetComponent>,
-              public configservice: ConfigService,
-              public assetservice: AssetService, 
+              private configservice: ConfigService,
+              private assetservice: AssetService, 
+              private accountService: AccountService, 
               private eventService: EventService) { }
 
   ngOnInit() {
     this.getTypes().subscribe( (response: serverPacket) => {
       // Gets the data for default asset type              
-      console.log(response);  
       for (let row of Object.values(response.data)) {
-          console.log(row)
           if (row.hasOwnProperty('typename')) {
             console.log('push!')
             this.types.push(row['typename']);
           }
         }
-      this.getAssetTypeData(this.types[0]);
-      console.log(this.types)
+      this.getAssetTypeData(this.types[0]);      
     });
     
+    this.getAccounts();
+
     this.currencyNames = Object.keys(currencyList);
 
     // Category form
@@ -110,17 +129,22 @@ export class AddAssetComponent implements OnInit {
     this.addAssetDetailsGroup = new FormGroup({
       number: this.assetDetailsNumberCtrl,
       date: this.assetDetailsDateCtrl,
-      price: this.assetDetailsPriceCtrl,
-      currency: this.assetDetailsCurrencyCtrl,      
+      account: this.assetDetailsAccountCtrl
     });
     this.addAssetDetailsGroup.patchValue({
       date: new Date()
     });
 
+    this.addAssetPaymentGroup = new FormGroup({
+      deduct: new FormControl(true),
+      price: this.assetPaymentPriceCtrl,
+      currency: this.assetPaymentCurrencyCtrl,
+      account: this.assetPaymentAccountCtrl
+    });
+    
     // Confirm form
     this.addAssetConfirmGroup = new FormGroup({
-      comment: new FormControl(),
-      deduct: new FormControl(true)
+      comment: new FormControl(),      
     });
 
   }
@@ -204,5 +228,21 @@ export class AddAssetComponent implements OnInit {
       // We should create an alert dialog class to handle these situations
     });
   }
+
+  getAccounts() {
+    console.log('Getting accounts');
+    this.accountService.getAccounts().subscribe((result) => {
+      console.log(result);
+      this.accounts = result.data;
+    });
+  }
   
+createNewAccount() {
+  console.log('Create new account!!');
+}
+
+  togglePaymentFields() {    
+    let state = this.addAssetPaymentGroup.get('deduct').value;
+    console.log(this.assetPaymentAccountCtrl);
+  }
 }

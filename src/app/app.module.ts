@@ -20,7 +20,8 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { HistoryGraphComponent } from './components/graphs/history-graph/history-graph.component';
 import { GraphContainerComponent } from './components/graphs/graph-container/graph-container.component';
 
-import { NgxChartsModule } from '@swimlane/ngx-charts'
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgComponent } from './components/ng/ng.component'
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts'
     SelectAssetIdComponent,
     SummaryComponent,
     HistoryGraphComponent,
-    GraphContainerComponent
+    GraphContainerComponent,
+    NgComponent
   ],
   imports: [
     BrowserModule,
