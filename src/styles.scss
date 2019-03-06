@@ -10,6 +10,7 @@ $app-major-color: $app-color-lightblue;
 $app-accent-color: $app-color-orange;
 
 $marginSmall: 20px;
+$marginXSmall: 10px;
 
 /*
 @font-face {
@@ -153,6 +154,8 @@ $marginSmall: 20px;
     display: flex;
 }
 
+
+/* All kinds of margins */
 .app-bottommargins {
     margin-bottom: $marginSmall;
 }
@@ -160,6 +163,39 @@ $marginSmall: 20px;
 .app-topmargins {
     margin-top: $marginSmall;
 }
+
+.app-leftmargins {
+    margin-left: $marginSmall;
+}
+
+.app-rightmargins {
+    margin-right: $marginSmall;
+}
+
+.app-margins {
+    margin: $marginSmall;
+}
+
+.app-bottommarginxs {
+    margin-bottom: $marginXSmall;
+}
+
+.app-topmarginxs {
+    margin-top: $marginXSmall;
+}
+
+.app-leftmarginxs {
+    margin-left: $marginXSmall;
+}
+
+.app-rightmarginxs {
+    margin-right: $marginXSmall;
+}
+
+.app-marginxs {
+    margin: $marginXSmall;
+}
+
 
 .app-dialog-panel-login {
     height: '500px';

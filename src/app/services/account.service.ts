@@ -22,5 +22,11 @@ export class AccountService {
     const url: string = this.baseUrl; 
     return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
   }
+
+  addAccount(accountspec: any): Observable<serverPacket> {
+    // Adds a new account for the current user
+    const url: string = this.baseUrl; 
+    return this.http.post(url, accountspec, { withCredentials: true }) as Observable<serverPacket>;
+  }
 }
 

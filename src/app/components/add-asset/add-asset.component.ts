@@ -9,6 +9,7 @@ import { AssetService } from '@app/services/asset.service'
 import { AccountService } from '@app/services/account.service'
 import { assetNumberString, currencyList } from '@server/assets/assets'
 import { EventService } from '@app/services/event.service'
+import { AddAccountComponent } from '@app/components/add-account/add-account.component'
 
 @Component({
   selector: 'app-add-asset',
@@ -88,7 +89,8 @@ export class AddAssetComponent implements OnInit {
   // For progress spinner
   iswaiting: boolean = false;
 
-  constructor(private dialogRef:MatDialogRef<AddAssetComponent>,
+  constructor(private dialog: MatDialog,
+              private dialogRef:MatDialogRef<AddAssetComponent>,
               private configservice: ConfigService,
               private assetservice: AssetService, 
               private accountService: AccountService, 
@@ -237,9 +239,23 @@ export class AddAssetComponent implements OnInit {
     });
   }
   
-createNewAccount() {
-  console.log('Create new account!!');
-}
+  createNewAccount() {
+    const aadialogRef = this.dialog.open(AddAccountComponent, {
+      panelClass: 'app-dialog-panel',
+      hasBackdrop: true,
+      disableClose: true
+    });
+    
+    aadialogRef.afterClosed().subscribe(response => {
+      console.log('AddAccount dialog was closed');
+      // Here do something with userData
+      console.log(response);
+      if (response.reloadAccounts)
+      {
+        this.getAccounts();
+      }
+    });
+  }
 
   togglePaymentFields() {    
     let state = this.addAssetPaymentGroup.get('deduct').value;

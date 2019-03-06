@@ -21,7 +21,8 @@ import { HistoryGraphComponent } from './components/graphs/history-graph/history
 import { GraphContainerComponent } from './components/graphs/graph-container/graph-container.component';
 
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { NgComponent } from './components/ng/ng.component'
+import { NgComponent } from './components/ng/ng.component';
+import { AddAccountComponent } from './components/add-account/add-account.component'
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { NgComponent } from './components/ng/ng.component'
     SummaryComponent,
     HistoryGraphComponent,
     GraphContainerComponent,
-    NgComponent
+    NgComponent,
+    AddAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +57,8 @@ import { NgComponent } from './components/ng/ng.component'
     AddSecurityComponent,
     LoginComponent,
     AddAssetComponent,
-    HistoryGraphComponent
+    HistoryGraphComponent,
+    AddAccountComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -255,6 +255,13 @@ app.get('/accounts', (req, res) => {
 	}); 
 });
 
+app.post('/accounts', (req, res) => {
+	accountService.createAccount(configdb, req.session, req.body, (result) => {
+		res.status(result.status);
+		res.json(result);
+	}); 
+});
+
 /////////////////////////////////////
 // Portfolios endpoint - to get 
 // data related to accounts

@@ -1,0 +1,26 @@
+<h2 mat-dialog-title class="app-dialog-title">Create new account</h2>
+<mat-dialog-content class="" class="app-dialog">
+  <form [formGroup]="addAccountFormGroup" class="app-topmargins app-bottommargins">
+      <mat-form-field class="app-formfield">
+        <input matInput placeholder="Account Name" autocomplete="false"
+                formControlName="name"  [errorStateMatcher]="matcher" 
+                required>
+        <mat-hint>Enter a name for he new account</mat-hint>
+        <mat-error *ngIf="accountNameCtrl.hasError('required')">
+          Account name is required
+        </mat-error>        
+      </mat-form-field>      
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutGap="32px">  
+  <button class="app-button app-marginxs" mat-flat-button mat-dialog-cancel 
+  (click)="cancel()">Cancel</button>  
+  <button class="app-button app-marginxs" mat-flat-button mat-dialog-submit color="primary"
+  [disabled]="addAccountFormGroup.invalid" (click)="submitForm()">Add account</button>  
+</mat-dialog-actions>
+
+
+
+
+
+  
