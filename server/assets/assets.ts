@@ -84,7 +84,6 @@ date: string;
 price: number;
 currency: string;
 comment: string;
-portfolioid: number;
 payaccount: number;
 creditaccount: number;
 deduct: boolean;

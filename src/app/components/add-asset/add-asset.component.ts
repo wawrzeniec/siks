@@ -213,11 +213,14 @@ export class AddAssetComponent implements OnInit {
     this.data['id'] = this.addAssetIdGroup.get('id').value;
     this.data['number'] = this.addAssetDetailsGroup.get('number').value as number;
     this.data['date'] = this.addAssetDetailsGroup.get('date').value.toISOString().slice(0, 10);;
-    this.data['price'] = this.addAssetDetailsGroup.get('price').value as number;
-    this.data['currency'] = this.addAssetDetailsGroup.get('currency').value;
+    this.data['price'] = this.addAssetPaymentGroup.get('price').value as number;
+    this.data['currency'] = this.addAssetPaymentGroup.get('currency').value;
     this.data['comment'] = this.addAssetConfirmGroup.get('comment').value;
-    this.data['deduct'] = this.addAssetConfirmGroup.get('deduct').value as boolean;
+    this.data['deduct'] = this.addAssetPaymentGroup.get('deduct').value as boolean;
+    this.data['payaccount'] = this.addAssetPaymentGroup.get('account').value as number;
+    this.data['creditaccount'] = this.addAssetDetailsGroup.get('account').value as number;
     
+    console.log(this.data);
     // Pushes data to the server
     this.iswaiting = true;
     this.assetservice.addAsset(this.data).subscribe(result => {

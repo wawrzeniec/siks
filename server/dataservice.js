@@ -11,7 +11,7 @@ function getSummary(db, session, callback) {
                     SELECT securityid, number, number*value AS intrinsicvalue FROM (
                         SELECT securityid, SUM(number) AS number FROM 
                             investments 
-                        WHERE userid=:userid
+                        WHERE userid=$userid
                         GROUP BY securityid
                     ) 
                     JOIN (
@@ -51,11 +51,13 @@ function getSummary(db, session, callback) {
         types 
     USING (typeid)`
 
-    db.all(stmt, (err, rows) => {
+    db.all(stmt, {
+        $userid: session.userid
+        }, (err, rows) => {
         if (err) {
             return callback({
                 status: 500,
-                reASon: 'failed to get summary FROM DB',
+                reason: 'failed to get summary FROM DB',
                 err: err
             });
         }

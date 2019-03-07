@@ -9,7 +9,7 @@ import { ServerConfig } from '@server/server-config-ng';
 })
 export class AuthService {
   private baseUrl: string;
-  private serverIP:string;   
+  private serverIP:string;
 
   constructor(private http: HttpClient) { 
     this.serverIP = window.location.hostname;
@@ -18,12 +18,18 @@ export class AuthService {
   }
 
   postLogin(loginData: loginDataContainer): Observable<serverPacket> {
-    // Add user: returns the http response code
+    // logs in to the app: returns the http response code
     // 200 => OK
     // 503 => SQLITE Error
     // 401 => Authentication failed
     const url: string = this.baseUrl; 
     return this.http.post(url, loginData, { withCredentials: true }) as Observable<serverPacket>;
+  }
+
+  logout() {
+    // Logs out of the app
+    const url: string = this.baseUrl + '/signout'; 
+    return this.http.post(url, {}, { withCredentials: true }) as Observable<serverPacket>;
   }
 
 }

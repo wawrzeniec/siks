@@ -23,6 +23,7 @@ import { GraphContainerComponent } from './components/graphs/graph-container/gra
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgComponent } from './components/ng/ng.component';
 import { AddAccountComponent } from './components/add-account/add-account.component'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { AddAccountComponent } from './components/add-account/add-account.compon
     ReactiveFormsModule,
     HttpClientModule,
     TooltipModule.forRoot(),
-    NgxChartsModule
+    NgxChartsModule,
+    FontAwesomeModule
   ],
   entryComponents: [
     AddUserComponent,

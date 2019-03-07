@@ -120,6 +120,12 @@ app.get('/login', (req, res) => {
 	});
 });
 
+app.post('/login/signout', (req, res) => {
+	req.session.destroy();
+	res.status(200);
+	res.json({});
+})
+
 // Configuration API
 // This is the endpoint to add a new user
 // Here what we need to do is 

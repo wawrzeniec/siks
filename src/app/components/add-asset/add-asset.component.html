@@ -78,14 +78,14 @@
           <!-- Account selection -->
           <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="left center">
             <mat-form-field class="app-formfield app-bottommargins">
-              <mat-select formControlName="account" placeholder="Pay account" required>
+              <mat-select formControlName="account" placeholder="Credit account" required>
                 <mat-option class="app-select" *ngFor="let acc of accounts" [value]="acc.accountid">{{acc.name}}</mat-option>
               </mat-select>
               <mat-error *ngIf="assetDetailsAccountCtrl.hasError('required')">
                 Account is required
               </mat-error>
             </mat-form-field>
-            <button mat-raised-button (click)="createNewAccount()">Create account</button>
+            <button mat-raised-button (click)="createNewAccount()">Create</button>
           </div>
         </div>
         <!-- Action buttons -->
@@ -142,7 +142,7 @@
               Account is required
             </mat-error>
           </mat-form-field>        
-          <button mat-raised-button (click)="createNewAccount()">Create account</button>
+          <button mat-raised-button (click)="createNewAccount()">Create</button>
         </div>
         <div>
             <button class="app-stepper-backbtn" mat-button matStepperPrevious>Back</button>
