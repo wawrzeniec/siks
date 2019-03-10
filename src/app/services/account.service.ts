@@ -9,12 +9,14 @@ import { serverPacket, assetDescriptor } from '@server/assets/assets'
 })
 export class AccountService {
   private baseUrl: string;
+  private pfUrl: string;
   private serverIP:string; 
 
   constructor(private http: HttpClient) { 
     this.serverIP = window.location.hostname;
     let schema = ServerConfig.https? 'https://' : 'http://';
     this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/accounts';
+    this.pfUrl = schema + this.serverIP + ':' + ServerConfig.port + '/portfolios';
   }
 
   getAccounts(): Observable<serverPacket> {
@@ -28,5 +30,12 @@ export class AccountService {
     const url: string = this.baseUrl; 
     return this.http.post(url, accountspec, { withCredentials: true }) as Observable<serverPacket>;
   }
+
+  getPortfolios(): Observable<serverPacket> {
+    // Retrieves the existing portfolios for the current user
+    const url: string = this.pfUrl; 
+    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+  } 
+
 }
 

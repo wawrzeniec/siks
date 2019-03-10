@@ -1,4 +1,17 @@
-<div *ngIf="dataLoaded" style="height:300px" class="">
+<div *ngIf="displayChart" style="height:300px" class="">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div class="app-history-groupmenu">
+    <div class="app-history-groupmenu-element app-rightmarginxs">
+    Group by:
+    </div>
+    <div class="app-history-groupmenu-select">
+      <mat-select (selectionChange)="reGroupData()" [(value)]="groupby">
+      <mat-option value="security">Asset type</mat-option>
+      <mat-option value="account">Account</mat-option>
+      <mat-option value="portfolio">Portfolio</mat-option>
+    </mat-select></div>
+    </div>  
+  </div>
   <ngx-charts-area-chart-stacked
     [results]="lineData"    
     scheme="picnic"    
@@ -13,4 +26,7 @@
     gradient="true"
     >
   </ngx-charts-area-chart-stacked>
+</div>
+<div *ngIf="!displayChart" fxLayout="row" fxLayoutAlign="center center">
+  <mat-spinner></mat-spinner>
 </div>

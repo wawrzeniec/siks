@@ -1,6 +1,6 @@
 
 function getAccounts(db, session, callback) {
-    let stmt = 'SELECT accountid, name FROM accounts WHERE userid=$id';
+    let stmt = 'SELECT accountid, name, portfolioid FROM accounts WHERE userid=$id';
     db.all(stmt, {
         $id: session.userid
         }, (err, rows) => {
@@ -19,6 +19,7 @@ function getAccounts(db, session, callback) {
         }
     );
 }
+
 
 function createAccount(db, session, accountspec, callback) {
     console.log(accountspec.name);

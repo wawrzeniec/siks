@@ -131,6 +131,132 @@ function getHistory(db, session, mindate, callback) {
     }
     console.log(userclause);
     
+    let stmt = `WITH usec AS ( 
+        SELECT 
+            DISTINCT(securityid) FROM investments` + userclause + 
+       `UNION
+        SELECT 
+            DISTINCT(securityid) FROM (
+                SELECT 
+                    DISTINCT(n.securityid) as iid, o.currency 
+                FROM 
+                    (SELECT * FROM	investments` + userclause + `) n 
+                JOIN 
+                    securities o         
+            )
+            JOIN (
+                SELECT 
+                    securityid, currency 
+                FROM 
+                    securities 
+                WHERE typeid = 1
+            )
+            USING(currency)
+        ),
+    
+    history2 AS (
+        SELECT * FROM (
+            SELECT * FROM
+                (SELECT DISTINCT(date(timestamp)) AS timestamp FROM history WHERE date(timestamp)>=$mindate)
+            JOIN
+                usec
+            ORDER BY timestamp, securityid
+            ) n
+        LEFT JOIN (
+            SELECT securityid, date(timestamp) AS timestamp, value FROM history
+            ) o
+        USING(timestamp, securityid) ORDER BY timestamp
+        ),
+    
+        history3 AS (
+        SELECT o.timestamp, o.securityid, o.value, coalesce(o.value,
+            (SELECT n.value FROM history2 AS n WHERE n.value IS NOT NULL AND o.securityid=n.securityid AND o.timestamp > n.timestamp order by timestamp desc)
+            ) AS fvalue
+        FROM history2 AS o
+        ORDER BY securityid, timestamp),
+    
+        history4 AS (
+        SELECT n.*, o.typeid FROM history3 n JOIN securities o USING(securityid)),
+    
+        totalnumber AS (
+        SELECT n.securityid securityid, n.creditaccount accountid, n.dnumber number, n.date date, n.currency currency, sum(o.dnumber) AS total FROM (
+            SELECT *, sum(number) dnumber FROM investments` + userclause + 
+        `GROUP BY securityid, creditaccount, date) n
+        LEFT JOIN
+            (SELECT *, sum(number) dnumber FROM investments` + userclause + 
+        `GROUP BY securityid, creditaccount, date) o
+        ON (o.securityid = n.securityid AND o.creditaccount=n.creditaccount AND n.date >= o.date)
+        GROUP BY n.securityid, n.creditaccount, n.date
+        ),
+    
+		totalnumber2 AS ( 
+		SELECT n.*, o.portfolioid FROM totalnumber n JOIN accounts o USING(accountid)
+		),
+	
+        tvalue AS (
+        SELECT * FROM
+            (SELECT
+                n.securityid 		AS securityid,
+				o.accountid			AS accountid,
+				o.portfolioid		AS portfolioid,
+                date(n.timestamp) 	AS timestamp,
+                CASE n.typeid WHEN 1 THEN 1 ELSE n.fvalue END AS value,
+                max(total) 			AS total
+            FROM history4 n
+            JOIN totalnumber2 o
+            ON(n.securityid = o.securityid AND date(n.timestamp) >= o.date) GROUP BY n.securityid, o.accountid, n.timestamp)
+        JOIN
+            (SELECT
+                n.securityid 		AS securityid,
+                n.typeid 			AS typeid,
+                n.categoryid		AS categoryid,
+                o.securityid 		AS currencyid
+            FROM (SELECT * FROM securities) n JOIN (SELECT * FROM securities WHERE typeid=1) o ON (n.currency=o.currency))
+        USING(securityid)),
+    
+        ownings2 AS
+        (SELECT o.timestamp, o.securityid, o.value, COALESCE(o.value,
+            (SELECT n.value FROM history2 AS n WHERE
+                n.value IS NOT NULL AND o.securityid=n.securityid AND o.timestamp > n.timestamp ORDER BY timestamp DESC)
+            ) AS fvalue
+        FROM history2 AS o
+        ORDER BY securityid, timestamp),
+    
+    
+        cvalue AS
+        (SELECT
+            securityid 				AS currencyid,
+            date(timestamp) 		AS timestamp,
+            fvalue 					AS value
+        FROM
+            ownings2
+        JOIN
+            securities
+        USING(securityid) WHERE typeid = 1)
+    
+    SELECT 	securityid,
+			n.accountid							AS accountid,
+			n.portfolioid						AS portfolioid,
+            n.typeid							AS typeid,
+            n.categoryid 						AS categoryid,
+            n.timestamp 						AS timestamp,
+            value,
+            total,
+            n.currencyid 						AS currencyid,
+            currencyvalue,
+            total * value * currencyvalue 		AS totalvalue
+    FROM
+        tvalue AS n
+    JOIN
+        (SELECT
+            currencyid,
+            timestamp,
+            value 								AS currencyvalue
+        FROM cvalue) o
+    ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
+    ORDER BY securityid, accountid, timestamp;`;
+    
+    /*
     let stmt = `
     WITH usec AS ( 
         SELECT 
@@ -247,7 +373,7 @@ function getHistory(db, session, mindate, callback) {
             value 								AS currencyvalue
         FROM cvalue) o
     ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
-    ORDER BY securityid, timestamp;`;
+    ORDER BY securityid, timestamp;`;*/
     
     console.log(stmt);
     db.all(stmt, {
