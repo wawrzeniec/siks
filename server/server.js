@@ -296,12 +296,19 @@ app.get('/data/summary', (req, res) => {
 });
 
 app.get('/data/history', (req, res) => {
-	dataService.getHistory(configdb, req.session, req.params.mindate, (result) => {
+	dataService.getHistory(configdb, req.session, req.query.mindate, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});
 });
 
+app.get('/data/breakdown', (req, res) => {
+	console.log(req)
+	dataService.getBreakdown(configdb, req.session, req.query.maxdate, (result) => {
+		res.status(result.status);
+		res.json(result)
+	});
+});
 
 ////////////////////////////////////
 // Default enpoint - to check server

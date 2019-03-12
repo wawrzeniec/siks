@@ -8,25 +8,20 @@ import { ConfigService } from '@app/services/config.service'
 import { AccountService } from '@app/services/account.service'
 import { FlexLayoutModule } from '@angular/flex-layout'
 
-//import { NgxChartsModule, BaseChartComponent, LineComponent, LineSeriesComponent,
-//calculateViewDimensions, ViewDimensions, ColorHelper } from '@swimlane/ngx-charts'
-//import { area, line, curveLinear } from 'd3-shape';
-//import { scaleBand, scaleLinear, scalePoint, scaleTime } from 'd3-scale';
-
 @Component({
-  selector: 'app-history-graph',
-  templateUrl: './history-graph.component.html',
-  styleUrls: ['./history-graph.component.scss']
+  selector: 'app-breakdown-graph',
+  templateUrl: './breakdown-graph.component.html',
+  styleUrls: ['./breakdown-graph.component.scss']
 })
-export class HistoryGraphComponent implements OnInit {
-  
+export class BreakdownGraphComponent implements OnInit {
+
   displayChart: boolean = false;
   dataLoaded: number = 0;
   lineData: any = [];
   securityData: any = {};
   accountData: any = {};
   portfolioData: any = {};
-  historyData: any = {};
+  breakdownData: any = {};
   groupby: string="account";
 
   constructor(private dataService: DataService, 
@@ -35,12 +30,10 @@ export class HistoryGraphComponent implements OnInit {
               private accountService: AccountService
     ) { }
 
-  ngOnInit() {
-    //this.eventService.reloadHistoryEvent.register(() => this.reload());     
-  }
+  ngOnInit() {}
 
   reload() {
-    console.log('HistoryGraphComponent: reloading myself!!')
+    console.log('BreakdownGraphComponent: reloading myself!!')
     this.dataLoaded = 0;
     this.configService.getSecurities().subscribe((result) => {
       if (result.status == 200) {        
@@ -93,19 +86,19 @@ export class HistoryGraphComponent implements OnInit {
       }
     });
 
-    this.dataService.getHistory().subscribe((result) => {
+    this.dataService.getBreakdown().subscribe((result) => {
       if (result.status == 200) {        
-        this.historyData = result.data;
+        this.breakdownData = result.data;
         this.dataLoaded += 1;
         if(this.dataLoaded == 4) {
-          console.log('got history, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
+          console.log('got breakdown, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
           this.groupDataBy(this.groupby);
           this.displayChart = true;
         }
       }
       else {
         // Handle the error here
-        console.log('Error while retrieving historical data:');
+        console.log('Error while retrieving breakdown data:');
         console.log(result);
       }
     });
@@ -148,7 +141,7 @@ export class HistoryGraphComponent implements OnInit {
       let added = {};
       let id;
       let name;
-      for (let y of this.historyData) {
+      for (let y of this.breakdownData) {
         if (key=='account') {
           id = y.accountid;
           name = this.accountData[id].name;
@@ -166,22 +159,12 @@ export class HistoryGraphComponent implements OnInit {
           };
           _lineData.push({
             "name": name,
-            "series": []
+            "value": y.totalvalue
           });
         }
-        if (y.totalvalue != null) {        
-          if (added[id].hasOwnProperty(y.timestamp)) {          
-            let thisindex = added[id][y.timestamp];
-            _lineData[added[id].index]["series"][thisindex].value += y.totalvalue;
-          }
-          else {
-            added[id][y.timestamp] = _lineData[added[id].index]["series"].length;
-            _lineData[added[id].index]["series"].push({
-              "name": new Date(y.timestamp),
-              "value": y.totalvalue
-            }); 
-          }
-        }
+        else {
+          _lineData[added[id].index]["value"] += y.totalvalue;
+        }        
       }  
       this.lineData = _lineData;
       

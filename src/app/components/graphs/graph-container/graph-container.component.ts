@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryGraphComponent } from '@app/components/graphs/history-graph/history-graph.component';
+import { BreakdownGraphComponent } from '@app/components/graphs/breakdown-graph/breakdown-graph.component';
 import { EventService } from '@app/services/event.service';
-
-import {NgModule, ViewChild, ElementRef, Input, Output, 
+import { MatTabsModule } from '@angular/material/tabs';
+import { NgModule, ViewChild, ElementRef, Input, Output, 
         EventEmitter, ViewContainerRef, ComponentRef, 
-        ComponentFactoryResolver, ReflectiveInjector} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+        ComponentFactoryResolver, ReflectiveInjector } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @Component({
@@ -18,17 +19,31 @@ export class GraphContainerComponent implements OnInit {
     private _HistoryGraphComponentRef;
   private historyGraphComponent: HistoryGraphComponent;
 
+  @ViewChild('breakdownGraph', {read: ViewContainerRef}) 
+    private _BreakdownGraphComponentRef;
+  private breakdownGraphComponent: BreakdownGraphComponent;
+
+
   constructor(private eventService: EventService,
               private _cmpFctryRslvr: ComponentFactoryResolver) { }
 
   ngOnInit() {
     this.eventService.reloadGraphsEvent.register(() => this.reloadGraphs()); 
 
+    /* Creates the histogry graph component */
     let _comp = this.createComponent(this._HistoryGraphComponentRef, HistoryGraphComponent);
 
     // all inputs/outputs set => add it to the DOM ..
     this._HistoryGraphComponentRef.insert(_comp.hostView);
     this.historyGraphComponent = _comp.instance;
+
+    /* Creates the breakdown graph component */
+    _comp = this.createComponent(this._BreakdownGraphComponentRef, BreakdownGraphComponent);
+
+    // all inputs/outputs set => add it to the DOM ..
+    this._BreakdownGraphComponentRef.insert(_comp.hostView);
+    this.breakdownGraphComponent = _comp.instance;
+
   }
 
   public createComponent (vCref: ViewContainerRef, type: any): ComponentRef<any> {
@@ -45,9 +60,9 @@ export class GraphContainerComponent implements OnInit {
   }
   
   reloadGraphs() {
-    console.log(this.historyGraphComponent);
     console.log('GraphContainer: reload() event received.')
     this.historyGraphComponent.reload();
+    this.breakdownGraphComponent.reload();
   }
 
 }

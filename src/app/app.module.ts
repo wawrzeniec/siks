@@ -24,6 +24,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgComponent } from './components/ng/ng.component';
 import { AddAccountComponent } from './components/add-account/add-account.component'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { BreakdownGraphComponent } from './components/graphs/breakdown-graph/breakdown-graph.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     HistoryGraphComponent,
     GraphContainerComponent,
     NgComponent,
-    AddAccountComponent
+    AddAccountComponent,
+    BreakdownGraphComponent
   ],
   imports: [
     BrowserModule,
@@ -60,7 +62,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     LoginComponent,
     AddAssetComponent,
     HistoryGraphComponent,
-    AddAccountComponent
+    AddAccountComponent,
+    BreakdownGraphComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

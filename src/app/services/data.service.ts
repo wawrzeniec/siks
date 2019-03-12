@@ -28,4 +28,10 @@ export class DataService {
     const url: string = this.baseUrl + '/history'; 
     return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
   }
+
+  getBreakdown(maxdate?: string): Observable<serverPacket> {
+    // Get the "breakdown" total in CHF
+    const url: string = this.baseUrl + '/breakdown'; 
+    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+  }
 }

@@ -1,8 +1,12 @@
-<mat-card #historyGraphContainer>
-  <mat-card-header>
-    <b>Asset history</b>
-  </mat-card-header>
-  <mat-card-content>
-    <template #historyGraph></template>
-  </mat-card-content>
-</mat-card>
+<mat-tab-group [color]="Primary" [backgroundColor]="Primary">
+  <mat-tab label="History" #historyGraphContainer>
+    <mat-card class="app-graph-card app-marginxs">
+      <template #historyGraph></template>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Breakdown" #breakdownGraphContainer>
+    <mat-card class="app-graph-card app-marginxs">
+      <template #breakdownGraph></template>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>

@@ -13,7 +13,7 @@ exports.scrapeMethods = {
     ],
     'Fund': [
         ['fch', 'Finanzen.ch', 'Valor or ISIN'],
-        ['ov', 'Onvista.de', 'ISIN']
+        ['ov', 'Onvista.de API', 'API identifier']
     ]
 };
 // Text constants for the security properties

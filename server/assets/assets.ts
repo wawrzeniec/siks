@@ -14,7 +14,7 @@ export const scrapeMethods: any = {
     ],
     'Fund': [
         ['fch', 'Finanzen.ch', 'Valor or ISIN'],
-        ['ov', 'Onvista.de', 'ISIN']
+        ['ov', 'Onvista.de API', 'API identifier']
     ]
 };
   
