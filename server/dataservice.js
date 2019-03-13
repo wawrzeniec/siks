@@ -244,7 +244,11 @@ function getHistory(db, session, mindate, callback) {
             total,
             n.currencyid 						AS currencyid,
             currencyvalue,
-            total * value * currencyvalue 		AS totalvalue
+            CASE WHEN currencyvalue IS NULL THEN 
+                total * value 
+            ELSE 
+                total * value * currencyvalue END		
+                                                AS totalvalue
     FROM
         tvalue AS n
     JOIN

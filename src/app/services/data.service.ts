@@ -31,7 +31,11 @@ export class DataService {
 
   getBreakdown(maxdate?: string): Observable<serverPacket> {
     // Get the "breakdown" total in CHF
-    const url: string = this.baseUrl + '/breakdown'; 
-    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    const url: string = this.baseUrl + '/breakdown';    
+    let params = new HttpParams();
+    if (maxdate) {
+      params = params.append('maxdate', maxdate);
+    }
+    return this.http.get(url, { withCredentials: true, params: params }) as Observable<serverPacket>;
   }
 }

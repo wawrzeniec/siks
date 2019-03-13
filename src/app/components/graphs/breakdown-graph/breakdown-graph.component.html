@@ -2,23 +2,39 @@
   <div *ngIf="!displayChart" fxLayout="row" fxLayoutAlign="center center" class="overlay-spinner">          
         <mat-spinner diameter=30 strokeWidth=5></mat-spinner>
   </div>
-<div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
-  <div class="app-breakdown-groupmenu">
-  <div class="app-breakdown-groupmenu-element app-rightmarginxs">
-  Group by:
+<div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">    
+    <mat-form-field>
+    <input matInput [matDatepicker]="datepicker" placeholder="Choose date" (dateChange)="updateDate()"
+    [formControl]="dateCtrl">
+    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker touchUi></mat-datepicker>
+    </mat-form-field>
   </div>
-  <div class="app-breakdown-groupmenu-select">
-    <mat-select (selectionChange)="reGroupData()" [(value)]="groupby">
-    <mat-option value="security">Asset type</mat-option>
-    <mat-option value="account">Account</mat-option>
-    <mat-option value="portfolio">Portfolio</mat-option>
-  </mat-select></div>
-  </div>  
+  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+    <div class="app-breakdown-groupmenu">
+    <div class="app-breakdown-groupmenu-element app-rightmarginxs">
+    Group by:
+    </div>
+    <div class="app-breakdown-groupmenu-select">
+      <mat-select (selectionChange)="reGroupData()" [(value)]="groupby">
+      <mat-option value="security">Asset type</mat-option>
+      <mat-option value="account">Account</mat-option>
+      <mat-option value="currency">Currency</mat-option>
+      <mat-option value="portfolio">Portfolio</mat-option>
+    </mat-select></div>
+    </div>  
+  </div>
 </div>
 <ngx-charts-pie-chart *ngIf="displayChart"
   [results]="lineData"    
   scheme="picnic"    
   gradient="true"
+  labels="true"  
   >
+  <!-- 
+  legend="true"
+  legendPosition="below"
+  -->
 </ngx-charts-pie-chart>
 </div>

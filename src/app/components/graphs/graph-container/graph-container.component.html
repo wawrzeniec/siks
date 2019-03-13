@@ -1,12 +1,15 @@
-<mat-tab-group [color]="Primary" [backgroundColor]="Primary">
+<mat-tab-group color="primary" backgroundColor="primary"
+(selectedTabChange)="onSelectChange()" [(selectedIndex)]="selectedTab">
   <mat-tab label="History" #historyGraphContainer>
     <mat-card class="app-graph-card app-marginxs">
-      <template #historyGraph></template>
+      <template #historyGraph>
+      </template>
     </mat-card>
   </mat-tab>
   <mat-tab label="Breakdown" #breakdownGraphContainer>
     <mat-card class="app-graph-card app-marginxs">
-      <template #breakdownGraph></template>
+      <template #breakdownGraph>
+      </template>
     </mat-card>
   </mat-tab>
 </mat-tab-group>

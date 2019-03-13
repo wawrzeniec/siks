@@ -23,6 +23,7 @@ export class GraphContainerComponent implements OnInit {
     private _BreakdownGraphComponentRef;
   private breakdownGraphComponent: BreakdownGraphComponent;
 
+  selectedTab: number = 0;
 
   constructor(private eventService: EventService,
               private _cmpFctryRslvr: ComponentFactoryResolver) { }
@@ -43,7 +44,6 @@ export class GraphContainerComponent implements OnInit {
     // all inputs/outputs set => add it to the DOM ..
     this._BreakdownGraphComponentRef.insert(_comp.hostView);
     this.breakdownGraphComponent = _comp.instance;
-
   }
 
   public createComponent (vCref: ViewContainerRef, type: any): ComponentRef<any> {
@@ -59,10 +59,19 @@ export class GraphContainerComponent implements OnInit {
     return comp;
   }
   
+  onSelectChange() {
+    switch(this.selectedTab) {
+      case 0:
+        this.historyGraphComponent.reDisplay();
+      case 1:
+      this.breakdownGraphComponent.reDisplay();
+    }
+  }
+
   reloadGraphs() {
     console.log('GraphContainer: reload() event received.')
-    this.historyGraphComponent.reload();
-    this.breakdownGraphComponent.reload();
+    this.historyGraphComponent.reDisplay();
+    //this.breakdownGraphComponent.reload();
   }
 
 }

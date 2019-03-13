@@ -7,6 +7,7 @@ import { BaseChartComponent } from '@swimlane/ngx-charts/release/common/base-cha
 import { ConfigService } from '@app/services/config.service'
 import { AccountService } from '@app/services/account.service'
 import { FlexLayoutModule } from '@angular/flex-layout'
+import { currencyList } from '@server/assets/assets';
 
 //import { NgxChartsModule, BaseChartComponent, LineComponent, LineSeriesComponent,
 //calculateViewDimensions, ViewDimensions, ColorHelper } from '@swimlane/ngx-charts'
@@ -155,10 +156,13 @@ export class HistoryGraphComponent implements OnInit {
         } else if (key=='portfolio') {
           id = y.portfolioid;
           name = this.portfolioData[id].name;
+        } else if (key=='currency') {
+          id = y.currencyid;
+          name = this.securityData[id].identifier;
         } else {
           id = y.securityid;
           name = this.securityData[id].identifier;
-        }   
+        }
 
         if (!added.hasOwnProperty(id)) {
           added[id] = {
@@ -197,6 +201,16 @@ export class HistoryGraphComponent implements OnInit {
       this.groupDataBy(this.groupby)
       this.displayChart = true;
     }, 0);
+  }
+
+  reDisplay() {
+    if (!this.dataLoaded)
+    {
+      this.reload()
+    }
+    else {
+      this.reGroupData();
+    }
   }
 
 }

@@ -7,6 +7,8 @@ import { BaseChartComponent } from '@swimlane/ngx-charts/release/common/base-cha
 import { ConfigService } from '@app/services/config.service'
 import { AccountService } from '@app/services/account.service'
 import { FlexLayoutModule } from '@angular/flex-layout'
+import { currencyList } from '@server/assets/assets';
+import { FormGroup, FormControl, FormGroupDirective, Validators, FormBuilder }  from '@angular/forms';
 
 @Component({
   selector: 'app-breakdown-graph',
@@ -24,16 +26,20 @@ export class BreakdownGraphComponent implements OnInit {
   breakdownData: any = {};
   groupby: string="account";
 
+  curdate: Date = new Date();
+  dateCtrl: FormControl = new FormControl(this.curdate, []);
+
   constructor(private dataService: DataService, 
               private eventService: EventService, 
               private configService: ConfigService,
               private accountService: AccountService
     ) { }
 
-  ngOnInit() {}
+  ngOnInit() {    
+  }
 
-  reload() {
-    console.log('BreakdownGraphComponent: reloading myself!!')
+  reload(date?: Date) {
+    console.log('BreakdownGraphComponent: reloading myself!! date=' + date)
     this.dataLoaded = 0;
     this.configService.getSecurities().subscribe((result) => {
       if (result.status == 200) {        
@@ -86,7 +92,7 @@ export class BreakdownGraphComponent implements OnInit {
       }
     });
 
-    this.dataService.getBreakdown().subscribe((result) => {
+    this.dataService.getBreakdown(this.formatdate(date)).subscribe((result) => {
       if (result.status == 200) {        
         this.breakdownData = result.data;
         this.dataLoaded += 1;
@@ -148,6 +154,9 @@ export class BreakdownGraphComponent implements OnInit {
         } else if (key=='portfolio') {
           id = y.portfolioid;
           name = this.portfolioData[id].name;
+        } else if (key=='currency') {
+          id = y.currencyid;
+          name = this.securityData[id].identifier;
         } else {
           id = y.securityid;
           name = this.securityData[id].identifier;
@@ -166,8 +175,7 @@ export class BreakdownGraphComponent implements OnInit {
           _lineData[added[id].index]["value"] += y.totalvalue;
         }        
       }  
-      this.lineData = _lineData;
-      
+      this.lineData = _lineData;      
     }
     else {
       console.log('groupDataBy() called but dataLoaded=' + this.dataLoaded);
@@ -180,6 +188,30 @@ export class BreakdownGraphComponent implements OnInit {
       this.groupDataBy(this.groupby)
       this.displayChart = true;
     }, 0);
+  }
+
+  reDisplay() {
+    if (!this.dataLoaded)
+    {
+      this.reload()
+    }
+    else {
+      this.reGroupData();
+    }
+  }
+
+  updateDate() {
+    let newdate = this.dateCtrl.value;    
+    if (newdate != this.curdate) {
+      this.curdate = newdate;
+      this.reload(this.curdate);
+
+    }
+    
+  }
+
+  formatdate(d?: Date) {
+    return d? d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) : undefined;
   }
 
 }
