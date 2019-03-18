@@ -71,7 +71,7 @@ export class GraphContainerComponent implements OnInit {
   reloadGraphs() {
     console.log('GraphContainer: reload() event received.')
     this.historyGraphComponent.reDisplay();
-    //this.breakdownGraphComponent.reload();
+    this.breakdownGraphComponent.reload();
   }
 
 }

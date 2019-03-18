@@ -2,7 +2,30 @@
     <div *ngIf="!displayChart" fxLayout="row" fxLayoutAlign="center center" class="overlay-spinner">          
           <mat-spinner diameter=30 strokeWidth=5></mat-spinner>
     </div>
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+  
+  <div fxLayout="row" 
+   fxLayoutAlign="space-between center" fxLayoutGap="10px">
+   <div class="app-history-rangemenu">
+    <mat-button-toggle-group class="app-history-rangetoggle" 
+    id="toggle-group-borderless" #group="matButtonToggleGroup"
+    (change)="setRange($event)" value="All">
+      <mat-button-toggle class="app-history-rangetoggle" id="toggle-label-thin" value="1w">
+        1w
+      </mat-button-toggle>
+      <mat-button-toggle class="app-history-rangetoggle" id="toggle-label-thin" value="1m">
+        1m
+      </mat-button-toggle>
+      <mat-button-toggle class="app-history-rangetoggle" id="toggle-label-thin" value="6m">
+        6m
+      </mat-button-toggle>
+      <mat-button-toggle class="app-history-rangetoggle" id="toggle-label-thin" value="1y">
+        1y
+      </mat-button-toggle>
+      <mat-button-toggle class="app-history-rangetoggle" id="toggle-label-thin" value="All">
+        All
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+   </div>
     <div class="app-history-groupmenu">
     <div class="app-history-groupmenu-element app-rightmarginxs">
     Group by:

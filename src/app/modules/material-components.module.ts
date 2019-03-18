@@ -17,6 +17,7 @@ import { MatTableModule } from '@angular/material/table'
 import { MatDatepickerModule } from '@angular/material/datepicker'
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 @NgModule({
   imports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
@@ -24,13 +25,13 @@ import {MatTabsModule} from '@angular/material/tabs';
             MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
             MatSelectModule, MatProgressSpinnerModule, MatTableModule,
             MatDatepickerModule, MatNativeDateModule, MatTooltipModule,
-            MatTabsModule],
+            MatTabsModule, MatButtonToggleModule],
 
   exports: [BrowserAnimationsModule, MatButtonModule, MatCheckboxModule, 
     MatMenuModule, MatIconModule, MatCardModule, MatToolbarModule, 
     MatFormFieldModule, MatInputModule, MatDialogModule, MatStepperModule, 
     MatSelectModule, MatProgressSpinnerModule, MatTableModule,
     MatDatepickerModule, MatNativeDateModule, MatTooltipModule,
-    MatTabsModule]
+    MatTabsModule, MatButtonToggleModule]
 })
 export class MaterialComponentsModule { }

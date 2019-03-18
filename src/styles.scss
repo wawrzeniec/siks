@@ -210,6 +210,16 @@ $marginXSmall: 10px;
     opacity: 0.98;
 }
 
+/* Overrides some of the material styles */
+#toggle-label-thin-button .mat-button-toggle-label-content {
+    line-height: 140% !important;
+    padding: 0 6px;
+}
+
+#toggle-group-borderless {
+    border: 0px;
+}
+
 
 /* Special class for the ngx-charts */
 .graph-dark {
@@ -372,4 +382,5 @@ $marginXSmall: 10px;
   
   }
 
-  @import "styles/overlay-spinner.scss";
+
+@import "styles/overlay-spinner.scss";

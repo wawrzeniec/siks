@@ -3,15 +3,14 @@
         <mat-spinner diameter=30 strokeWidth=5></mat-spinner>
   </div>
 <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">    
-    <mat-form-field>
+  
+  <mat-form-field fxFlex="40">
     <input matInput [matDatepicker]="datepicker" placeholder="Choose date" (dateChange)="updateDate()"
     [formControl]="dateCtrl">
     <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
     <mat-datepicker #datepicker touchUi></mat-datepicker>
-    </mat-form-field>
-  </div>
-  <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+  </mat-form-field>  
+  <div fxFlex="60">    
     <div class="app-breakdown-groupmenu">
     <div class="app-breakdown-groupmenu-element app-rightmarginxs">
     Group by:
@@ -23,7 +22,7 @@
       <mat-option value="currency">Currency</mat-option>
       <mat-option value="portfolio">Portfolio</mat-option>
     </mat-select></div>
-    </div>  
+    </div>
   </div>
 </div>
 <ngx-charts-pie-chart *ngIf="displayChart"

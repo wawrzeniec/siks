@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SessionService } from '@app/services/session.service'
 import { EventService } from '@app/services/event.service'
+import { Meta } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,14 @@ export class AppComponent implements OnInit{
   title: string = 'siks';
   
   constructor(public sessionService: SessionService, 
-    public eventService: EventService) {
+              public eventService: EventService,
+              private meta: Meta) {
     
   };
 
   ngOnInit() {
+    this.meta.addTag({name: "viewport",
+              content:"width=device-width, initial-scale=1"});
   }
 
   ngAfterViewInit() {

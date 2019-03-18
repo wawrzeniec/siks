@@ -26,7 +26,11 @@ export class DataService {
   getHistory(mindate?: string): Observable<serverPacket> {
     // Get the "history" total in CHF
     const url: string = this.baseUrl + '/history'; 
-    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    let params = new HttpParams();
+    if (mindate) {
+      params = params.append('mindate', mindate);
+    }
+    return this.http.get(url, { withCredentials: true, params: params }) as Observable<serverPacket>;
   }
 
   getBreakdown(maxdate?: string): Observable<serverPacket> {

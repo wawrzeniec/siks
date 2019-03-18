@@ -5,9 +5,18 @@
 
 .app-history-groupmenu {
     display: inline-block;
+    float: right;
 }
 
 .app-history-groupmenu-element {
     display: inline-block;
 }
 
+.app-history-rangetoggle {
+    line-height: 100%;
+}
+
+.app-history-togglebutton {
+    line-height: 100%;
+    padding: 0 6px;
+}

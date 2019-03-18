@@ -1,15 +1,36 @@
 <mat-tab-group color="primary" backgroundColor="primary"
 (selectedTabChange)="onSelectChange()" [(selectedIndex)]="selectedTab">
-  <mat-tab label="History" #historyGraphContainer>
-    <mat-card class="app-graph-card app-marginxs">
-      <template #historyGraph>
-      </template>
-    </mat-card>
+  <mat-tab label="Assets" #assetsGraphContainer>
+    <div class="app-tab-content app-margin-xs" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">    
+      <div class="app-tab-item" fxFlex="49" fxFlex.lt-sm="99">
+        <mat-card class="app-graph-card app-marginxs">
+          <mat-card-title>
+              Breakdown
+          </mat-card-title>
+          <mat-card-content>
+            <template #breakdownGraph></template>
+          </mat-card-content>    
+          </mat-card>
+      </div>
+      <div class="app-tab-item" fxFlex="49" fxFlex.lt-sm="99">
+        <mat-card class="app-graph-card app-marginxs">
+          <mat-card-title>
+            History
+          </mat-card-title>
+          <mat-card-content>
+            <template #historyGraph></template>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
   </mat-tab>
-  <mat-tab label="Breakdown" #breakdownGraphContainer>
-    <mat-card class="app-graph-card app-marginxs">
-      <template #breakdownGraph>
-      </template>
-    </mat-card>
+  <mat-tab label="Watched" #watchedGraphContainer>
+    <div class="app-tab-content">
+      <div class="app-tab-item">
+        <mat-card class="app-graph-card app-marginxs">
+          <template #watchedHistoryGRaph></template>
+        </mat-card>
+      </div>
+    </div>
   </mat-tab>
 </mat-tab-group>

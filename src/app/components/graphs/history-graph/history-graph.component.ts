@@ -40,7 +40,7 @@ export class HistoryGraphComponent implements OnInit {
     //this.eventService.reloadHistoryEvent.register(() => this.reload());     
   }
 
-  reload() {
+  reload(date?: Date) {
     console.log('HistoryGraphComponent: reloading myself!!')
     this.dataLoaded = 0;
     this.configService.getSecurities().subscribe((result) => {
@@ -94,7 +94,7 @@ export class HistoryGraphComponent implements OnInit {
       }
     });
 
-    this.dataService.getHistory().subscribe((result) => {
+    this.dataService.getHistory(this.formatdate(date)).subscribe((result) => {
       if (result.status == 200) {        
         this.historyData = result.data;
         this.dataLoaded += 1;
@@ -213,4 +213,28 @@ export class HistoryGraphComponent implements OnInit {
     }
   }
 
+  setRange(event) {
+    let d = new Date();
+    switch(event.value) {
+      case "1w":
+        d.setHours(d.getHours() - 7*24);
+      break;
+      case "1m":
+        d.setMonth(d.getMonth() - 3);
+      break;
+      case "6m":
+        d.setMonth(d.getMonth() - 6);
+      break;
+      case "1y":
+        d.setYear(d.getFullYear() - 1);
+      break;
+      case "All":
+        d = undefined; 
+    }
+    this.reload(d);
+  }
+
+  formatdate(d?: Date) {
+    return d? d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) : undefined;
+  }
 }
