@@ -9,18 +9,13 @@ import { AccountService } from '@app/services/account.service'
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { currencyList } from '@server/assets/assets';
 
-//import { NgxChartsModule, BaseChartComponent, LineComponent, LineSeriesComponent,
-//calculateViewDimensions, ViewDimensions, ColorHelper } from '@swimlane/ngx-charts'
-//import { area, line, curveLinear } from 'd3-shape';
-//import { scaleBand, scaleLinear, scalePoint, scaleTime } from 'd3-scale';
-
 @Component({
-  selector: 'app-history-graph',
-  templateUrl: './history-graph.component.html',
-  styleUrls: ['./history-graph.component.scss']
+  selector: 'app-security-graph',
+  templateUrl: './security-graph.component.html',
+  styleUrls: ['./security-graph.component.scss']
 })
-export class HistoryGraphComponent implements OnInit {
-  
+export class SecurityGraphComponent implements OnInit {
+
   displayChart: boolean = false;
   dataLoaded: number = 0;
   lineData: any = new Array();
@@ -33,15 +28,14 @@ export class HistoryGraphComponent implements OnInit {
   constructor(private dataService: DataService, 
               private eventService: EventService, 
               private configService: ConfigService,
-              private accountService: AccountService
-    ) { }
+              private accountService: AccountService) { }
 
   ngOnInit() {
     //this.eventService.reloadHistoryEvent.register(() => this.reload());     
   }
 
   reload(date?: Date) {
-    console.log('HistoryGraphComponent: reloading myself!!')
+    console.log('SecurityGraphComponent: reloading myself!!')
     this.dataLoaded = 0;
     this.configService.getSecurities().subscribe((result) => {
       if (result.status == 200) {        
@@ -113,8 +107,9 @@ export class HistoryGraphComponent implements OnInit {
   }
   
   processSecurityData(data: any) {
-    this.securityData = new Array();
+    this.securityData =  new Array();
     for (let d of data) {
+      console.log(this.securityData);
       this.securityData[d.securityid] = {
         "identifier": d.identifier, 
         "typeid": d.typeid,
@@ -122,6 +117,7 @@ export class HistoryGraphComponent implements OnInit {
         "currency": d.currency
       }
     }
+    console.log(this.securityData);
   }
 
   processAccountData(data: any) {
@@ -132,6 +128,7 @@ export class HistoryGraphComponent implements OnInit {
         "portfolioid": d.portfolioid
       }
     }
+    console.log(this.accountData)
   }
 
   processPortfolioData(data: any) {

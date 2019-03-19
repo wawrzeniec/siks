@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HistoryGraphComponent } from '@app/components/graphs/history-graph/history-graph.component';
 import { BreakdownGraphComponent } from '@app/components/graphs/breakdown-graph/breakdown-graph.component';
+import { SecurityGraphComponent } from '@app/components/graphs/security-graph/security-graph.component';
 import { EventService } from '@app/services/event.service';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgModule, ViewChild, ElementRef, Input, Output, 
@@ -23,6 +24,10 @@ export class GraphContainerComponent implements OnInit {
     private _BreakdownGraphComponentRef;
   private breakdownGraphComponent: BreakdownGraphComponent;
 
+  @ViewChild('securityGraph', {read: ViewContainerRef}) 
+    private _SecurityGraphComponentRef;
+  private securityGraphComponent: SecurityGraphComponent;
+
   selectedTab: number = 0;
 
   constructor(private eventService: EventService,
@@ -30,20 +35,10 @@ export class GraphContainerComponent implements OnInit {
 
   ngOnInit() {
     this.eventService.reloadGraphsEvent.register(() => this.reloadGraphs()); 
-
-    /* Creates the histogry graph component */
-    let _comp = this.createComponent(this._HistoryGraphComponentRef, HistoryGraphComponent);
-
-    // all inputs/outputs set => add it to the DOM ..
-    this._HistoryGraphComponentRef.insert(_comp.hostView);
-    this.historyGraphComponent = _comp.instance;
-
-    /* Creates the breakdown graph component */
-    _comp = this.createComponent(this._BreakdownGraphComponentRef, BreakdownGraphComponent);
-
-    // all inputs/outputs set => add it to the DOM ..
-    this._BreakdownGraphComponentRef.insert(_comp.hostView);
-    this.breakdownGraphComponent = _comp.instance;
+    
+    // Loads the graphs on the first tab
+    this.loadHistoryGraph();
+    this.loadBreakdownGraph();
   }
 
   public createComponent (vCref: ViewContainerRef, type: any): ComponentRef<any> {
@@ -62,16 +57,56 @@ export class GraphContainerComponent implements OnInit {
   onSelectChange() {
     switch(this.selectedTab) {
       case 0:
+        if (!this.historyGraphComponent) {
+          this.loadHistoryGraph();
+        }
+        if (!this.breakdownGraphComponent) {
+          this.loadBreakdownGraph();
+        }
         this.historyGraphComponent.reDisplay();
-      case 1:
-      this.breakdownGraphComponent.reDisplay();
-    }
+        this.breakdownGraphComponent.reDisplay();
+        break;
+      case 1: 
+        if (!this.securityGraphComponent) {
+          this.loadSecurityGraph();
+        }
+        this.securityGraphComponent.reDisplay();
+        break;
+    }     
   }
 
   reloadGraphs() {
     console.log('GraphContainer: reload() event received.')
-    this.historyGraphComponent.reDisplay();
-    this.breakdownGraphComponent.reload();
+    this.onSelectChange();
   }
+
+  loadHistoryGraph() {
+    /* Creates the histogry graph component */
+    let _comp = this.createComponent(this._HistoryGraphComponentRef, HistoryGraphComponent);
+
+    // all inputs/outputs set => add it to the DOM ..
+    this._HistoryGraphComponentRef.insert(_comp.hostView);
+    this.historyGraphComponent = _comp.instance;
+  }
+
+  loadBreakdownGraph() {
+    /* Creates the breakdown graph component */
+    let _comp = this.createComponent(this._BreakdownGraphComponentRef, BreakdownGraphComponent);
+
+    // all inputs/outputs set => add it to the DOM ..
+    this._BreakdownGraphComponentRef.insert(_comp.hostView);
+    this.breakdownGraphComponent = _comp.instance;
+  }
+
+  loadSecurityGraph() {
+    /* Creates the security graph component */
+    let _comp = this.createComponent(this._SecurityGraphComponentRef, SecurityGraphComponent);
+
+    // all inputs/outputs set => add it to the DOM ..
+    this._SecurityGraphComponentRef.insert(_comp.hostView);
+    this.securityGraphComponent = _comp.instance;    
+  }
+
+
 
 }

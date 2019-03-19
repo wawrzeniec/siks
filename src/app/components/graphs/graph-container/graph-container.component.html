@@ -25,11 +25,16 @@
     </div>
   </mat-tab>
   <mat-tab label="Watched" #watchedGraphContainer>
-    <div class="app-tab-content">
-      <div class="app-tab-item">
+    <div class="app-tab-content app-margin-xs" fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">    
+      <div class="app-tab-item" fxFlex="49" fxFlex.lt-sm="99">
         <mat-card class="app-graph-card app-marginxs">
-          <template #watchedHistoryGRaph></template>
-        </mat-card>
+          <mat-card-title>
+              Securities
+          </mat-card-title>
+          <mat-card-content>
+            <template #securityGraph></template>
+          </mat-card-content>    
+          </mat-card>
       </div>
     </div>
   </mat-tab>
