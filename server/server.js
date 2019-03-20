@@ -310,6 +310,14 @@ app.get('/data/breakdown', (req, res) => {
 	});
 });
 
+app.get('/data/security/:securityid', (req, res) => {
+	console.log(req)
+	dataService.getSecurityHistory(configdb, req.session, req.params.securityid, req.query.maxdate, (result) => {
+		res.status(result.status);
+		res.json(result)
+	});
+});
+
 ////////////////////////////////////
 // Default enpoint - to check server
 app.get('/', (req, res) => {

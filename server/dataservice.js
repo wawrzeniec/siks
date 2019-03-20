@@ -605,7 +605,7 @@ function getBreakdown(db, session, maxdate, callback) {
             USING(currency)
         ),
     
-    history2 AS (
+        history2 AS (
         SELECT * FROM (
             SELECT * FROM
                 (SELECT DISTINCT(date(timestamp)) AS timestamp FROM history WHERE date(timestamp)<=$maxdate)
@@ -731,8 +731,109 @@ function getBreakdown(db, session, maxdate, callback) {
 }
 
 
+function getSecurityHistory(db, session, securityid, mindate, callback) {
+    
+    if (!mindate) {
+        mindate = '1970-01-01';    
+    } 
+    
+    let userid = session.userid;
+    let userclause = ' ';
+    if (userid == 0) {
+        userclause = ' '; 
+    }
+    else {
+        userclause = ' WHERE userid=$userid ';
+    }
+    console.log(userclause);
+    let seclist = JSON.parse(securityid);
+    let stmtvars = {$mindate: mindate};
+    let listexpr = ''
+    for (let i in seclist) {
+        stmtvars['$s'+i] = seclist[i];
+        listexpr += '$s'+i;
+        if (i < seclist.length-1) {
+            listexpr += ', ';
+        } 
+    }
+    console.log(stmtvars)
+    console.log(listexpr)
+
+    let stmt = `
+    WITH history2 AS (
+        SELECT * FROM (
+            SELECT  securityid, 
+                    DATE(timestamp)         AS timestamp, 
+                    value 
+            FROM history WHERE securityid IN (`+ listexpr + `) AND timestamp>=$mindate
+            )
+            JOIN (
+            SELECT  securityid, 
+                    typeid, 
+                    categoryid,
+                    currency
+            FROM securities WHERE securityid IN (` + listexpr + `)
+            )
+            USING (securityid)
+        ),
+
+    history3 AS (
+        SELECT * FROM
+            history2 
+        JOIN (
+            SELECT  securityid      AS currencyid, 
+                    currency 
+            FROM securities WHERE typeid=1) 
+            USING (currency)
+        ),
+
+    history4 AS (
+        SELECT * FROM 
+            history3 AS n 
+        JOIN (
+            SELECT 
+                securityid          AS currencyid, 
+                DATE(timestamp)     AS timestamp, 
+                value               AS currencyvalue 
+            FROM history WHERE timestamp>=$mindate) 
+            AS o 
+        USING(currencyid, timestamp)
+        )
+
+    SELECT 	securityid,
+            timestamp,
+            typeid,
+            categoryid,
+            CASE typeid WHEN 1 THEN 1 ELSE currencyvalue END AS value,
+            currencyid,
+            currencyvalue,
+            CASE typeid WHEN 1 THEN currencyvalue ELSE value * currencyvalue END AS chfvalue
+    FROM history4`
+    
+    console.log(stmt)
+    db.all(stmt, stmtvars,
+        (err, rows) => {
+            if (err) {
+                console.log(err);
+                return callback({
+                    status: 500,
+                    reASon: 'failed to get history data for securityid' + securityid + ' and userid ' + userid,
+                    err: err
+                });
+            }
+            else {
+                return callback({
+                    status: 200,
+                    data: rows
+                });
+            }
+        }
+    );
+}
+
 module.exports = {
     getSummary,
     getHistory,
-    getBreakdown
+    getBreakdown,
+    getSecurityHistory
 }

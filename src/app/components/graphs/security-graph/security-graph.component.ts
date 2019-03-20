@@ -24,6 +24,7 @@ export class SecurityGraphComponent implements OnInit {
   portfolioData: any = new Array();
   historyData: any = new Array();
   groupby: string="account";
+  currentSecurity: number = 1;
 
   constructor(private dataService: DataService, 
               private eventService: EventService, 
@@ -41,7 +42,7 @@ export class SecurityGraphComponent implements OnInit {
       if (result.status == 200) {        
         this.processSecurityData(result.data);
         this.dataLoaded += 1;
-        if(this.dataLoaded == 4) {
+        if(this.dataLoaded == 2) {
           console.log('got securities, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
           this.groupDataBy(this.groupby);
           this.displayChart = true;
@@ -54,45 +55,11 @@ export class SecurityGraphComponent implements OnInit {
       }
     });
 
-    this.accountService.getAccounts().subscribe((result) => {
-      if (result.status == 200) {        
-        this.processAccountData(result.data);
-        this.dataLoaded += 1;
-        if(this.dataLoaded == 4) {
-          console.log('got accounts, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
-          this.groupDataBy(this.groupby);
-          this.displayChart = true;
-        }
-      }
-      else {
-        // Handle the error here
-        console.log('Error while retrieving account data:');
-        console.log(result);
-      }
-    });
-
-    this.accountService.getPortfolios().subscribe((result) => {
-      if (result.status == 200) {        
-        this.processPortfolioData(result.data);
-        this.dataLoaded += 1;
-        if(this.dataLoaded == 4) {
-          console.log('got portfolios, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
-          this.groupDataBy(this.groupby);
-          this.displayChart = true;
-        }
-      }
-      else {
-        // Handle the error here
-        console.log('Error while retrieving portfolio data:');
-        console.log(result);
-      }
-    });
-
-    this.dataService.getHistory(this.formatdate(date)).subscribe((result) => {
+    this.dataService.getSecurityHistory(this.currentSecurity, this.formatdate(date)).subscribe((result) => {
       if (result.status == 200) {        
         this.historyData = result.data;
         this.dataLoaded += 1;
-        if(this.dataLoaded == 4) {
+        if(this.dataLoaded == 2) {
           console.log('got history, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
           this.groupDataBy(this.groupby);
           this.displayChart = true;
@@ -109,7 +76,6 @@ export class SecurityGraphComponent implements OnInit {
   processSecurityData(data: any) {
     this.securityData =  new Array();
     for (let d of data) {
-      console.log(this.securityData);
       this.securityData[d.securityid] = {
         "identifier": d.identifier, 
         "typeid": d.typeid,
@@ -117,7 +83,6 @@ export class SecurityGraphComponent implements OnInit {
         "currency": d.currency
       }
     }
-    console.log(this.securityData);
   }
 
   processAccountData(data: any) {
@@ -128,7 +93,6 @@ export class SecurityGraphComponent implements OnInit {
         "portfolioid": d.portfolioid
       }
     }
-    console.log(this.accountData)
   }
 
   processPortfolioData(data: any) {
