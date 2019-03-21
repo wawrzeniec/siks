@@ -43,10 +43,11 @@ export class DataService {
     return this.http.get(url, { withCredentials: true, params: params }) as Observable<serverPacket>;
   }
 
-  getSecurityHistory(securityid: number, mindate?: string): Observable<serverPacket> {
+  getSecurityHistory(securityids: Array<number>, mindate?: string): Observable<serverPacket> {
     // Get the "history" total in CHF
-    const url: string = this.baseUrl + '/security/' + securityid; 
+    const url: string = this.baseUrl + '/security'; 
     let params = new HttpParams();
+    params = params.append('securityids', securityids.toString())
     if (mindate) {
       params = params.append('mindate', mindate);
     }

@@ -731,7 +731,7 @@ function getBreakdown(db, session, maxdate, callback) {
 }
 
 
-function getSecurityHistory(db, session, securityid, mindate, callback) {
+function getSecurityHistory(db, session, securityids, mindate, callback) {
     
     if (!mindate) {
         mindate = '1970-01-01';    
@@ -745,8 +745,8 @@ function getSecurityHistory(db, session, securityid, mindate, callback) {
     else {
         userclause = ' WHERE userid=$userid ';
     }
-    console.log(userclause);
-    let seclist = JSON.parse(securityid);
+    console.log(securityids);
+    let seclist = JSON.parse("[" + securityids + "]");
     let stmtvars = {$mindate: mindate};
     let listexpr = ''
     for (let i in seclist) {
@@ -804,7 +804,7 @@ function getSecurityHistory(db, session, securityid, mindate, callback) {
             timestamp,
             typeid,
             categoryid,
-            CASE typeid WHEN 1 THEN 1 ELSE currencyvalue END AS value,
+            CASE typeid WHEN 1 THEN 1 ELSE value END AS value,
             currencyid,
             currencyvalue,
             CASE typeid WHEN 1 THEN currencyvalue ELSE value * currencyvalue END AS chfvalue

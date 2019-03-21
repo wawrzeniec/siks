@@ -68,8 +68,10 @@ export class GraphContainerComponent implements OnInit {
         break;
       case 1: 
         if (!this.securityGraphComponent) {
+          console.log('graphContainer: Instantiating securityGraph');
           this.loadSecurityGraph();
         }
+        console.log('graphContainer: Reloading securityGraph');
         this.securityGraphComponent.reDisplay();
         break;
     }     

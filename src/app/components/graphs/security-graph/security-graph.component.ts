@@ -23,8 +23,11 @@ export class SecurityGraphComponent implements OnInit {
   accountData: any = new Array();
   portfolioData: any = new Array();
   historyData: any = new Array();
-  groupby: string="account";
-  currentSecurity: number = 1;
+  added: any = {};
+  groupby: string="instrinsic";
+  listSelection: Array<string> = ["1"];
+  currentSecurities: Array<number> = [1];
+  mindate: Date = undefined;
 
   constructor(private dataService: DataService, 
               private eventService: EventService, 
@@ -33,9 +36,19 @@ export class SecurityGraphComponent implements OnInit {
 
   ngOnInit() {
     //this.eventService.reloadHistoryEvent.register(() => this.reload());     
+    this.mindate = new Date();
+    this.mindate.setMonth(new Date().getMonth() - 1);
+
+    console.log('SecurityGraph::init');
+    console.log(this.dataService);
+
   }
 
-  reload(date?: Date) {
+  ngAfterViewInit() {
+    this.listSelection = ["1"];
+  }
+
+  reload() {
     console.log('SecurityGraphComponent: reloading myself!!')
     this.dataLoaded = 0;
     this.configService.getSecurities().subscribe((result) => {
@@ -43,8 +56,7 @@ export class SecurityGraphComponent implements OnInit {
         this.processSecurityData(result.data);
         this.dataLoaded += 1;
         if(this.dataLoaded == 2) {
-          console.log('got securities, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
-          this.groupDataBy(this.groupby);
+          this.pushData();
           this.displayChart = true;
         }
       }
@@ -55,13 +67,13 @@ export class SecurityGraphComponent implements OnInit {
       }
     });
 
-    this.dataService.getSecurityHistory(this.currentSecurity, this.formatdate(date)).subscribe((result) => {
+    console.log('securityids=' + this.currentSecurities)
+    this.dataService.getSecurityHistory(this.currentSecurities?this.currentSecurities:[1], this.formatdate(this.mindate)).subscribe((result) => {
       if (result.status == 200) {        
         this.historyData = result.data;
         this.dataLoaded += 1;
         if(this.dataLoaded == 2) {
-          console.log('got history, dataLoaded=' + this.dataLoaded + '. this.groupby=' + this.groupby)
-          this.groupDataBy(this.groupby);
+          this.pushData();
           this.displayChart = true;
         }
       }
@@ -77,6 +89,7 @@ export class SecurityGraphComponent implements OnInit {
     this.securityData =  new Array();
     for (let d of data) {
       this.securityData[d.securityid] = {
+        "securityid": d.securityid,
         "identifier": d.identifier, 
         "typeid": d.typeid,
         "categoryid": d.categoryid,
@@ -85,48 +98,50 @@ export class SecurityGraphComponent implements OnInit {
     }
   }
 
-  processAccountData(data: any) {
-    this.accountData = new Array();
-    for (let d of data) {
-      this.accountData[d.accountid] = {
-        "name": d.name, 
-        "portfolioid": d.portfolioid
+  processSelected() {
+    let toLoad = [];
+    console.log(this.added);
+    console.log(this.currentSecurities)
+    for (let id of this.listSelection)
+    {
+      console.log(id as number)
+      console.log(this.added.hasOwnProperty(id as number))
+      if (!this.added.hasOwnProperty(id as number)) {
+        toLoad.push(id as number);
+        this.currentSecurities.push(id as number);
       }
+    }    
+    console.log('currentsec='+this.currentSecurities);
+    console.log('toload='+toLoad)
+    if (toLoad.length > 0) {
+      this.dataService.getSecurityHistory(toLoad, this.formatdate(this.mindate)).subscribe((result) => {
+        if (result.status == 200) {        
+          this.historyData = result.data;
+          console.log(this.historyData);
+          this.pushData();
+          this.displayChart = true;
+          }        
+        else {
+          // Handle the error here
+          console.log('Error while retrieving historical data:');
+          console.log(result);
+        }
+      });
     }
   }
-
-  processPortfolioData(data: any) {
-    this.portfolioData = new Array();
-    for (let d of data) {
-      this.portfolioData[d.portfolioid] = {
-        "name": d.name
-      }
-    }
-  }
-
-  groupDataBy(key: string) {
-    if (this.dataLoaded >= 4) {
-      let _lineData = new Array();
-      let added = {};
+  
+  pushData() {
+    if (this.dataLoaded >= 2) {
+      let _lineData = this.lineData;
+      this.lineData = {};
       let id;
       let name;
       for (let y of this.historyData) {
-        if (key=='account') {
-          id = y.accountid;
-          name = this.accountData[id].name;
-        } else if (key=='portfolio') {
-          id = y.portfolioid;
-          name = this.portfolioData[id].name;
-        } else if (key=='currency') {
-          id = y.currencyid;
-          name = this.securityData[id].identifier;
-        } else {
-          id = y.securityid;
-          name = this.securityData[id].identifier;
-        }
-
-        if (!added.hasOwnProperty(id)) {
-          added[id] = {
+        id = y.securityid;
+        name = this.securityData[id].identifier;
+      
+        if (!this.added.hasOwnProperty(id)) {
+          this.added[id] = {
             "index": _lineData.length,
           };
           _lineData.push({
@@ -134,32 +149,24 @@ export class SecurityGraphComponent implements OnInit {
             "series": new Array()
           });
         }
-        if (y.totalvalue != null) {        
-          if (added[id].hasOwnProperty(y.timestamp)) {          
-            let thisindex = added[id][y.timestamp];
-            _lineData[added[id].index]["series"][thisindex].value += y.totalvalue;
-          }
-          else {
-            added[id][y.timestamp] = _lineData[added[id].index]["series"].length;
-            _lineData[added[id].index]["series"].push({
-              "name": new Date(y.timestamp),
-              "value": y.totalvalue
-            }); 
-          }
+        if (y.chfvalue != null) {  
+          _lineData[this.added[id].index]["series"].push({
+            "name": new Date(y.timestamp),
+            "value": y.chfvalue
+          }); 
         }
       }  
       this.lineData = _lineData;
-      
+      console.log(this.lineData)      
     }
     else {
       console.log('groupDataBy() called but dataLoaded=' + this.dataLoaded);
     }
   }
 
-  reGroupData() {
+  rePushData() {
     this.displayChart = false;
-    setTimeout(() => {
-      this.groupDataBy(this.groupby)
+    setTimeout(() => {      
       this.displayChart = true;
     }, 0);
   }
@@ -170,29 +177,29 @@ export class SecurityGraphComponent implements OnInit {
       this.reload()
     }
     else {
-      this.reGroupData();
+      this.rePushData();
     }
   }
 
   setRange(event) {
-    let d = new Date();
+    this.mindate = new Date();
     switch(event.value) {
       case "1w":
-        d.setHours(d.getHours() - 7*24);
+        this.mindate.setHours(this.mindate.getHours() - 7*24);
       break;
       case "1m":
-        d.setMonth(d.getMonth() - 3);
+        this.mindate.setMonth(this.mindate.getMonth() - 1);
       break;
       case "6m":
-        d.setMonth(d.getMonth() - 6);
+        this.mindate.setMonth(this.mindate.getMonth() - 6);
       break;
       case "1y":
-        d.setFullYear(d.getFullYear() - 1);
+        this.mindate.setFullYear(this.mindate.getFullYear() - 1);
       break;
       case "All":
-        d = undefined; 
+        this.mindate = undefined; 
     }
-    this.reload(d);
+    this.reload(this.mindate);
   }
 
   formatdate(d?: Date) {

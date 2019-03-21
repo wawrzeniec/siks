@@ -28,15 +28,15 @@
    </div>
     <div class="app-securitygraph-groupmenu">
     <div class="app-securitygraph-groupmenu-element app-rightmarginxs">
-    Group by:
+    Display:
     </div>
     <div class="app-securitygraph-groupmenu-select" *ngIf="dataLoaded">
-      <mat-select (selectionChange)="reGroupData()" [(value)]="groupby">
-      <mat-option *ngFor="let sec of securityData.slice(1); let secid=index" value="{{secid}}">{{sec.identifier}}</mat-option>      
+      <mat-select multiple (selectionChange)="processSelected()" [(value)]="listSelection">
+      <mat-option *ngFor="let sec of securityData.slice(1)" value="{{sec.securityid}}">{{sec.securityid}} {{sec.identifier}}</mat-option>      
     </mat-select></div>
     </div>  
   </div>
-  <ngx-charts-area-chart-stacked *ngIf="displayChart"
+  <ngx-charts-line-chart *ngIf="displayChart"
     [results]="lineData"    
     scheme="picnic"    
     xAxis="true"
@@ -49,5 +49,5 @@
     xScale="date"
     gradient="true"
     >
-  </ngx-charts-area-chart-stacked>
+  </ngx-charts-line-chart>
 </div>

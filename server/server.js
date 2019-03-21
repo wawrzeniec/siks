@@ -79,7 +79,6 @@ app.use(function(req, res, next) {
 
 app.use(/^(?!\/login\/?$)/, function(req, res, next) {	
 	if (req.session.loggedin) {        
-			console.log(req.session)	
 			next()
     }
     else {
@@ -303,16 +302,14 @@ app.get('/data/history', (req, res) => {
 });
 
 app.get('/data/breakdown', (req, res) => {
-	console.log(req)
 	dataService.getBreakdown(configdb, req.session, req.query.maxdate, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});
 });
 
-app.get('/data/security/:securityid', (req, res) => {
-	console.log(req)
-	dataService.getSecurityHistory(configdb, req.session, req.params.securityid, req.query.maxdate, (result) => {
+app.get('/data/security', (req, res) => {
+	dataService.getSecurityHistory(configdb, req.session, req.query.securityids, req.query.mindate, (result) => {
 		res.status(result.status);
 		res.json(result)
 	});
