@@ -8,7 +8,7 @@
    <div class="app-securitygraph-rangemenu">
     <mat-button-toggle-group class="app-securitygraph-rangetoggle" 
     id="toggle-group-borderless" #group="matButtonToggleGroup"
-    (change)="setRange($event)" value="All">
+    (change)="setRange($event)" value="1m">
       <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1w">
         1w
       </mat-button-toggle>
@@ -27,13 +27,16 @@
     </mat-button-toggle-group>
    </div>
     <div class="app-securitygraph-groupmenu">
-    <div class="app-securitygraph-groupmenu-element app-rightmarginxs">
-    Display:
-    </div>
-    <div class="app-securitygraph-groupmenu-select" *ngIf="dataLoaded">
-      <mat-select multiple (selectionChange)="processSelected()" [(value)]="listSelection">
-      <mat-option *ngFor="let sec of securityData.slice(1)" value="{{sec.securityid}}">{{sec.securityid}} {{sec.identifier}}</mat-option>      
-    </mat-select></div>
+      <div class="app-securitygraph-groupmenu-element app-rightmarginxs">
+      Display:
+      </div>
+      <div class="app-securitygraph-groupmenu-select" *ngIf="dataLoaded">
+        <form>
+          <mat-select [formControl]="selectedFormControl" (selectionChange)="processSelected()" multiple>
+            <mat-option *ngFor="let sec of securityData.slice(1)" [value]="sec.securityid">{{sec.securityid}} {{sec.identifier}}</mat-option>      
+          </mat-select>
+        </form>
+      </div>
     </div>  
   </div>
   <ngx-charts-line-chart *ngIf="displayChart"

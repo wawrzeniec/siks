@@ -8,6 +8,7 @@ import { ConfigService } from '@app/services/config.service'
 import { AccountService } from '@app/services/account.service'
 import { FlexLayoutModule } from '@angular/flex-layout'
 import { currencyList } from '@server/assets/assets';
+import { FormGroup, FormControl } from '@angular/forms'
 
 @Component({
   selector: 'app-security-graph',
@@ -23,40 +24,50 @@ export class SecurityGraphComponent implements OnInit {
   accountData: any = new Array();
   portfolioData: any = new Array();
   historyData: any = new Array();
+  allData: any = {};
   added: any = {};
+  displayed: any = undefined;
   groupby: string="instrinsic";
   listSelection: Array<string> = ["1"];
   currentSecurities: Array<number> = [1];
   mindate: Date = undefined;
+  selectedFormControl: FormControl;
 
   constructor(private dataService: DataService, 
               private eventService: EventService, 
               private configService: ConfigService,
-              private accountService: AccountService) { }
-
-  ngOnInit() {
-    //this.eventService.reloadHistoryEvent.register(() => this.reload());     
+              private accountService: AccountService) {
     this.mindate = new Date();
     this.mindate.setMonth(new Date().getMonth() - 1);
+  }
 
+  ngOnInit() {
+    //this.eventService.reloadHistoryEvent.register(() => this.reload());         
+    this.selectedFormControl = new FormControl();
+    this.selectedFormControl.setValue([1]); 
     console.log('SecurityGraph::init');
     console.log(this.dataService);
 
   }
 
   ngAfterViewInit() {
-    this.listSelection = ["1"];
+    //this.listSelection = ["1"];
   }
 
   reload() {
     console.log('SecurityGraphComponent: reloading myself!!')
+
     this.dataLoaded = 0;
+    this.added = {};
+    this.allData = {};
+
     this.configService.getSecurities().subscribe((result) => {
       if (result.status == 200) {        
         this.processSecurityData(result.data);
         this.dataLoaded += 1;
         if(this.dataLoaded == 2) {
           this.pushData();
+          this.displayData();
           this.displayChart = true;
         }
       }
@@ -67,13 +78,16 @@ export class SecurityGraphComponent implements OnInit {
       }
     });
 
-    console.log('securityids=' + this.currentSecurities)
-    this.dataService.getSecurityHistory(this.currentSecurities?this.currentSecurities:[1], this.formatdate(this.mindate)).subscribe((result) => {
+    console.log(this.mindate);
+    this.displayed = this.displayed?this.displayed:[1];
+    console.log(this.displayed);
+    this.dataService.getSecurityHistory(this.displayed, this.formatdate(this.mindate)).subscribe((result) => {
       if (result.status == 200) {        
         this.historyData = result.data;
         this.dataLoaded += 1;
         if(this.dataLoaded == 2) {
           this.pushData();
+          this.displayData();
           this.displayChart = true;
         }
       }
@@ -100,16 +114,20 @@ export class SecurityGraphComponent implements OnInit {
 
   processSelected() {
     let toLoad = [];
-    console.log(this.added);
-    console.log(this.currentSecurities)
-    for (let id of this.listSelection)
+    console.log(this.added);    
+    let listSelection = this.selectedFormControl.value;
+    console.log(listSelection);
+    this.displayed = [];
+    for (let id of listSelection)
     {
-      console.log(id as number)
-      console.log(this.added.hasOwnProperty(id as number))
-      if (!this.added.hasOwnProperty(id as number)) {
-        toLoad.push(id as number);
-        this.currentSecurities.push(id as number);
+      let sid = Number(id);
+      console.log(sid)
+      console.log(this.added.hasOwnProperty(sid));
+      if (!this.added.hasOwnProperty(sid)) {
+        toLoad.push(sid);
+        this.currentSecurities.push(sid);
       }
+      this.displayed.push(id);
     }    
     console.log('currentsec='+this.currentSecurities);
     console.log('toload='+toLoad)
@@ -117,26 +135,39 @@ export class SecurityGraphComponent implements OnInit {
       this.dataService.getSecurityHistory(toLoad, this.formatdate(this.mindate)).subscribe((result) => {
         if (result.status == 200) {        
           this.historyData = result.data;
-          console.log(this.historyData);
           this.pushData();
-          this.displayChart = true;
+          this.displayData();
           }        
         else {
           // Handle the error here
           console.log('Error while retrieving historical data:');
           console.log(result);
         }
-      });
+      });      
+    }
+    else {
+      this.displayData();
     }
   }
   
+  displayData() {
+    let _lineData = [];
+    console.log(this.displayed);
+    for (let i of this.displayed) {
+      _lineData.push(this.allData[i]);
+    }
+    console.log(_lineData)
+    this.lineData = _lineData;
+  }
+
   pushData() {
     if (this.dataLoaded >= 2) {
-      let _lineData = this.lineData;
+      let _lineData = new Array();
       this.lineData = {};
       let id;
       let name;
-      for (let y of this.historyData) {
+      console.log(this.securityData);
+      for (let y of this.historyData) {        
         id = y.securityid;
         name = this.securityData[id].identifier;
       
@@ -146,6 +177,7 @@ export class SecurityGraphComponent implements OnInit {
           };
           _lineData.push({
             "name": name,
+            "id": id,
             "series": new Array()
           });
         }
@@ -156,11 +188,15 @@ export class SecurityGraphComponent implements OnInit {
           }); 
         }
       }  
-      this.lineData = _lineData;
-      console.log(this.lineData)      
+
+      console.log(_lineData);
+      for (let data of _lineData) {
+        this.allData[data.id] = data;
+      }
+      console.log(this.allData)      
     }
     else {
-      console.log('groupDataBy() called but dataLoaded=' + this.dataLoaded);
+      console.log('pushData() called but dataLoaded=' + this.dataLoaded);
     }
   }
 
@@ -199,7 +235,7 @@ export class SecurityGraphComponent implements OnInit {
       case "All":
         this.mindate = undefined; 
     }
-    this.reload(this.mindate);
+    this.reload();
   }
 
   formatdate(d?: Date) {
