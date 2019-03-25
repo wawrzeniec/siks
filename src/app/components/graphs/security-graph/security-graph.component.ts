@@ -32,6 +32,10 @@ export class SecurityGraphComponent implements OnInit {
   currentSecurities: Array<number> = [1];
   mindate: Date = undefined;
   selectedFormControl: FormControl;
+  yScaleMin: number = 0;
+  yScaleMax: number = 1000;
+  autoscale: boolean = true;
+  yAxisLabel: string = "Value (CHF)";
 
   constructor(private dataService: DataService, 
               private eventService: EventService, 
@@ -237,6 +241,21 @@ export class SecurityGraphComponent implements OnInit {
     }
     this.reload();
   }
+
+  setZoom(event) {
+    switch(event.value) {
+      case "tight":
+        this.autoscale=true;
+        break;
+      case "wide":
+        this.autoscale=false;
+        break;
+    }
+  }
+
+  setCurrency(event) { }
+
+  setDiff(event) { }
 
   formatdate(d?: Date) {
     return d? d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) : undefined;

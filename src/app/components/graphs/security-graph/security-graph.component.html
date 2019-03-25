@@ -1,31 +1,30 @@
 <div class="overlay-spinner-wrapper">
-    <div *ngIf="!displayChart" fxLayout="row" fxLayoutAlign="center center" class="overlay-spinner">          
-          <mat-spinner diameter=30 strokeWidth=5></mat-spinner>
-    </div>
-  
+  <div *ngIf="!displayChart" fxLayout="row" fxLayoutAlign="center center" class="overlay-spinner">          
+        <mat-spinner diameter=30 strokeWidth=5></mat-spinner>
+  </div>
   <div fxLayout="row" 
    fxLayoutAlign="space-between center" fxLayoutGap="10px">
-   <div class="app-securitygraph-rangemenu">
-    <mat-button-toggle-group class="app-securitygraph-rangetoggle" 
-    id="toggle-group-borderless" #group="matButtonToggleGroup"
-    (change)="setRange($event)" value="1m">
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1w">
-        1w
-      </mat-button-toggle>
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1m">
-        1m
-      </mat-button-toggle>
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="6m">
-        6m
-      </mat-button-toggle>
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1y">
-        1y
-      </mat-button-toggle>
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="All">
-        All
-      </mat-button-toggle>
-    </mat-button-toggle-group>
-   </div>
+    <div class="app-securitygraph-rangemenu">
+      <mat-button-toggle-group class="app-securitygraph-rangetoggle" 
+        id="toggle-group-borderless" #group="matButtonToggleGroup"
+        (change)="setRange($event)" value="1m">
+        <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1w">
+          1w
+        </mat-button-toggle>
+        <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1m">
+          1m
+        </mat-button-toggle>
+        <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="6m">
+          6m
+        </mat-button-toggle>
+        <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="1y">
+          1y
+        </mat-button-toggle>
+        <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="All">
+          All
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
     <div class="app-securitygraph-groupmenu">
       <div class="app-securitygraph-groupmenu-element app-rightmarginxs">
       Display:
@@ -39,6 +38,7 @@
       </div>
     </div>  
   </div>
+  <div class="app-securitygraph-graphwrapper app-bottommargins">
   <ngx-charts-line-chart *ngIf="displayChart"
     [results]="lineData"    
     scheme="picnic"    
@@ -47,10 +47,45 @@
     showXAxisLabel="true"
     showYAxisLabel="true"
     xAxisLabel="Date"
-    yAxisLabel="Value (CHF)"
+    [yAxisLabel]="yAxisLabel"
     timeline="true"
     xScale="date"
     gradient="true"
+    [autoScale]="autoscale"
     >
-  </ngx-charts-line-chart>
+  </ngx-charts-line-chart>  
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+      <mat-button-toggle-group class="app-securitygraph-zoomtoggle" 
+        id="toggle-group-borderless" #group="matButtonToggleGroup"
+      (change)="setZoom($event)" value="tight">
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="tight">
+        Tight
+      </mat-button-toggle>
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="wide">
+        Wide
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-button-toggle-group class="app-securitygraph-currtoggle" 
+        id="toggle-group-borderless" #group="matButtonToggleGroup"
+      (change)="setCurrency($event)" value="chf">
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="chf">
+        CHF
+      </mat-button-toggle>
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="intrinsic">
+        Instrinsic
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-button-toggle-group class="app-securitygraph-difftoggle" 
+        id="toggle-group-borderless" #group="matButtonToggleGroup"
+      (change)="setDiff($event)" value="abs">
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="abs">
+        Abs
+      </mat-button-toggle>
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="diff">
+        Diff
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
 </div>
