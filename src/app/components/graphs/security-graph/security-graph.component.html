@@ -78,12 +78,12 @@
     </mat-button-toggle-group>
     <mat-button-toggle-group class="app-securitygraph-difftoggle" 
         id="toggle-group-borderless" #group="matButtonToggleGroup"
-      (change)="setDiff($event)" value="abs">
+      (change)="setScale($event)" value="abs">
       <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="abs">
         Abs
       </mat-button-toggle>
-      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="diff">
-        Diff
+      <mat-button-toggle class="app-securitygraph-rangetoggle" id="toggle-label-thin" value="pct">
+        Pct
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>

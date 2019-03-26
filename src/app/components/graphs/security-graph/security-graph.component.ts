@@ -10,6 +10,11 @@ import { FlexLayoutModule } from '@angular/flex-layout'
 import { currencyList } from '@server/assets/assets';
 import { FormGroup, FormControl } from '@angular/forms'
 
+enum DISPLAYOPTS {
+  intrinsic = 0b01,
+  percent = 0b10
+} 
+
 @Component({
   selector: 'app-security-graph',
   templateUrl: './security-graph.component.html',
@@ -36,6 +41,7 @@ export class SecurityGraphComponent implements OnInit {
   yScaleMax: number = 1000;
   autoscale: boolean = true;
   yAxisLabel: string = "Value (CHF)";
+  displayOpts: number = 0;
 
   constructor(private dataService: DataService, 
               private eventService: EventService, 
@@ -158,7 +164,31 @@ export class SecurityGraphComponent implements OnInit {
     let _lineData = [];
     console.log(this.displayed);
     for (let i of this.displayed) {
-      _lineData.push(this.allData[i]);
+      if( (this.displayOpts & (DISPLAYOPTS.intrinsic | DISPLAYOPTS.percent))
+          == (DISPLAYOPTS.intrinsic | DISPLAYOPTS.percent) ) {
+        _lineData.push({
+          "name": this.allData[i].name,
+          "series": this.allData[i].pctrawseries
+        });  
+      }
+      else if( (this.displayOpts & DISPLAYOPTS.intrinsic) == DISPLAYOPTS.intrinsic) {
+        _lineData.push({
+          "name": this.allData[i].name,
+          "series": this.allData[i].rawseries
+        });  
+      }
+      else if( (this.displayOpts & DISPLAYOPTS.percent) == DISPLAYOPTS.percent) {
+        _lineData.push({
+          "name": this.allData[i].name,
+          "series": this.allData[i].pctseries
+        });  
+      }
+      else {
+        _lineData.push({
+          "name": this.allData[i].name,
+          "series": this.allData[i].series
+        });      
+      }
     }
     console.log(_lineData)
     this.lineData = _lineData;
@@ -170,7 +200,6 @@ export class SecurityGraphComponent implements OnInit {
       this.lineData = {};
       let id;
       let name;
-      console.log(this.securityData);
       for (let y of this.historyData) {        
         id = y.securityid;
         name = this.securityData[id].identifier;
@@ -182,22 +211,45 @@ export class SecurityGraphComponent implements OnInit {
           _lineData.push({
             "name": name,
             "id": id,
-            "series": new Array()
+            "series": new Array(),
+            "rawseries": new Array(),
+            "pctseries": new Array(),
+            "pctrawseries": new Array(),
           });
         }
         if (y.chfvalue != null) {  
           _lineData[this.added[id].index]["series"].push({
             "name": new Date(y.timestamp),
-            "value": y.chfvalue
+            "value": y.chfvalue,            
           }); 
         }
-      }  
-
-      console.log(_lineData);
+        if (y.value != null) {  
+          _lineData[this.added[id].index]["rawseries"].push({
+            "name": new Date(y.timestamp),
+            "value": y.value,            
+          }); 
+        }
+      }
+      for (let l of _lineData) {
+        let x0 = l["series"][0].value;
+        let x0raw = l["rawseries"][0].value;
+        for (let x of l["series"]) {
+          l["pctseries"].push({
+            "name": x.name,
+            "value": 100 * (x["value"] - x0) / x0
+          });          
+        }
+        for (let x of l["rawseries"]) {
+          l["pctrawseries"].push({
+            "name": x.name,
+            "value": 100 * (x["value"] - x0raw) / x0raw
+          });          
+        }
+      }
       for (let data of _lineData) {
         this.allData[data.id] = data;
       }
-      console.log(this.allData)      
+      console.log(this.allData);     
     }
     else {
       console.log('pushData() called but dataLoaded=' + this.dataLoaded);
@@ -253,9 +305,29 @@ export class SecurityGraphComponent implements OnInit {
     }
   }
 
-  setCurrency(event) { }
+  setCurrency(event) {
+    switch(event.value) {
+      case "chf":
+        this.displayOpts &= ~DISPLAYOPTS.intrinsic;
+        break;
+      case "intrinsic":
+        this.displayOpts |= DISPLAYOPTS.intrinsic;
+        break;
+    }
+    this.displayData();
+  }
 
-  setDiff(event) { }
+  setScale(event) {
+    switch(event.value) {
+      case "abs":
+        this.displayOpts &= ~DISPLAYOPTS.percent;
+        break;
+      case "pct":
+        this.displayOpts |= DISPLAYOPTS.percent;
+        break;
+    }
+    this.displayData();
+  }
 
   formatdate(d?: Date) {
     return d? d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2) : undefined;
