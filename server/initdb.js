@@ -33,7 +33,7 @@ function createDB(db, callback)
   // Adds the cred table
   console.log('Adding table usercred...');
   let stmt = `CREATE TABLE usercred (
-    userid INTEGER UNIQUE NOT NULL AUTOINCREMENT PRIMARY KEY, 
+    userid INTEGER PRIMARY KEY AUTOINCREMENT, 
     username TEXT UNIQUE NOT NULL, 
     hash TEXT NOT NULL
     )`;
@@ -296,6 +296,7 @@ function createDB(db, callback)
     }
   });
 
+/*
   CREATE TABLE "investments" (
     "investmentid"	INTEGER UNIQUE,
     "securityid"	INTEGER,
@@ -313,6 +314,7 @@ function createDB(db, callback)
     PRIMARY KEY("investmentid"),
     FOREIGN KEY("creditaccount") REFERENCES "accounts"("accountid")
   )
+*/
 
   stmt = `CREATE TABLE investments (
     investmentid INTEGER UNIQUE PRIMARY KEY,
@@ -328,7 +330,7 @@ function createDB(db, callback)
     FOREIGN KEY(securityid) REFERENCES securities(securityid)
     FOREIGN KEY(userid) REFERENCES userprefs(userid),
     FOREIGN KEY(creditaccount) REFERENCES accounts(accountid),
-    FOREIGN KEY(payaccount) REFERENCES accounts(accountid),
+    FOREIGN KEY(payaccount) REFERENCES accounts(accountid)
     )`;
   db.run(stmt, [], (err) => {
     if (err) {  

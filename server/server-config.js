@@ -7,6 +7,7 @@ class ServerConfig  {
     this.port = 8000;
     this.https = true;
     this.saltRounds = 10;
+    this.ip = '192.168.1.112';
     }
 };
 

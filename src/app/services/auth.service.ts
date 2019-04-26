@@ -12,7 +12,7 @@ export class AuthService {
   private serverIP:string;
 
   constructor(private http: HttpClient) { 
-    this.serverIP = window.location.hostname;
+    this.serverIP = ServerConfig.ip;
     let schema = ServerConfig.https? 'https://' : 'http://';
     this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login';    
   }
