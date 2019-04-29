@@ -16,11 +16,29 @@ export class SessionService {
 
   constructor(public dialog: MatDialog, 
               private http: HttpClient) {
-    this.serverIP = window.location.hostname;
+    this.serverIP = ServerConfig.ip;
     let schema = ServerConfig.https? 'https://' : 'http://';
     this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login';
 
     this.checkSession = Observable.create((o) => this.doCheckSession(o));
+  }
+
+  findServer() {
+    // This finds the address of the server
+    // On the server side the php should decode the json using
+    // $_POST = json_decode(file_get_contents(‘php://input’), true);
+
+    const url: string = 'http://siks.badel.org/getServerAddress.php';
+    let params = new HttpParams();
+    params.append('username', 'siks');
+    params.append('password', 'WhereIsTheSiksServer');
+
+    this.http.post(url, params).subscribe( response => {
+       console.log('Obtained server IP: ' + response.ip);
+       this.serverIP = response.ip;
+    }, err => {
+        console.log('Error getting the server address!!');
+    });
   }
 
   doCheckSession(observer) {
