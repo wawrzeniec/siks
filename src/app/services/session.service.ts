@@ -23,24 +23,6 @@ export class SessionService {
     this.checkSession = Observable.create((o) => this.doCheckSession(o));
   }
 
-  findServer() {
-    // This finds the address of the server
-    // On the server side the php should decode the json using
-    // $_POST = json_decode(file_get_contents(‘php://input’), true);
-
-    const url: string = 'http://siks.badel.org/getServerAddress.php';
-    let params = new HttpParams();
-    params.append('username', 'siks');
-    params.append('password', 'WhereIsTheSiksServer');
-
-    this.http.post(url, params).subscribe( response => {
-       console.log('Obtained server IP: ' + response.ip);
-       this.serverIP = response.ip;
-    }, err => {
-        console.log('Error getting the server address!!');
-    });
-  }
-
   doCheckSession(observer) {
     // This asks the server if the session is valid, and if not, 
     // Opens a login dialog.

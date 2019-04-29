@@ -2,12 +2,12 @@
 // configuration options for the node API server
 
 class ServerConfig  {
-    
-    constructor() { 
+
+    constructor() {
     this.port = 8000;
     this.https = true;
     this.saltRounds = 10;
-    this.ip = '192.168.1.112';
+    this.ip = '192.168.1.27';
     }
 };
 
