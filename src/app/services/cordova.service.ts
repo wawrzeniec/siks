@@ -2,8 +2,10 @@ import { Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/operator/map';
+import { fromEvent } from 'rxjs';
+import { map } from 'rxjs/operators';
+//import 'rxjs/add/observable/fromEvent';
+//import 'rxjs/add/operator/map';
 
 function _window(): any {
  // return the global native browser window object
@@ -22,7 +24,7 @@ export class CordovaService {
    }
    
    ngAfterViewinit() {
-      Observable.fromEvent(document, 'resume').subscribe(event => {
+      fromEvent(document, 'resume').subscribe(event => {
          this.zone.run(() => {
             this.onResume();
          });

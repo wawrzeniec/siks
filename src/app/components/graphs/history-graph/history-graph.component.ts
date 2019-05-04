@@ -220,7 +220,7 @@ export class HistoryGraphComponent implements OnInit {
         d.setHours(d.getHours() - 7*24);
       break;
       case "1m":
-        d.setMonth(d.getMonth() - 3);
+        d.setMonth(d.getMonth() - 1);
       break;
       case "6m":
         d.setMonth(d.getMonth() - 6);

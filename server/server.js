@@ -20,7 +20,7 @@ require('typescript-require');
 
 const ip = require('ip');
 const authorizedOrigin = 'https://' + ip.address() + ':4200';
-console.log(authorizedOrigin);
+console.log('authorized origin: ' + authorizedOrigin);
 
 // Session management
 var session = require('express-session');
