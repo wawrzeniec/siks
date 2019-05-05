@@ -3,18 +3,16 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpParams }    from '@angular/common/http';
 import { ServerConfig } from '@server/server-config-ng';
 import { serverPacket } from '@server/assets/assets'
+import { ServerService } from '@app/services/server.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigService {
   private baseUrl: string;
-  private serverIP:string; 
-
-  constructor(private http: HttpClient) { 
-    this.serverIP = window.location.hostname;
-    let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/config/';
+  
+  constructor(private server: ServerService) { 
+    this.baseUrl = '/config/';
 
   }
 
@@ -23,7 +21,7 @@ export class ConfigService {
     // 200 => OK
     // 503 => SQLITE Error
     const url: string = this.baseUrl + 'types'; 
-    return this.http.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true }) as Observable<serverPacket>;
   }
 
   getCategories(type?: string): Observable<serverPacket> {
@@ -36,7 +34,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'categories'; 
-    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
   getMarkets(type?: string): Observable<serverPacket> {
@@ -49,7 +47,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'markets'; 
-    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
   getSecurities(type?: string): Observable<serverPacket> {
@@ -62,7 +60,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'securities'; 
-    return this.http.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
   }
 
 }

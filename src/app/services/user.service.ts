@@ -3,18 +3,16 @@ import { userDataContainer, serverPacket } from '@server/assets/assets'
 import { Observable } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ServerConfig } from '@server/server-config-ng';
+import { ServerService } from '@app/services/server.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private baseUrl: string;
-  private serverIP:string; 
 
-  constructor(private http: HttpClient) { 
-    this.serverIP = window.location.hostname;
-    let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/users/';
+  constructor(private server: ServerService) { 
+    this.baseUrl = '/users/';
     console.log(this.baseUrl);
   }
 
@@ -24,7 +22,7 @@ export class UserService {
     // 503 => SQLITE Error
     // 409 => User already exists
     const url: string = this.baseUrl; 
-    return this.http.post(url, userData, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, userData, { withCredentials: true }) as Observable<serverPacket>;
   }
 
   checkUserExists(userData: userDataContainer): Observable<serverPacket> {
@@ -33,7 +31,7 @@ export class UserService {
     // 503 => SQLITE Error
     // 404 => Username is available
     const url: string = this.baseUrl + userData.userName; 
-    return this.http.head(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.head(url, { withCredentials: true }) as Observable<serverPacket>;
   }
 
   deleteUser() {

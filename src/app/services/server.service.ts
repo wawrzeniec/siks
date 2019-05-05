@@ -14,8 +14,12 @@ export class ServerService {
 
   constructor(
     private http: HttpClient,
-    private eventService: EventService) {}
+    private eventService: EventService) {
+      this.location = this.getServer();
+    }
 
+  
+  
   get(path: string, options?) {
     // Gets an url - same parameters as http.get
     // We can implement retries and fallback behavior on error
@@ -23,14 +27,46 @@ export class ServerService {
     return this.fget(0, path, options);
   }
   
+  post(path: string, params?, options?) {
+    // Posts an url
+    console.log('called server.post with path=' + path + ' / options=' + options + ' / params=' + params);
+    return this.fpost(0, path, options, params);
+  }
+  
+  head(path: string, options?) {
+    // HEAD method
+    console.log('called server.head with path=' + path + ' / options=' + options);
+    return this.fhead(0, path, options);
+  }
+  
   fget(count: number, path: string, options?: any, params?: any) {
     let url = this.location? this.location + path : path;
-    console.log('in fget() with url=' + url);
+    console.log('in fget() with url=' + url + ' / location=' + this.location);
     return this.http.get(url, options).pipe(
       retry(1),                                                     //Retries one time 
       catchError(err => this.handleError(err, this.fget, count, path, options))
     );
   }
+
+  fpost(count: number, path: string, options?: any, params?: any) {
+    let url = this.location? this.location + path : path;
+    console.log('in fpost() with url=' + url + ' / location=' + this.location);
+    console.log(params);
+    return this.http.post(url, params, options).pipe(
+      retry(1),                                                     //Retries one time 
+      catchError(err => this.handleError(err, this.fpost, count, path, options, params))
+    );
+  }
+
+  fhead(count: number, path: string, options?: any, params?: any) {
+    let url = this.location? this.location + path : path;
+    console.log('in fhead() with url=' + url + ' / location=' + this.location);
+    return this.http.head(url, options).pipe(
+      retry(1),                                                     //Retries one time 
+      catchError(err => this.handleError(err, this.fhead, count, path, options))
+    );
+  }
+
 
   handleError(err, method: Function, count: number, path: string, options?: any, params?: any) {
     // HTTP error handler. 
@@ -78,9 +114,6 @@ export class ServerService {
     }
   }
 
-  post() {
-    // Posts an url
-  }
   
   checkWifi() {
     // Uses cordova plugin to retrieve wifi info. 
@@ -108,7 +141,7 @@ export class ServerService {
     return this.http.get(url, {params: params, headers: headers});
     */
     
-    return ServerConfig.ip;
+    return 'https://' + ServerConfig.ip + ':' + ServerConfig.port;
   }
 
 }

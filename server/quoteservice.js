@@ -13,7 +13,7 @@ function getQuote(query, callback) {
         try {
             callback(JSON.parse(data.toString('utf8')))
         }
-        catch {
+        catch (error) {
             callback({status: 500, reason: "Error parsing JSON response from getquote.py", err: data.toString('utf-8')});
         }
     });
@@ -22,7 +22,7 @@ function getQuote(query, callback) {
         try { 
             callback(JSON.parse(data.toString('utf8')))
         }
-        catch {
+        catch (error) {
             callback({status: 500, reason: "Error parsing JSON response from getquote.py", err: data.toString('utf-8')});
         }
     });

@@ -18,9 +18,7 @@ export class SessionService {
   
   constructor(public dialog: MatDialog, 
               private server: ServerService) {
-    this.serverIP = ServerConfig.ip;
-    let schema = ServerConfig.https? 'https://' : 'http://';
-    this.baseUrl = schema + this.serverIP + ':' + ServerConfig.port + '/login';
+    this.baseUrl = '/login';
 
     this.checkSession = Observable.create((o) => this.doCheckSession(o));
   }
@@ -34,8 +32,9 @@ export class SessionService {
     if (!this.isChecking) {
       this.isChecking = true;                // Flag to avoid opening 2 login dialogs simultaneously
       const url: string = this.baseUrl;
-      return this.server.get(url, { withCredentials: true }).subscribe( response => {
+      return this.server.get(url, { withCredentials: true }).subscribe( response => {        
         console.log('Logged in.');        
+        this.isChecking = false;
         observer.next('continueSession');
         }, (err) => {
         console.log('Not logged in => opening dialog')          

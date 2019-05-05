@@ -2,6 +2,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { SessionService } from '@app/services/session.service'
 import { EventService } from '@app/services/event.service'
 import { Meta } from '@angular/platform-browser';
+import { CordovaService } from '@app/services/cordova.service'
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ export class AppComponent implements OnInit{
   
   constructor(public sessionService: SessionService, 
               public eventService: EventService,
+              public cordova: CordovaService,
               private meta: Meta) {
     
   };
@@ -29,6 +31,10 @@ export class AppComponent implements OnInit{
       this.eventService.triggerReloadSummary();
       this.eventService.triggerReloadGraphs();
     });
+
+    console.log('ON CORDOVA:');
+    console.log(this.cordova.cordova);
+    console.log(this.cordova.onCordova);
   }
 
   @HostListener('window:focus')
