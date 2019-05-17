@@ -19,6 +19,6 @@ export class AssetService {
   addAsset(asset: assetDescriptor): Observable<serverPacket> {
     // Adds an asset to the portfolio
     const url: string = this.baseUrl; 
-    return this.server.post(url, asset, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, asset, { withCredentials: true });
   }
 }

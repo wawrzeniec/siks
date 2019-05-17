@@ -41,10 +41,11 @@ export class LoginComponent implements OnInit {
               public eventService: EventService) { }
 
   ngOnInit() {
+    console.log('Opening login dialog...');
     this.loginFormGroup = new FormGroup({
       name: this.userNameCtrl,
       password: this.passwordCtrl,     
-    });
+    });    
   }
 
   submitForm() {
@@ -55,7 +56,7 @@ export class LoginComponent implements OnInit {
     this.authService.postLogin(this.loginData).subscribe(result => {
       // Successful login => close the dialog
       this.wrongCred = false;
-      this.dialogRef.close();
+      this.dialogRef.close(true);
       this.eventService.triggerReloadSummary();
       this.eventService.triggerReloadGraphs();
     }, error => {

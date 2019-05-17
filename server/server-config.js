@@ -11,6 +11,7 @@ class ServerConfig  {
     this.port = 8000;
     this.ssid = 'Swisscheese';
     this.domain = 'siks.duckdns.org';
+    this.routerbssid = "38:35:fb:46:b0:fc";
     }
 };
 

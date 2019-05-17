@@ -1,0 +1,13 @@
+$loader-bg: #222299;
+$loader-fg: #aabbdd;
+
+.app-loader {
+    width: 100%;
+    height: 100%;
+    background-color: $loader-bg;
+    color: $loader-fg;
+}
+
+.app-loader-element {
+    display: flex;
+}

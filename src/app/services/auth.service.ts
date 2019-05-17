@@ -21,13 +21,13 @@ export class AuthService {
     // 503 => SQLITE Error
     // 401 => Authentication failed
     const url: string = this.baseUrl; 
-    return this.server.post(url, loginData, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, loginData, { withCredentials: true });
   }
 
   logout() {
     // Logs out of the app
     const url: string = this.baseUrl + '/signout'; 
-    return this.server.post(url, {}, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, {}, { withCredentials: true });
   }
 
 }

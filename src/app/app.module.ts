@@ -26,6 +26,7 @@ import { AddAccountComponent } from './components/add-account/add-account.compon
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { BreakdownGraphComponent } from './components/graphs/breakdown-graph/breakdown-graph.component';
 import { SecurityGraphComponent } from './components/graphs/security-graph/security-graph.component';
+import { LoaderComponent } from './components/loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SecurityGraphComponent } from './components/graphs/security-graph/secur
     NgComponent,
     AddAccountComponent,
     BreakdownGraphComponent,
-    SecurityGraphComponent
+    SecurityGraphComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

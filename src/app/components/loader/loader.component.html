@@ -1,0 +1,6 @@
+<div class="overlay-spinner-wrapper">
+  <div *ngIf="loading" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="30px" class="app-loader overlay-spinner">          
+    <div class="app-loader-element">{{loadText}}</div>
+    <div class="app-loader-element"><mat-spinner diameter=30 strokeWidth=5></mat-spinner></div>
+  </div>  
+</div>

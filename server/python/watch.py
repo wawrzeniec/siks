@@ -1,6 +1,7 @@
 from __future__ import print_function
 from error import GETQUOTE_ERROR
 import os
+import numpy as np
 
 PAUSE_BETWEEN_REQUESTS = 2
 
@@ -21,6 +22,9 @@ def getQuote(method, ticker):
         elif method == 'ov' or method == "3":
             import onvista as ov
             quote = ov.getQuote(ticker)
+        elif method == 'mw' or method == "4":
+            import marketwatch as mw
+            quote = mw.getQuote(ticker)
         elif method == 'gcur' or method == "100":
             import gcurrency as gc
             quote = gc.getQuote(ticker)

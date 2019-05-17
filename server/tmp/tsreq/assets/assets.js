@@ -5,11 +5,13 @@ exports.currencyList = { "USD (US Dollar)": { "name": "US Dollar", "symbol": "US
 exports.scrapeMethods = {
     'Stock': [
         ['gf', 'Google finance', 'Google finance ticker'],
-        ['yf', 'Yahoo finance', 'Yahoo finance ticker']
+        ['yf', 'Yahoo finance', 'Yahoo finance ticker'],
+        ['mw', 'Marketwatch', 'Marketwatch ticker']
     ],
     'ETF': [
         ['gf', 'Google finance', 'Google finance ticker'],
-        ['yf', 'Yahoo finance', 'Yahoo finance ticker']
+        ['yf', 'Yahoo finance', 'Yahoo finance ticker'],
+        ['mw', 'Marketwatch', 'Marketwatch ticker']
     ],
     'Fund': [
         ['fch', 'Finanzen.ch', 'Valor or ISIN'],
@@ -82,4 +84,4 @@ CASH = 'Cash',
 SECURITY = 'Security',
 OTHER = 'Other'
 }
-*/ 
+*/

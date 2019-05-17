@@ -22,7 +22,7 @@ export class UserService {
     // 503 => SQLITE Error
     // 409 => User already exists
     const url: string = this.baseUrl; 
-    return this.server.post(url, userData, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, userData, { withCredentials: true });
   }
 
   checkUserExists(userData: userDataContainer): Observable<serverPacket> {
@@ -31,7 +31,7 @@ export class UserService {
     // 503 => SQLITE Error
     // 404 => Username is available
     const url: string = this.baseUrl + userData.userName; 
-    return this.server.head(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.head(url, { withCredentials: true });
   }
 
   deleteUser() {

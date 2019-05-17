@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-//@import "~@angular/material/prebuilt-themes/indigo-pink.css";
-@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+//@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 //@import '@angular/material/prebuilt-themes/pink-bluegrey.css';
 //@import '@angular/material/prebuilt-themes/purple-green.css';
 
@@ -133,12 +133,6 @@ $marginXSmall: 10px;
     font: $font-stack;
     text-align: center;
     color: $app-major-color;
-}
-
-// Dialog classes
-.app-dialog-panel-login {
-    display: flex;
-    max-width: 300px;
 }
 
 .app-stepper-nextbtn {

@@ -19,19 +19,19 @@ export class AccountService {
   getAccounts(): Observable<serverPacket> {
     // Retrieves the existing accounts for the current user
     const url: string = this.baseUrl; 
-    return this.server.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true });
   }
 
   addAccount(accountspec: any): Observable<serverPacket> {
     // Adds a new account for the current user
     const url: string = this.baseUrl; 
-    return this.server.post(url, accountspec, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, accountspec, { withCredentials: true });
   }
 
   getPortfolios(): Observable<serverPacket> {
     // Retrieves the existing portfolios for the current user
     const url: string = this.pfUrl; 
-    return this.server.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true });
   } 
 
 }

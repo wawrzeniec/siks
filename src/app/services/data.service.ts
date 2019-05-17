@@ -38,7 +38,7 @@ export class DataService {
     if (maxdate) {
       params = params.append('maxdate', maxdate);
     }
-    return this.server.get(url, { withCredentials: true, params: params }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true, params: params });
   }
 
   getSecurityHistory(securityids: Array<number>, mindate?: string): Observable<serverPacket> {
@@ -49,6 +49,6 @@ export class DataService {
     if (mindate) {
       params = params.append('mindate', mindate);
     }
-    return this.server.get(url, { withCredentials: true, params: params }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true, params: params });
   }
 }

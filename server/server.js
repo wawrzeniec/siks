@@ -77,7 +77,7 @@ app.use(function(req, res, next) {
 	}
 });
 
-app.use(/^(?!\/login\/?$)/, function(req, res, next) {	
+app.use(/^(?!\/login\/?$)/, function(req, res, next) {		
 	if (req.session.loggedin) {        
 			next()
     }
@@ -113,6 +113,7 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+	console.log('RECEIVED LOGIN REQUEST')
 	authService.checkSession(req.session, (result) => {		
 		res.status(result.status);
 		res.json(result);

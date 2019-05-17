@@ -1,110 +1,148 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map, catchError, retry } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { map, catchError, retry, switchMap, flatMap, tap, retryWhen, repeatWhen, scan } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { ServerConfig } from '@server/server-config-ng';
 import { EventService } from '@app/services/event.service';
+import { LocationService } from '@app/services/location.service';
+import { CordovaService } from '@app/services/cordova.service';
+import { serverPacket } from '@server/assets/assets'
+
+declare var cordova; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServerService {
-  private location: string;
+  private location: string;  
+  public wifi;  
 
-  constructor(
-    private http: HttpClient,
-    private eventService: EventService) {
-      this.location = this.getServer();
-    }
+  constructor(public http: HttpClient,
+              public eventService: EventService,
+              public locationService: LocationService)  {
+    this.init();
+  }
 
-  
-  
+  init() {
+    console.log('Initializing ServerService...');
+  }
+
+  setLocation(loc): void {
+    this.location = loc;
+  }
+
+  getLocation(): string {
+    return(this.location);
+  }
+
   get(path: string, options?) {
     // Gets an url - same parameters as http.get
     // We can implement retries and fallback behavior on error
-    console.log('called server.get with path=' + path + ' / options=' + options);
-    return this.fget(0, path, options);
+    let url = this.locationService.getLocation() + path;
+    let nErrors = 0;
+    console.log('called server.get with path=' + path + ' / options=' + options + ' / location=' + this.locationService.getLocation());    
+    console.log('url = ' + url);
+    return this.http.get(url, options).pipe(   
+      catchError(err => this.handleError(err)),      
+      retryWhen(err => 
+        err.pipe(
+          tap((err)=>{
+            console.log('retrywhen: error = ');
+            console.log(err)
+            }),
+          map((err) => {
+            nErrors += 1;
+            if (err !== 'updateServer' || nErrors > 1) {              
+              throw(err);
+            }
+          })
+        )
+      )      
+    ) as Observable<serverPacket>;
   }
   
   post(path: string, params?, options?) {
     // Posts an url
+    let url = this.locationService.getLocation() + path;
+    let nErrors = 0;
     console.log('called server.post with path=' + path + ' / options=' + options + ' / params=' + params);
-    return this.fpost(0, path, options, params);
+    return this.http.post(url, params, options).pipe(   
+      catchError(err => this.handleError(err)),      
+      retryWhen(err => 
+        err.pipe(
+          tap((err)=>{
+            console.log('retrywhen: error = ');
+            console.log(err)
+            }),
+          map((err) => {
+            nErrors += 1;
+            if (err !== 'updateServer' || nErrors > 1) {              
+              throw(err);
+            }
+          })
+        )
+      )      
+    ) as Observable<serverPacket>;
   }
   
   head(path: string, options?) {
     // HEAD method
-    console.log('called server.head with path=' + path + ' / options=' + options);
-    return this.fhead(0, path, options);
+    let url = this.locationService.getLocation() + path;
+    let nErrors = 0;
+    console.log('called server.head with path=' + path + ' / options=' + options);    
+    return this.http.head(url, options).pipe(   
+      catchError(err => this.handleError(err)),      
+      retryWhen(err => 
+        err.pipe(
+          tap((err)=>{
+            console.log('retrywhen: error = ');
+            console.log(err)
+            }),
+          map((err) => {
+            nErrors += 1;
+            if (err !== 'updateServer' || nErrors > 1) {              
+              throw(err);
+            }
+          })
+        )
+      )      
+    ) as Observable<serverPacket>;
   }
   
-  fget(count: number, path: string, options?: any, params?: any) {
-    let url = this.location? this.location + path : path;
-    console.log('in fget() with url=' + url + ' / location=' + this.location);
-    return this.http.get(url, options).pipe(
-      retry(1),                                                     //Retries one time 
-      catchError(err => this.handleError(err, this.fget, count, path, options))
-    );
-  }
 
-  fpost(count: number, path: string, options?: any, params?: any) {
-    let url = this.location? this.location + path : path;
-    console.log('in fpost() with url=' + url + ' / location=' + this.location);
-    console.log(params);
-    return this.http.post(url, params, options).pipe(
-      retry(1),                                                     //Retries one time 
-      catchError(err => this.handleError(err, this.fpost, count, path, options, params))
-    );
-  }
-
-  fhead(count: number, path: string, options?: any, params?: any) {
-    let url = this.location? this.location + path : path;
-    console.log('in fhead() with url=' + url + ' / location=' + this.location);
-    return this.http.head(url, options).pipe(
-      retry(1),                                                     //Retries one time 
-      catchError(err => this.handleError(err, this.fhead, count, path, options))
-    );
-  }
-
-
-  handleError(err, method: Function, count: number, path: string, options?: any, params?: any) {
+  async handleError(err) {
     // HTTP error handler. 
     // If could not connect to server, try to update the server address and retry
-    // If other error, rethrow it
-    if (count >= 1) {
-      console.log('Max number of attempts to connect to server exceeded. Giving up.')
-      return throwError(err); 
-    }
-
+    // If other error, rethrow it  
+    console.log('In handleError()');          
     switch(err.status) {
-      case 0: 
-        // Unknown error => attempt reconnecting to the server and retry
-        
-        // Getting the ip from HTTP server is doomed to fail.
-        // We use dyndns instead with a fixed domain name.
-        /*
-        this.getServer().subscribe( response => {
-          console.log('Obtained server IP: ' + response['data']);
-          this.location = response['data'];
-          return method(count+1, path, options, params)
-       }, err => {
-           console.log('Error getting the server address!!');
-           return throwError(err); 
-       });
-       */
-        this.location = this.getServer();
-        return method(count+1, path, options, params);
+      case 0:
+        // Unknown error => attempt reconnecting to the server and retry        
+        console.log('handleError: trying to switch server')
+        const loc = await this.locationService.getServer.toPromise();
+        if (loc == 'updateServer') {
+          console.log('handleError: received updateServer');
+          return 'updateServer';
+        } 
+        else {
+          console.log('handleError: receive browser');
+          return 'browser';
+        }
         break;
       case 401:
         // Session invalid -> fallback to login
-        this.eventService.triggerLogin();
+        console.log('handleError: 401 received; triggering login')
+        const result = await this.triggerLogin()
+        console.log('Login dialog closed. result=' + result);
+        console.log('Throwing error 401');
         return throwError(err);
         break;
       case 403:
       case 404:
       case 500:
         // Known errors => this is not a connection error
+        console.log('handleError: HTTP code 403, 404, or 500 received; aborting')
         return throwError(err); 
         break;
       default:
@@ -112,36 +150,9 @@ export class ServerService {
          console.log(err)
          return throwError(err); 
     }
+  }  
+
+  async triggerLogin() {
+    return this.eventService.triggerLogin();
   }
-
-  
-  checkWifi() {
-    // Uses cordova plugin to retrieve wifi info. 
-    // Returns true if we are on swisscheese and false otherwise.
-  }
-  
-  getServer() {
-    // This finds the address of the server
-    // On the server side the php should decode the json using
-    
-    // With cordova this should fallback to local address if on wifi
-
-    // This doesn't work due to mixed content policy
-    /* 
-    const url: string = 'http://siks.badel.org/getServerAddress.php';
-    let params = new HttpParams();
-    params.append('username', 'siks');
-    params.append('password', 'WhereIsTheSiksServer');
-
-    const headers = new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Access-Control-Allow-Origin': '*'
-    });
-    
-    return this.http.get(url, {params: params, headers: headers});
-    */
-    
-    return 'https://' + ServerConfig.ip + ':' + ServerConfig.port;
-  }
-
 }

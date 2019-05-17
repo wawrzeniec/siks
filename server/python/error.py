@@ -77,6 +77,13 @@ class ONVISTA_ERROR(Exception):
     def __str__(self):
         return self.message
 
+class MARKETWATCH_ERROR(Exception):
+    def __init__(self, ticker):
+        self.message = """Error parsing marketwatch.com result for ticker {:s}""".format(ticker)
+        self.args = (self.message, )
+
+    def __str__(self):
+        return self.message
 
 class PARSEERROR(Exception):
     def __init__(self):

@@ -21,7 +21,7 @@ export class ConfigService {
     // 200 => OK
     // 503 => SQLITE Error
     const url: string = this.baseUrl + 'types'; 
-    return this.server.get(url, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, { withCredentials: true });
   }
 
   getCategories(type?: string): Observable<serverPacket> {
@@ -34,7 +34,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'categories'; 
-    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true });
   }
 
   getMarkets(type?: string): Observable<serverPacket> {
@@ -47,7 +47,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'markets'; 
-    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true });
   }
 
   getSecurities(type?: string): Observable<serverPacket> {
@@ -60,7 +60,7 @@ export class ConfigService {
     }
 
     const url: string = this.baseUrl + 'securities'; 
-    return this.server.get(url, {params: params, withCredentials: true }) as Observable<serverPacket>;
+    return this.server.get(url, {params: params, withCredentials: true });
   }
 
 }

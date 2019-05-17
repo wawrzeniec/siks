@@ -7,6 +7,8 @@ import { map } from 'rxjs/operators';
 //import 'rxjs/add/observable/fromEvent';
 //import 'rxjs/add/operator/map';
 
+declare var cordova;
+
 function _window(): any {
  // return the global native browser window object
  return window;
@@ -17,10 +19,12 @@ function _window(): any {
 })
 export class CordovaService {
    
-   private resume: BehaviorSubject<boolean>;
+   public resume: BehaviorSubject<boolean>;
+   public getWifiInfo: Observable<object>;
 
    constructor(private zone: NgZone) {
       this.resume = new BehaviorSubject<boolean>(null);
+      this.getWifiInfo = Observable.create((o) => this.do_getWifiInfo(o));
    }
    
    ngAfterViewinit() {
@@ -40,6 +44,30 @@ export class CordovaService {
     }
 
    public onResume(): void {
+      console.log('onResume!!')
       this.resume.next(true);
    }
+
+   public do_getWifiInfo(observer) {
+      if (this.onCordova === true) {        
+        if (cordova.plugins) {      
+          cordova.plugins.wifiinfo.getInfo(
+            info => {
+              observer.next(info);
+              observer.complete();
+            },
+            error => observer.error(error)
+          );
+        }
+        else
+        {
+          observer.error('Cordova plugins not initialized');
+        }
+      }
+      else
+      {
+        observer.next('Browser');
+        observer.complete();
+      }
+   }  
 }

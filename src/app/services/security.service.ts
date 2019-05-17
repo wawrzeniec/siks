@@ -18,6 +18,6 @@ export class SecurityService {
   addSecurity(security: securityDescriptor): Observable<serverPacket> {
     // Adds a security to the list of securities
     const url: string = this.baseUrl; 
-    return this.server.post(url, security, { withCredentials: true }) as Observable<serverPacket>;
+    return this.server.post(url, security, { withCredentials: true });
   }
 }
