@@ -123,32 +123,34 @@ export class ServerService {
         const loc = await this.locationService.getServer.toPromise();
         if (loc == 'updateServer') {
           console.log('handleError: received updateServer');
-          return 'updateServer';
+          throw(new Error('updateServer'));
         } 
         else {
           console.log('handleError: receive browser');
-          return 'browser';
+          throw (new Error('browser'));
         }
         break;
       case 401:
         // Session invalid -> fallback to login
         console.log('handleError: 401 received; triggering login')
         const result = await this.triggerLogin()
-        console.log('Login dialog closed. result=' + result);
-        console.log('Throwing error 401');
-        return throwError(err);
+        console.log('Login dialog closed. result=' + result);        
+        if (!result) {
+          console.log('ServerService: Throwing error 401');
+          throw(err);
+        }
         break;
       case 403:
       case 404:
       case 500:
         // Known errors => this is not a connection error
         console.log('handleError: HTTP code 403, 404, or 500 received; aborting')
-        return throwError(err); 
+        throw(err); 
         break;
       default:
          console.log('Unimplemented error status found in server.service.handleError()');
          console.log(err)
-         return throwError(err); 
+         throw(err); 
     }
   }  
 

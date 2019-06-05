@@ -112,6 +112,12 @@ function getSummary(db, session, callback) {
 //  9. totalvalue       (= total * value * currencyvalue)
 //
 
+// NOTE to get every second day of history, do
+// SELECT timestamp from history 
+// WHERE ((julianday() - julianday(timestamp)) % 2) == 0
+// => add this in 'history2' definition with 
+// WHERE date(timestamp)>=$mindate) AND ...
+// Divides the query time by almost the # of days skipped...
 function getHistory(db, session, mindate, callback) {
     
     if (!mindate) {
@@ -232,9 +238,11 @@ function getHistory(db, session, mindate, callback) {
             ownings2
         JOIN
             securities
-        USING(securityid) WHERE typeid = 1)
+        USING(securityid) WHERE typeid = 1),
     
-    SELECT 	securityid,
+        fhist AS
+        (SELECT 	
+            securityid,
 			n.accountid							AS accountid,
 			n.portfolioid						AS portfolioid,
             n.typeid							AS typeid,
@@ -249,16 +257,31 @@ function getHistory(db, session, mindate, callback) {
             ELSE 
                 total * value * currencyvalue END		
                                                 AS totalvalue
-    FROM
-        tvalue AS n
-    JOIN
-        (SELECT
-            currencyid,
-            timestamp,
-            value 								AS currencyvalue
-        FROM cvalue) o
-    ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
-    ORDER BY securityid, accountid, timestamp;`;
+        FROM
+            tvalue AS n
+        JOIN
+            (SELECT
+                currencyid,
+                timestamp,
+                value 								AS currencyvalue
+            FROM cvalue) o
+        ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
+        ORDER BY securityid, accountid, timestamp)
+        
+    SELECT 
+        securityid, 
+        accountid, 
+        portfolioid, 
+        typeid, 
+        categoryid, 
+        timestamp, 
+        MAX(value) AS value, 
+        MAX(total) AS total, 
+        currencyid, 
+        MAX(currencyvalue) AS currencyvalue, 
+        MAX(totalvalue) AS totalvalue
+    FROM fhist 
+    GROUP BY securityid, accountid, timestamp;`;
     
     /*
     let stmt = `

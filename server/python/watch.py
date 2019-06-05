@@ -2,11 +2,15 @@ from __future__ import print_function
 from error import GETQUOTE_ERROR
 import os
 import numpy as np
+import datetime
 
 PAUSE_BETWEEN_REQUESTS = 2
 
 dbpath = '../db'
 dbname = 'siksdb.db'
+
+query_interval_in_hours = 6
+query_frequency_in_timedelta = datetime.timedelta(query_interval_in_hours/24.0)
 
 def getQuote(method, ticker):
     try:
@@ -134,7 +138,7 @@ def getAll(securityid=None):
                 else:
                     dt = nowdate - thislast
                     print(dt)
-                    if dt > datetime.timedelta(0.9):
+                    if dt > query_frequency_in_timedelta:
                         print('Last update for %s [%s] ago. Re-queriying.' % (thisname, dt.__str__()))
 
                         method = json.loads(thismethods)
@@ -189,6 +193,9 @@ def getAll(securityid=None):
     print('getAll() terminated. Committing and closing DB.')
     conn.commit()
     db.close()
+
+    timestamp = getts()
+    print('[%s] Returning from getAll()' % timestamp)
 
     return nErrors, errorLoc, errorDesc
 
