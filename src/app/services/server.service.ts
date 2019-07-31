@@ -126,7 +126,7 @@ export class ServerService {
           throw(new Error('updateServer'));
         } 
         else {
-          console.log('handleError: receive browser');
+          console.log('handleError: received browser');
           throw (new Error('browser'));
         }
         break;
