@@ -51,6 +51,8 @@ function getSummary(db, session, callback) {
         types 
     USING (typeid)`
 
+    var starttime = new Date(); // To time execution
+
     db.all(stmt, {
         $userid: session.userid
         }, (err, rows) => {
@@ -89,6 +91,9 @@ function getSummary(db, session, callback) {
                 data.typename.push(rows[d].typename);
                 data.currency.push(rows[d].currency)
             }
+            
+            console.log('Summary retrieved in %dms', new Date() - starttime);
+
             return callback({
                 status: 200,
                 data: data
@@ -119,15 +124,14 @@ function getSummary(db, session, callback) {
 // WHERE date(timestamp)>=$mindate) AND ...
 // Divides the query time by almost the # of days skipped...
 function getHistory(db, session, mindate, callback) {
+    console.log('Getting history')
     
     if (!mindate) {
         mindate = '1970-01-01';    
     } 
-    console.log(mindate);
     
     let userid = session.userid;
-    console.log(userid);
-
+    
     let userclause = ' ';
     if (userid == 0) {
         userclause = ' '; 
@@ -135,7 +139,6 @@ function getHistory(db, session, mindate, callback) {
     else {
         userclause = ' WHERE userid=$userid ';
     }
-    console.log(userclause);
     
     let stmt = `WITH usec AS ( 
         SELECT 
@@ -402,7 +405,8 @@ function getHistory(db, session, mindate, callback) {
     ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
     ORDER BY securityid, timestamp;`;*/
     
-    console.log(stmt);
+    var starttime = new Date();
+
     db.all(stmt, {
         $userid: userid,
         $mindate: mindate
@@ -466,6 +470,7 @@ function getHistory(db, session, mindate, callback) {
                 }
                 */
 
+                console.log('History retrieved in %dms', new Date() - starttime);
                 return callback({
                     status: 200,
                     data: rows
@@ -587,14 +592,13 @@ SELECT * FROM historyall;
 */ 
 
 function getBreakdown(db, session, maxdate, callback) {
-    
+    console.log('Getting breakdown');
+
     if (!maxdate) {
         let d = new Date();
         console.log(d.getMonth());
         maxdate = d.getFullYear() + '-' + ('0' + (d.getMonth()+1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
     }     
-    
-    console.log('maxdate: ' + maxdate);
     
     let userid = session.userid;
     let userclause = ' ';
@@ -730,6 +734,8 @@ function getBreakdown(db, session, maxdate, callback) {
     ON (n.currencyid = o.currencyid AND n.timestamp=o.timestamp)
     ORDER BY securityid, accountid, timestamp;`;
 
+    var starttime = new Date();
+
     db.all(stmt, {
         $userid: userid,
         $maxdate: maxdate
@@ -739,11 +745,13 @@ function getBreakdown(db, session, maxdate, callback) {
                 console.log(err);
                 return callback({
                     status: 500,
-                    reASon: 'failed to get breakdown data for userid ' + userid,
+                    reason: 'failed to get breakdown data for userid ' + userid,
                     err: err
                 });
             }
             else {
+
+                console.log('Breakdown retrieved in %dms', new Date() - starttime);
                 return callback({
                     status: 200,
                     data: rows
@@ -755,7 +763,8 @@ function getBreakdown(db, session, maxdate, callback) {
 
 
 function getSecurityHistory(db, session, securityids, mindate, callback) {
-    
+    console.log('Getting security history');
+
     if (!mindate) {
         mindate = '1970-01-01';    
     } 
@@ -768,7 +777,7 @@ function getSecurityHistory(db, session, securityids, mindate, callback) {
     else {
         userclause = ' WHERE userid=$userid ';
     }
-    console.log(securityids);
+
     let seclist = JSON.parse("[" + securityids + "]");
     let stmtvars = {$mindate: mindate};
     let listexpr = ''
@@ -779,8 +788,6 @@ function getSecurityHistory(db, session, securityids, mindate, callback) {
             listexpr += ', ';
         } 
     }
-    console.log(stmtvars)
-    console.log(listexpr)
 
     let stmt = `
     WITH history2 AS (
@@ -833,18 +840,20 @@ function getSecurityHistory(db, session, securityids, mindate, callback) {
             CASE typeid WHEN 1 THEN currencyvalue ELSE value * currencyvalue END AS chfvalue
     FROM history4`
     
-    console.log(stmt)
+    var starttime = new Date();
     db.all(stmt, stmtvars,
         (err, rows) => {
             if (err) {
                 console.log(err);
                 return callback({
                     status: 500,
-                    reASon: 'failed to get history data for securityid' + securityid + ' and userid ' + userid,
+                    reason: 'failed to get history data for securityid' + securityid + ' and userid ' + userid,
                     err: err
                 });
             }
             else {
+
+                console.log('Security history retrieved in %dms', new Date() - starttime);
                 return callback({
                     status: 200,
                     data: rows

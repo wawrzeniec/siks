@@ -168,6 +168,8 @@ def getAll(securityid=None):
                             nErrors += 1
                             errorLoc.append('While inserting quote for %s [%s] into DB' % (thisname, ticker))
                             errorDesc.append(str(e))
+                            print(errorloc[-1])
+                            print(errorDesc[-1])
                             continue
 
                         try:
