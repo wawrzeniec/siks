@@ -48,3 +48,6 @@ server/db
 server/siks-server.cert
 server/siks-server.key
 server/sessions
+
+# python
+.pyc
