@@ -50,4 +50,4 @@ server/siks-server.key
 server/sessions
 
 # python
-.pyc
+*.pyc
